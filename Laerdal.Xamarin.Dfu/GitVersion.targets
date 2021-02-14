@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <ItemGroup>
+        <PackageReference Include="GitVersion.MsBuild" Version="5.6.6" PrivateAssets="all" />
+    </ItemGroup>
+    <PropertyGroup>
+        <UpdateVersionProperties>true</UpdateVersionProperties>
+        <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
+    </PropertyGroup>
+    <Target Name="PrintBuildInfo" AfterTargets="GetVersion">
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="Platform: $(Platform)" />
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="High" Text="GitVersion_InformationalVersion: $(GitVersion_InformationalVersion)" />
+        <Message Importance="High" Text="GitVersion_AssemblySemVer: $(GitVersion_AssemblySemVer)" />
+        <Message Importance="High" Text="GitVersion_BranchName: $(GitVersion_BranchName)" />
+        <Message Importance="High" Text="GitVersion_Sha: $(GitVersion_Sha)" />
+        <Message Importance="High" Text="##vso[build.updatebuildnumber]$(PackageVersion)" />
+    </Target>
+
+</Project>

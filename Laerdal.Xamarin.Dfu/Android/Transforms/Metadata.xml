@@ -1,0 +1,16 @@
+﻿
+<metadata>
+    <attr path="/api/package[@name='no.nordicsemi.android.dfu']" name="managedName">Laerdal.Xamarin.Dfu.Android</attr>
+  
+    <!-- warning BG8102: Class NO.Nordicsemi.Android.Dfu.DfuBaseService has unknown base type android.app.IntentService. -->
+    <attr path="/api/package[@name='no.nordicsemi.android.dfu']/class[@name='DfuBaseService']" name="extends">mono.android.app.IntentService</attr>
+
+    <!-- warning BG8C00: For type NO.Nordicsemi.Android.Dfu.DfuBaseService, base interface no.nordicsemi.android.dfu.DfuProgressInfo.ProgressListener is invalid. -->
+    <remove-node path="/api/package[@name='no.nordicsemi.android.dfu']/class[@name='DfuBaseService']/implements[contains(@name, 'no.nordicsemi.android.dfu.DfuProgressInfo.ProgressListener')]"/>
+
+    <!-- warning CS0114: 'IDfuScopeInvoker.Equals(Object)' hides inherited member 'Object.Equals(Object?)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword. -->
+    <remove-node path="/api/package[@name='no.nordicsemi.android.dfu']/interface[@name='DfuScope']"/>
+
+    <!-- warning CS0114: 'IFileTypeInvoker.Equals(Object)' hides inherited member 'Object.Equals(Object?)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword. -->
+    <remove-node path="/api/package[@name='no.nordicsemi.android.dfu']/interface[@name='FileType']"/>
+</metadata>
