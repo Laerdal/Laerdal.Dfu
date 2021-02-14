@@ -53,6 +53,11 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <!-- warning MSB9004: ManifestResourceWithNoCulture item type is deprecated. Emit EmbeddedResource items instead, with metadata WithCulture='false', Type='Resx', and optional LogicalName. -->
         <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB9004</MSBuildWarningsAsMessages>
+        <!-- WARN : SecureDFUServiceInitiator.g.cs: [CS0114] 'SecureDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 
+        'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. 
+        Otherwise add the new keyword.
+        Can be ignored. -->
+        <NoWarn>CS0114</NoWarn>
     </PropertyGroup>
     
     <ItemGroup>
@@ -62,7 +67,7 @@
 
     <!-- SHARED -->
     <ItemGroup>
-        <Compile Include="Shared\*.cs" />
+        <Compile Include="Shared\**\*.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     
@@ -84,10 +89,11 @@
     </PropertyGroup>
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
         <Reference Include="Mono.Android" />
-        <Compile Include="Android\*.cs" />
-        <EmbeddedReferenceJar Include="Android\Jars\*.jar" />
-        <LibraryProjectZip Include="Android\Jars\*.aar" />
-        <TransformFile Include="Android\Transforms\*.xml" />
+        <Compile Include="Droid\*.cs" />
+        <Compile Include="Droid\Specific\*.cs" />
+        <EmbeddedReferenceJar Include="Droid\Jars\*.jar" />
+        <LibraryProjectZip Include="Droid\Jars\*.aar" />
+        <TransformFile Include="Droid\Transforms\*.xml" />
     </ItemGroup>
 
     <!-- IOS -->
@@ -100,8 +106,9 @@
         <Reference Include="Xamarin.iOS" />
         <Reference Include="netstandard" />
         <Compile Include="iOS\*.cs" />
-        <ObjcBindingCoreSource Include="iOS\ObjcBinding\StructsAndEnums.cs" />
-        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinitions.cs" />
+        <Compile Include="iOS\Specific\*.cs" />
+        <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
+        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
         <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
     </ItemGroup>
     

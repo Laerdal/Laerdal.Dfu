@@ -42,7 +42,7 @@ nuget_project_folder="Laerdal.Xamarin.Dfu"
 nuget_project_name="Laerdal.Xamarin.Dfu"
 nuget_output_folder="$nuget_project_name.Output"
 nuget_csproj_path="$nuget_project_folder/$nuget_project_name.csproj"
-nuget_jars_folder="$nuget_project_folder/Android/Jars"
+nuget_jars_folder="$nuget_project_folder/Droid/Jars"
 nuget_frameworks_folder="$nuget_project_folder/iOS/Frameworks"
 
 # Generates variables
@@ -74,9 +74,19 @@ if [ "$use_carthage" = "1" ]; then
         echo "Failed : iOSDFULibrary_fat_framework does not exist"
         exit 1
     fi
+    iOSDFULibrary_fat_framework_dsym=`find ./Laerdal.Xamarin.Dfu.Source/iOS_Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-fat -iname "iOSDFULibrary.framework.dSYM" | head -n 1`
+    if [ ! -d "$iOSDFULibrary_fat_framework_dsym" ]; then
+        echo "Failed : iOSDFULibrary_fat_framework_dsym does not exist"
+        exit 1
+    fi
     ZIPFoundation_fat_framework=`find ./Laerdal.Xamarin.Dfu.Source/iOS_Carthage/Carthage/Build/ZIPFoundation.xcframework/ios-fat -iname "ZIPFoundation.framework" | head -n 1`
     if [ ! -d "$ZIPFoundation_fat_framework" ]; then
         echo "Failed : ZIPFoundation_fat_framework does not exist"
+        exit 1
+    fi
+    ZIPFoundation_fat_framework_dsym=`find ./Laerdal.Xamarin.Dfu.Source/iOS_Carthage/Carthage/Build/ZIPFoundation.xcframework/ios-fat -iname "ZIPFoundation.framework.dSYM" | head -n 1`
+    if [ ! -d "$ZIPFoundation_fat_framework_dsym" ]; then
+        echo "Failed : ZIPFoundation_fat_framework_dsym does not exist"
         exit 1
     fi
 else
@@ -85,9 +95,19 @@ else
         echo "Failed : iOSDFULibrary_fat_framework does not exist"
         exit 1
     fi
+    iOSDFULibrary_fat_framework_dsym=`find ./Laerdal.Xamarin.Dfu.Source/iOS/Frameworks -iname "iOSDFULibrary.framework.dSYM" | head -n 1`
+    if [ ! -d "$iOSDFULibrary_fat_framework_dsym" ]; then
+        echo "Failed : iOSDFULibrary_fat_framework_dsym does not exist"
+        exit 1
+    fi
     ZIPFoundation_fat_framework=`find ./Laerdal.Xamarin.Dfu.Source/iOS/Frameworks -iname "ZIPFoundation.framework" | head -n 1`
     if [ ! -d "$ZIPFoundation_fat_framework" ]; then
         echo "Failed : ZIPFoundation_fat_framework does not exist"
+        exit 1
+    fi
+    ZIPFoundation_fat_framework_dsym=`find ./Laerdal.Xamarin.Dfu.Source/iOS/Frameworks -iname "ZIPFoundation.framework.dSYM" | head -n 1`
+    if [ ! -d "$ZIPFoundation_fat_framework_dsym" ]; then
+        echo "Failed : ZIPFoundation_fat_framework_dsym does not exist"
         exit 1
     fi
 fi
@@ -102,6 +122,8 @@ echo "Created :"
 echo "  - $dfu_release_aar"
 echo "  - $iOSDFULibrary_fat_framework"
 echo "  - $ZIPFoundation_fat_framework"
+echo "  - $iOSDFULibrary_fat_framework_dsym"
+echo "  - $ZIPFoundation_fat_framework_dsym"
 
 echo ""
 echo "### COPY NATIVE FILES ###"
@@ -121,6 +143,16 @@ echo "Copying $ZIPFoundation_fat_framework to $nuget_frameworks_folder/ZIPFounda
 rm -rf $nuget_frameworks_folder/ZIPFoundation.framework
 mkdir -p $nuget_frameworks_folder/ZIPFoundation.framework
 cp -a $ZIPFoundation_fat_framework/. $nuget_frameworks_folder/ZIPFoundation.framework
+
+echo "Copying $iOSDFULibrary_fat_framework_dsym to $nuget_frameworks_folder/iOSDFULibrary.framework.dSYM"
+rm -rf $nuget_frameworks_folder/iOSDFULibrary.framework.dSYM
+mkdir -p $nuget_frameworks_folder/iOSDFULibrary.framework.dSYM
+cp -a $iOSDFULibrary_fat_framework_dsym/. $nuget_frameworks_folder/iOSDFULibrary.framework.dSYM
+
+echo "Copying $ZIPFoundation_fat_framework_dsym to $nuget_frameworks_folder/ZIPFoundation.framework.dSYM"
+rm -rf $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
+mkdir -p $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
+cp -a $ZIPFoundation_fat_framework_dsym/. $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
 
 echo ""
 echo "### MSBUILD ###"
