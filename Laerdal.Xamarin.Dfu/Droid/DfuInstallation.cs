@@ -11,7 +11,7 @@ namespace Laerdal.Xamarin.Dfu
     {
         public Laerdal.Xamarin.Dfu.Droid.DfuServiceInitiator Initiator { get; }
 
-        public Laerdal.Xamarin.Dfu.Droid.DfuServiceController Controller { get; }
+        public Laerdal.Xamarin.Dfu.Droid.DfuServiceController Controller { get; private set; }
 
         private DfuProgressListener DfuProgressListener { get; }
 
@@ -29,8 +29,29 @@ namespace Laerdal.Xamarin.Dfu
             }
 
             Initiator = new Laerdal.Xamarin.Dfu.Droid.DfuServiceInitiator(deviceId).SetZip(fileUrl).SetPacketsReceiptNotificationsEnabled(true).SetPacketsReceiptNotificationsValue(Laerdal.Xamarin.Dfu.Droid.DfuServiceInitiator.DefaultPrnValue).SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true).SetDisableNotification(true);
+        }
 
+        public override void Start()
+        {
+            if (Controller != null)
+            {
+                throw new System.Exception("Controller is already set.");
+            }
+            
             Controller = Initiator.Start(Application.Context, Class.FromType(typeof(DfuService)));
+        }
+
+        public override void Pause()
+        {
+            Controller?.Pause();
+        }
+        public override void Resume()
+        {
+            Controller?.Resume();
+        }
+        public override void Abort()
+        {
+            Controller?.Abort();
         }
 
         public override void Dispose()

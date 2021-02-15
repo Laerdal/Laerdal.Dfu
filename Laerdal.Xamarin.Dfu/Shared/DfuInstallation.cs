@@ -29,6 +29,11 @@ namespace Laerdal.Xamarin.Dfu
             StartTime = DateTime.UtcNow;
         }
 
+        public abstract void Start();
+        public abstract void Pause();
+        public abstract void Resume();
+        public abstract void Abort();
+
         public TimeSpan Duration => DateTime.UtcNow - StartTime;
 
         public TimeSpan? EstimatedTimeLeft => GetEstimatedTimeLeft();

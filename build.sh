@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage(){
-    echo "usage: ./build.sh [-r|--revision build_revision] [-c|--clean-output] [-v|--verbose] [-o|--output path]"
+    echo "usage: ./build.sh [-c|--clean-output] [-v|--verbose] [-o|--output path]"
     echo "parameters:"
     echo "  -c | --clean-output                     Cleans the output before building"
     echo "  -v | --verbose                          Enable verbose build details from msbuild and gradle tasks"

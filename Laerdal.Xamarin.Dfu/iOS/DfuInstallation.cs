@@ -8,7 +8,7 @@ namespace Laerdal.Xamarin.Dfu
     {
         public Laerdal.Xamarin.Dfu.iOS.DFUServiceInitiator Initiator { get; }
 
-        public Laerdal.Xamarin.Dfu.iOS.DFUServiceController Controller { get; }
+        public Laerdal.Xamarin.Dfu.iOS.DFUServiceController Controller { get; private set; }
 
         public Laerdal.Xamarin.Dfu.iOS.DFUFirmware Firmware { get; }
 
@@ -38,8 +38,33 @@ namespace Laerdal.Xamarin.Dfu
                 EnableUnsafeExperimentalButtonlessServiceInSecureDfu = true,
             };
             
+        }
+
+        public override void Start()
+        {
+            if (Controller != null)
+            {
+                throw new System.Exception("Controller is already set.");
+            }
+
             Controller = Initiator.WithFirmware(Firmware).StartWithTargetWithIdentifier(new NSUuid(DeviceId));
         }
+
+        public override void Pause()
+        {
+            Controller?.Pause();
+        }
+
+        public override void Resume()
+        {
+            Controller?.Resume();
+        }
+
+        public override void Abort()
+        {
+            Controller?.Abort();
+        }
+
 
         public override void Dispose()
         {
