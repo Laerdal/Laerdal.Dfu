@@ -53,3 +53,30 @@ Otherwise, to download cocoapods xcframeworks :
 ```
 
 You'll find the nuget in `Laerdal.Xamarin.Dfu.Output/`
+
+### Known issues
+
+- [**Invalid Swift support when submitted to the Apple AppStore**](https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/3) |
+
+Fix : https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/3#issuecomment-783298581 | 
+
+```shell
+#!/usr/bin/env sh
+xcode_lib_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/iphoneos"
+app_path=$1
+app_name=<insert app name>
+libs=("$app_path/Products/Applications/$app_name/Frameworks/"*.dylib)
+
+for i in "${libs[@]}"
+do
+  cp "$xcode_lib_path/$(basename "$i")" "$app_path/SwiftSupport/iphoneos/"
+  cp "$xcode_lib_path/$(basename "$i")" "$app_path/Products/Applications/$app_name/Frameworks/"
+done
+```
+
+> -- Thanks [@OliverFlecke](https://github.com/OliverFlecke)
+
+- [**ObjCRuntime.RuntimeException: Can't register the class XXX when the dynamic registrar has been linked away"**](https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/1)
+
+Fix : You might need to add "--optimize=-remove-dynamic-registrar" to your apps mtouch args.
+
