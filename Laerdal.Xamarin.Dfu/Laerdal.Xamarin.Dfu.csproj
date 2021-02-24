@@ -133,4 +133,5 @@
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
     </ItemGroup>
+    <Import Project="Documentation.targets" />
 </Project>

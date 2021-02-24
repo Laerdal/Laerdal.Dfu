@@ -12,59 +12,77 @@ namespace Laerdal.Xamarin.Dfu
         public string DeviceId { get; }
 
         public string FileUrl { get; }
-
-        public DateTime StartTime { get; }
-
+        
         private TaskCompletionSource ProgressTaskCompletionSource { get; }
+        private System.Timers.Timer RefreshBindingValues { get; } = new System.Timers.Timer(1000);
 
         protected SharedDfuInstallation(string deviceId, string fileUrl)
         {
-            RefreshBindingValues.Elapsed += RefreshBindingValuesOnElapsed;
             RefreshBindingValues.Start();
-
+            RefreshBindingValues.Elapsed += RefreshBindingValuesOnElapsed;
             ProgressTaskCompletionSource = new TaskCompletionSource();
 
             DeviceId = deviceId;
             FileUrl = fileUrl;
-            StartTime = DateTime.UtcNow;
         }
 
         public abstract void Start();
         public abstract void Pause();
         public abstract void Resume();
         public abstract void Abort();
-
-        public TimeSpan Duration => DateTime.UtcNow - StartTime;
-
-        public TimeSpan? EstimatedTimeLeft => GetEstimatedTimeLeft();
-
+        
         public Task Task => ProgressTaskCompletionSource.Task;
-
-        private TimeSpan? GetEstimatedTimeLeft()
-        {
-            if (Progress >= 1 || Error != DfuError.NoError)
-                return TimeSpan.Zero;
-            if (Progress <= 0)
-                return null;
-
-            var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
-            var ticksTotal = ticksPerProgressPercent * 100;
-            var ticksLeft = ticksTotal - ticksPerProgressPercent;
-            return TimeSpan.FromTicks(ticksLeft);
-        }
-
-        public virtual void Dispose()
-        {
-            RefreshBindingValues?.Stop();
-            RefreshBindingValues?.Dispose();
-        }
-
-        private System.Timers.Timer RefreshBindingValues { get; } = new System.Timers.Timer(1000);
 
         private void RefreshBindingValuesOnElapsed(object sender, ElapsedEventArgs e)
         {
-            RaisePropertyChanged(nameof(Duration));
-            RaisePropertyChanged(nameof(EstimatedTimeLeft));
+            if (StartTime != null)
+            {
+                Duration = DateTime.UtcNow - StartTime.Value;
+
+                if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
+                {
+                    EstimatedTimeLeft = TimeSpan.Zero;
+                    RefreshBindingValues?.Stop();
+                    RefreshBindingValues?.Dispose();
+                }
+                else if (Progress <= 0) // Not started
+                {
+                    EstimatedTimeLeft = null;
+                }
+                else // Running
+                {
+                    StartTime ??= DateTime.UtcNow;
+                    Duration = DateTime.UtcNow - StartTime.Value;
+                    var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
+                    var ticksTotal = ticksPerProgressPercent * 100;
+                    var ticksLeft = ticksTotal - ticksPerProgressPercent;
+                    EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
+                }
+            }
+        }
+        
+        public DateTime? StartTime
+        {
+            get => GetValue<DateTime?>(null);
+            set => SetValue(value);
+        }
+        
+        public DateTime? EndTime
+        {
+            get => GetValue<DateTime?>(null);
+            set => SetValue(value);
+        }
+        
+        public TimeSpan? EstimatedTimeLeft
+        {
+            get => GetValue(new TimeSpan(0));
+            set => SetValue(value);
+        }
+        
+        public TimeSpan Duration
+        {
+            get => GetValue(new TimeSpan(0));
+            set => SetValue(value);
         }
 
         public double Progress
@@ -92,6 +110,14 @@ namespace Laerdal.Xamarin.Dfu
             {
                 SetValue(value);
                 if (value == DfuState.Completed)
+                {
+                    ProgressTaskCompletionSource.TrySetCompleted();
+                }
+                else if (value == DfuState.Aborted)
+                {
+                    ProgressTaskCompletionSource.TrySetCompleted();
+                }
+                else if (value == DfuState.Error)
                 {
                     ProgressTaskCompletionSource.TrySetCompleted();
                 }
@@ -125,6 +151,11 @@ namespace Laerdal.Xamarin.Dfu
         public override string ToString()
         {
             return $"DFU Installation on '{DeviceId}'";
+        }
+
+        public virtual void Dispose()
+        {
+            RefreshBindingValues?.Dispose();
         }
     }
 
