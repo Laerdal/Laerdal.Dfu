@@ -1,6 +1,6 @@
 ﻿
 <metadata>
-    <attr path="/api/package[@name='no.nordicsemi.android.dfu']" name="managedName">Laerdal.Xamarin.Dfu.Android</attr>
+    <attr path="/api/package[@name='no.nordicsemi.android.dfu']" name="managedName">Laerdal.Xamarin.Dfu.Droid</attr>
   
     <!-- warning BG8102: Class NO.Nordicsemi.Android.Dfu.DfuBaseService has unknown base type android.app.IntentService. -->
     <attr path="/api/package[@name='no.nordicsemi.android.dfu']/class[@name='DfuBaseService']" name="extends">mono.android.app.IntentService</attr>

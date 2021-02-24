@@ -1,6 +1,4 @@
-assembly-versioning-scheme: MajorMinorPatch
-mode: ContinuousDeployment
-continuous-delivery-fallback-tag: ''
+mode: MainLine
 branches:
   feature:
     tag: alpha
@@ -12,9 +10,6 @@ branches:
   master:
     tag: ''
     regex: (^master$|^origin\/master$|^main$|^origin\/main$)
-    increment: Patch
+    increment: Minor
   pull-request:
     tag: pr
-ignore:
-  sha: []
-merge-message-formats: {}
