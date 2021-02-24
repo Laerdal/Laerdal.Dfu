@@ -128,12 +128,14 @@ lipo -info $frameworks_folder/iOSDFULibrary.framework/iOSDFULibrary
 #lipo -create -output $frameworks_folder/ZIPFoundation.framework/ZIPFoundation $ZIPFoundation_iphoneos_framework/ZIPFoundation $ZIPFoundation_iphonesimulator_framework/ZIPFoundation
 lipo -info $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
 
-echo
-echo "### SHARPIE ###"
-echo
+if [ "$sharpie" = "1" ]; then
+    echo
+    echo "### SHARPIE ###"
+    echo
 
-sharpie_folder="iOS/Sharpie"
-sharpie_version=`sharpie -v`
-sharpie_output_file=$sharpie_folder/ApiDefinitions.cs
+    sharpie_folder="iOS/Sharpie"
+    sharpie_version=`sharpie -v`
+    sharpie_output_file=$sharpie_folder/ApiDefinitions.cs
 
-sharpie bind -sdk iphoneos -o $sharpie_folder -f $frameworks_folder/iOSDFULibrary.framework
+    sharpie bind -sdk iphoneos -o $sharpie_folder -f $frameworks_folder/iOSDFULibrary.framework
+fi

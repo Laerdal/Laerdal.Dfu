@@ -34,15 +34,17 @@ rm -rf $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary
 lipo -create -output $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary $iphoneos_framework/iOSDFULibrary $iphonesimulator_framework/iOSDFULibrary
 lipo -info $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary
 
-echo
-echo "### SHARPIE ###"
-echo
+if [ "$sharpie" = "1" ]; then
+    echo
+    echo "### SHARPIE ###"
+    echo
 
-sharpie_folder="iOS_Carthage/Sharpie"
-sharpie_version=`sharpie -v`
-sharpie_output_file=$sharpie_folder/ApiDefinitions.cs
+    sharpie_folder="iOS_Carthage/Sharpie"
+    sharpie_version=`sharpie -v`
+    sharpie_output_file=$sharpie_folder/ApiDefinitions.cs
 
-sharpie bind -sdk iphoneos -o $sharpie_folder -f $fat_lib_path/iOSDFULibrary.framework
+    sharpie bind -sdk iphoneos -o $sharpie_folder -f $fat_lib_path/iOSDFULibrary.framework
+fi
 
 echo
 echo "### CREATE FAT LIBRARIES ZIPFoundation ###"
