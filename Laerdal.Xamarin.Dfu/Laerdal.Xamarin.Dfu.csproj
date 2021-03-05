@@ -5,7 +5,7 @@
     <!-- SHARED -->
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;monoandroid10.0;xamarin.ios10</TargetFrameworks>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>8.0</LangVersion>
         <DebugSymbols>true</DebugSymbols>
         <OutputPath>bin\</OutputPath>
         <OutputType>Library</OutputType>

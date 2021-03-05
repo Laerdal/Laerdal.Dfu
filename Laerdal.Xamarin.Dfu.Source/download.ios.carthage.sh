@@ -4,9 +4,11 @@ echo
 echo "### DOWNLOAD IOS SOURCE (via Carthage) ###"
 echo
 
-mkdir -p iOS_Carthage
-echo "github \"NordicSemiconductor/IOS-Pods-DFU-Library\" == 4.9.0" > iOS_Carthage/Cartfile
-pushd iOS_Carthage
+output_folder="iOS_Carthage"
+
+mkdir -p $output_folder
+echo "github \"NordicSemiconductor/IOS-Pods-DFU-Library\" == 4.9.0" > $output_folder/Cartfile
+pushd $output_folder
 carthage update --use-xcframeworks --platform iOS
 popd
 
@@ -14,8 +16,8 @@ echo
 echo "### CREATE FAT LIBRARIES iOSDFULibrary ###"
 echo
 
-iphoneos_framework=`find ./iOS_Carthage/Carthage/Build/iOSDFULibrary.xcframework/ -ipath "*arm64_armv7*" -iname "iOSDFULibrary.framework" | head -n 1`
-iphonesimulator_framework=`find ./iOS_Carthage/Carthage/Build/iOSDFULibrary.xcframework/ -ipath "*i386_x86_64*" -iname "iOSDFULibrary.framework" | head -n 1`
+iphoneos_framework=`find ./$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ -ipath "*arm64_armv7*" -iname "iOSDFULibrary.framework" | head -n 1`
+iphonesimulator_framework=`find ./$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ -ipath "*i386_x86_64*" -iname "iOSDFULibrary.framework" | head -n 1`
 
 if [ ! -d "$iphoneos_framework" ]; then
     echo "Failed : $iphoneos_framework does not exist"
@@ -26,7 +28,7 @@ if [ ! -d "$iphonesimulator_framework" ]; then
     exit 1
 fi
 
-fat_lib_path="./iOS_Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-fat"
+fat_lib_path="$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ios-fat"
 rm -rf $fat_lib_path
 cp -a $(dirname $iphoneos_framework)/. $fat_lib_path
 
@@ -39,7 +41,7 @@ if [ "$sharpie" = "1" ]; then
     echo "### SHARPIE ###"
     echo
 
-    sharpie_folder="iOS_Carthage/Sharpie"
+    sharpie_folder="$output_folder/Sharpie"
     sharpie_version=`sharpie -v`
     sharpie_output_file=$sharpie_folder/ApiDefinitions.cs
 
@@ -50,8 +52,8 @@ echo
 echo "### CREATE FAT LIBRARIES ZIPFoundation ###"
 echo
 
-iphoneos_framework=`find ./iOS_Carthage/Carthage/Build/ZIPFoundation.xcframework/ -ipath "*arm64_armv7*" -iname "ZIPFoundation.framework" | head -n 1`
-iphonesimulator_framework=`find ./iOS_Carthage/Carthage/Build/ZIPFoundation.xcframework/ -ipath "*i386_x86_64*" -iname "ZIPFoundation.framework" | head -n 1`
+iphoneos_framework=`find ./$output_folder/Carthage/Build/ZIPFoundation.xcframework/ -ipath "*arm64_armv7*" -iname "ZIPFoundation.framework" | head -n 1`
+iphonesimulator_framework=`find ./$output_folder/Carthage/Build/ZIPFoundation.xcframework/ -ipath "*i386_x86_64*" -iname "ZIPFoundation.framework" | head -n 1`
 
 if [ ! -d "$iphoneos_framework" ]; then
     echo "Failed : $iphoneos_framework does not exist"
@@ -62,7 +64,7 @@ if [ ! -d "$iphonesimulator_framework" ]; then
     exit 1
 fi
 
-fat_lib_path="./iOS_Carthage/Carthage/Build/ZIPFoundation.xcframework/ios-fat"
+fat_lib_path="$output_folder/Carthage/Build/ZIPFoundation.xcframework/ios-fat"
 rm -rf $fat_lib_path
 cp -a $(dirname $iphoneos_framework)/. $fat_lib_path
 
@@ -71,3 +73,30 @@ lipo -remove arm64 -output $iphonesimulator_framework/ZIPFoundation $iphonesimul
 lipo -create -output $fat_lib_path/ZIPFoundation.framework/ZIPFoundation $iphoneos_framework/ZIPFoundation $iphonesimulator_framework/ZIPFoundation
 lipo -info $fat_lib_path/ZIPFoundation.framework/ZIPFoundation
 
+
+iOSDFULibrary_fat_framework=`find ./$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ios-fat -iname "iOSDFULibrary.framework" | head -n 1`
+if [ ! -d "$iOSDFULibrary_fat_framework" ]; then
+    echo "Failed : iOSDFULibrary_fat_framework does not exist"
+    exit 1
+fi
+iOSDFULibrary_fat_framework_dsym=`find ./$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ios-fat -iname "iOSDFULibrary.framework.dSYM" | head -n 1`
+if [ ! -d "$iOSDFULibrary_fat_framework_dsym" ]; then
+    echo "Failed : iOSDFULibrary_fat_framework_dsym does not exist"
+    exit 1
+fi
+ZIPFoundation_fat_framework=`find ./$output_folder/Carthage/Build/ZIPFoundation.xcframework/ios-fat -iname "ZIPFoundation.framework" | head -n 1`
+if [ ! -d "$ZIPFoundation_fat_framework" ]; then
+    echo "Failed : ZIPFoundation_fat_framework does not exist"
+    exit 1
+fi
+ZIPFoundation_fat_framework_dsym=`find ./$output_folder/Carthage/Build/ZIPFoundation.xcframework/ios-fat -iname "ZIPFoundation.framework.dSYM" | head -n 1`
+if [ ! -d "$ZIPFoundation_fat_framework_dsym" ]; then
+    echo "Failed : ZIPFoundation_fat_framework_dsym does not exist"
+    exit 1
+fi
+
+echo "Created :"
+echo "  - $iOSDFULibrary_fat_framework"
+echo "  - $ZIPFoundation_fat_framework"
+echo "  - $iOSDFULibrary_fat_framework_dsym"
+echo "  - $ZIPFoundation_fat_framework_dsym"

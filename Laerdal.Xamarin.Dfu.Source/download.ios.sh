@@ -139,3 +139,31 @@ if [ "$sharpie" = "1" ]; then
 
     sharpie bind -sdk iphoneos -o $sharpie_folder -f $frameworks_folder/iOSDFULibrary.framework
 fi
+
+
+iOSDFULibrary_fat_framework=`find ./$frameworks_folder -iname "iOSDFULibrary.framework" | head -n 1`
+if [ ! -d "$iOSDFULibrary_fat_framework" ]; then
+    echo "Failed : iOSDFULibrary_fat_framework does not exist"
+    exit 1
+fi
+iOSDFULibrary_fat_framework_dsym=`find ./$frameworks_folder -iname "iOSDFULibrary.framework.dSYM" | head -n 1`
+if [ ! -d "$iOSDFULibrary_fat_framework_dsym" ]; then
+    echo "Failed : iOSDFULibrary_fat_framework_dsym does not exist"
+    exit 1
+fi
+ZIPFoundation_fat_framework=`find ./$frameworks_folder -iname "ZIPFoundation.framework" | head -n 1`
+if [ ! -d "$ZIPFoundation_fat_framework" ]; then
+    echo "Failed : ZIPFoundation_fat_framework does not exist"
+    exit 1
+fi
+ZIPFoundation_fat_framework_dsym=`find ./$frameworks_folder -iname "ZIPFoundation.framework.dSYM" | head -n 1`
+if [ ! -d "$ZIPFoundation_fat_framework_dsym" ]; then
+    echo "Failed : ZIPFoundation_fat_framework_dsym does not exist"
+    exit 1
+fi
+
+echo "Created :"
+echo "  - $iOSDFULibrary_fat_framework"
+echo "  - $ZIPFoundation_fat_framework"
+echo "  - $iOSDFULibrary_fat_framework_dsym"
+echo "  - $ZIPFoundation_fat_framework_dsym"
