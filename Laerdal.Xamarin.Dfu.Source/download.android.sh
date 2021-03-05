@@ -98,3 +98,12 @@ echo "Copying $gradle_output_file to $output_folder/dfu-release.aar"
 rm -rf $output_folder/dfu-release.aar
 mkdir -p $output_folder
 cp $gradle_output_file $output_folder/dfu-release.aar
+
+dfu_release_aar=`find $output_folder -iname "dfu-release.aar" | head -n 1`
+if [ ! -f "$dfu_release_aar" ]; then
+    echo "Failed : $output_folder/dfu-release.aar does not exist"
+    exit 1
+fi
+
+echo "Created :"
+echo "  - $dfu_release_aar"
