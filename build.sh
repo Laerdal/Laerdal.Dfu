@@ -48,6 +48,7 @@ nuget_source_folder="$nuget_project_name.Source"
 nuget_csproj_path="$nuget_project_folder/$nuget_project_name.csproj"
 nuget_jars_folder="$nuget_project_folder/Droid/Jars"
 nuget_frameworks_folder="$nuget_project_folder/iOS/Frameworks"
+nuget_sharpie_folder="$nuget_project_folder/iOS/ObjcBinding/Sharpie_Generated"
 
 # Generates variables
 echo "nuget_project_folder = $nuget_project_folder"
@@ -56,6 +57,7 @@ echo "nuget_frameworks_folder = $nuget_frameworks_folder"
 echo "nuget_output_folder = $nuget_output_folder"
 echo "nuget_project_name = $nuget_project_name"
 echo "nuget_csproj_path = $nuget_csproj_path"
+echo "nuget_sharpie_folder = $nuget_sharpie_folder"
 
 if [ "$clean_output" = "1" ]; then
     echo
@@ -77,7 +79,6 @@ popd
 echo ""
 echo "### COPY NATIVE FILES ###"
 echo ""
-
 
 echo "Copying $nuget_source_folder/$dfu_release_aar to $nuget_jars_folder/dfu-release.aar"
 if [ ! -f "$nuget_source_folder/$dfu_release_aar" ]; then
@@ -123,6 +124,17 @@ fi
 rm -rf $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
 mkdir -p $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
 cp -a $nuget_source_folder/$ZIPFoundation_fat_framework_dsym/. $nuget_frameworks_folder/ZIPFoundation.framework.dSYM
+
+if [ "$sharpie" = "1" ]; then
+    echo
+    echo "### SHARPIE ###"
+    echo
+
+    sharpie_version=$(sharpie -v)
+    echo "sharpie_version = $sharpie_version"
+
+    sharpie bind -sdk iphoneos -o $nuget_sharpie_folder -f $nuget_frameworks_folder/iOSDFULibrary.framework
+fi
 
 echo ""
 echo "### MSBUILD ###"
