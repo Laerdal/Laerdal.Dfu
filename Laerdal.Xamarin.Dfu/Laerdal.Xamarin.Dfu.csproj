@@ -113,18 +113,23 @@
     </ItemGroup>
     
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+        
         <!-- Frameworks\iOSDFULibrary.framework -->
+        <None Include="iOS\Frameworks\iOSDFULibrary.framework\iOSDFULibrary" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
+            <Link>Frameworks\iOSDFULibrary.framework</Link>
+        </None>
         <NativeReference Include="iOS\Frameworks\iOSDFULibrary.framework" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
             <Kind>Framework</Kind>
             <Frameworks>Foundation</Frameworks>
-            <Link>Frameworks\iOSDFULibrary.framework</Link>
         </NativeReference>
 
         <!-- Frameworks\ZIPFoundation.framework -->
+        <None Include="iOS\Frameworks\ZIPFoundation.framework\ZIPFoundation" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
+            <Link>Frameworks\ZIPFoundation.framework</Link>
+        </None>
         <NativeReference Include="iOS\Frameworks\ZIPFoundation.framework" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
             <Kind>Framework</Kind>
             <Frameworks>Foundation</Frameworks>
-            <Link>Frameworks\ZIPFoundation.framework</Link>
         </NativeReference>
     </ItemGroup>
     <Import Project="Documentation.targets" />
