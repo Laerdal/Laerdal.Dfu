@@ -113,22 +113,21 @@
     </ItemGroup>
     
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+        
         <!-- Frameworks\iOSDFULibrary.framework -->
-        <None Include="Frameworks\iOSDFULibrary.framework\iOSDFULibrary" Condition="Exists('Frameworks\iOSDFULibrary.framework')">
+        <None Include="iOS\Frameworks\iOSDFULibrary.framework\iOSDFULibrary" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
             <Link>Frameworks\iOSDFULibrary.framework</Link>
         </None>
-
-        <NativeReference Include="Frameworks\iOSDFULibrary.framework" Condition="Exists('Frameworks\iOSDFULibrary.framework')">
+        <NativeReference Include="iOS\Frameworks\iOSDFULibrary.framework" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
             <Kind>Framework</Kind>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
 
         <!-- Frameworks\ZIPFoundation.framework -->
-        <None Include="Frameworks\ZIPFoundation.framework\ZIPFoundation" Condition="Exists('Frameworks\ZIPFoundation.framework')">
+        <None Include="iOS\Frameworks\ZIPFoundation.framework\ZIPFoundation" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
             <Link>Frameworks\ZIPFoundation.framework</Link>
         </None>
-
-        <NativeReference Include="Frameworks\ZIPFoundation.framework" Condition="Exists('Frameworks\ZIPFoundation.framework')">
+        <NativeReference Include="iOS\Frameworks\ZIPFoundation.framework" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
             <Kind>Framework</Kind>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
