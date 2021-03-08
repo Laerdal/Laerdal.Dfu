@@ -1,0 +1,17 @@
+﻿<enum-field-mappings>
+  <mapping jni-class="no/nordicsemi/android/dfu/DfuBaseService" clr-enum-type="NO.Nordicsemi.Android.Dfu.FileType">
+    <!-- DfuBaseService.TYPE_SOFT_DEVICE -->
+    <bitfield jni-name="TYPE_SOFT_DEVICE" clr-name="SoftDevice" value="1" />
+    <!-- DfuBaseService.TYPE_BOOTLOADER -->
+    <bitfield jni-name="TYPE_BOOTLOADER" clr-name="Bootloader" value="2" />
+    <!-- DfuBaseService.TYPE_APPLICATION -->
+    <bitfield jni-name="TYPE_APPLICATION" clr-name="Application" value="4" />
+  </mapping>
+  
+  <mapping jni-class="no/nordicsemi/android/dfu/DfuServiceInitiator" clr-enum-type="NO.Nordicsemi.Android.Dfu.DfuScope">
+    <!-- DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS -->
+    <bitfield jni-name="SCOPE_SYSTEM_COMPONENTS" clr-name="SystemComponents" value="1" />
+    <!-- DfuServiceInitiator.SCOPE_APPLICATION -->
+    <bitfield jni-name="SCOPE_APPLICATION" clr-name="Application" value="2" />
+  </mapping>
+</enum-field-mappings>

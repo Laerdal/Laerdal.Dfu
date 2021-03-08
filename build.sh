@@ -41,8 +41,8 @@ echo "### INFORMATION ###"
 echo
 
 # Static configuration
-nuget_project_folder="Laerdal.Xamarin.Dfu"
-nuget_project_name="Laerdal.Xamarin.Dfu"
+nuget_project_folder="Laerdal.Dfu"
+nuget_project_name="Laerdal.Dfu"
 nuget_output_folder="$nuget_project_name.Output"
 nuget_source_folder="$nuget_project_name.Source"
 nuget_csproj_path="$nuget_project_folder/$nuget_project_name.csproj"
