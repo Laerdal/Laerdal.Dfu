@@ -1,4 +1,4 @@
-# Laerdal.Xamarin.Dfu
+# Laerdal.Dfu
 
 This is an Xamarin binding library for the Nordic Semiconductors Android library for updating the firmware of their devices over the air via Bluetooth Low Energy.
 
@@ -6,10 +6,9 @@ The Java library is located here: https://github.com/NordicSemiconductor/Android
 
 The native iOS Pod library is located here: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
 
+[![Build status](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_apis/build/status/MAN-Laerdal.Dfu)](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_build/latest?definitionId=121)
 
-[![Build status](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_apis/build/status/MAN-Laerdal.Xamarin.Dfu.Android)](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_build/latest?definitionId=110)
-
-[![NuGet Badge](https://buildstats.info/nuget/Laerdal.Xamarin.Dfu?includePreReleases=true)](https://www.nuget.org/packages/Laerdal.Xamarin.Dfu/)
+[![NuGet Badge](https://buildstats.info/nuget/Laerdal.Dfu?includePreReleases=true)](https://www.nuget.org/packages/Laerdal.Dfu/)
 
 ## Requirements
 
@@ -33,7 +32,7 @@ brew cask install objectivesharpie
 ### 1) Checkout
 
 ```bash
-git clone https://github.com/Laerdal/Laerdal.Xamarin.Dfu.git
+git clone https://github.com/Laerdal/Laerdal.Dfu.git
 ```
 
 ### 2) Run build script
@@ -52,13 +51,13 @@ Otherwise, to download cocoapods xcframeworks :
 ./build.sh --use-carthage
 ```
 
-You'll find the nuget in `Laerdal.Xamarin.Dfu.Output/`
+You'll find the nuget in `Laerdal.Dfu.Output/`
 
 ### Known issues
 
-- [**Invalid Swift support when submitted to the Apple AppStore**](https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/3) |
+- [**Invalid Swift support when submitted to the Apple AppStore**](https://github.com/Laerdal/Laerdal.Dfu.iOS/issues/3) |
 
-Fix : https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/3#issuecomment-783298581 | 
+Fix : https://github.com/Laerdal/Laerdal.Dfu.iOS/issues/3#issuecomment-783298581 | 
 
 ```shell
 #!/usr/bin/env sh
@@ -76,7 +75,7 @@ done
 
 > -- Thanks [@OliverFlecke](https://github.com/OliverFlecke)
 
-- [**ObjCRuntime.RuntimeException: Can't register the class XXX when the dynamic registrar has been linked away"**](https://github.com/Laerdal/Laerdal.Xamarin.Dfu.iOS/issues/1)
+- [**ObjCRuntime.RuntimeException: Can't register the class XXX when the dynamic registrar has been linked away"**](https://github.com/Laerdal/Laerdal.Dfu.iOS/issues/1)
 
 Fix : You might need to add "--optimize=-remove-dynamic-registrar" to your apps mtouch args.
 
