@@ -87,19 +87,19 @@ namespace Laerdal.Dfu
 
         public double Progress
         {
-            get => GetValue(0);
+            get => GetValue(0d);
             set => SetValue(value);
         }
 
         public double CurrentSpeedBytesPerSecond
         {
-            get => GetValue(0);
+            get => GetValue(0d);
             set => SetValue(value);
         }
 
         public double AvgSpeedBytesPerSecond
         {
-            get => GetValue(0);
+            get => GetValue(0d);
             set => SetValue(value);
         }
 
