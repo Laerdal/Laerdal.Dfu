@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-    <PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <!-- warning CS1591: Missing XML comment for publicly visible type or member. -->
         <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);CS1591</MSBuildWarningsAsMessages>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
