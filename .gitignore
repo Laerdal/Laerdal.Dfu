@@ -348,13 +348,13 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
-Laerdal.Xamarin.Dfu/Android/Jars/*
-Laerdal.Xamarin.Dfu/iOS/Frameworks/*
+Laerdal.Dfu/Android/Jars/*
+Laerdal.Dfu/iOS/Frameworks/*
 
-Laerdal.Xamarin.Dfu.Output
-Laerdal.Xamarin.Dfu.Source/iOS
-Laerdal.Xamarin.Dfu.Source/Android
-Laerdal.Xamarin.Dfu.Source/iOS_Carthage
+Laerdal.Dfu.Output
+Laerdal.Dfu.Source/iOS
+Laerdal.Dfu.Source/Android
+Laerdal.Dfu.Source/iOS_Carthage
 *.info.json
 
 Cartfile
