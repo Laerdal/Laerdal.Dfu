@@ -359,3 +359,5 @@ Laerdal.Dfu.Source/iOS_Carthage
 
 Cartfile
 Carthage
+
+Laerdal.Dfu/Droid/Jars/dfu-release.aar

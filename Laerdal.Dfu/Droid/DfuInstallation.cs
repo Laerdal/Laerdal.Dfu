@@ -1,7 +1,10 @@
 using Android.App;
 using Android.OS;
+
 using Java.Lang;
+
 using Laerdal.Dfu.Specific;
+
 using System.Globalization;
 using System.Linq;
 
@@ -37,7 +40,7 @@ namespace Laerdal.Dfu
             {
                 throw new System.Exception("Controller is already set.");
             }
-            
+
             Controller = Initiator.Start(Application.Context, Class.FromType(typeof(DfuService)));
         }
 
@@ -45,22 +48,26 @@ namespace Laerdal.Dfu
         {
             Controller?.Pause();
         }
+
         public override void Resume()
         {
             Controller?.Resume();
         }
+
         public override void Abort()
         {
             Controller?.Abort();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            Initiator?.Dispose();
-            Controller?.Dispose();
             DfuProgressListener?.Dispose();
-            DfuLogger?.Dispose();
+            if (disposing)
+            {
+                Initiator?.Dispose();
+                Controller?.Dispose();
+                DfuLogger?.Dispose();
+            }
         }
 
         public bool CheckDeviceAddress(string deviceAddress)

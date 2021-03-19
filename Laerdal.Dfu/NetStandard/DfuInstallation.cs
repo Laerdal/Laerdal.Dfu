@@ -11,7 +11,7 @@ namespace Laerdal.Dfu
             
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             throw new NotImplementedException();
         }
