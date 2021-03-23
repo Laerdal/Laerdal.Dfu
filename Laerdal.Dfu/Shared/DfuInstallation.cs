@@ -155,7 +155,7 @@ namespace Laerdal.Dfu
             ProgressTaskCompletionSource.TrySetException(new DfuException(error, message));
         }
 
-        public static event EventHandler<DfuErrorEventArgs> ErrorOccured;
+        public event EventHandler<DfuErrorEventArgs> ErrorOccured;
 
         #endregion
 
