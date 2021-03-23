@@ -109,10 +109,7 @@ namespace Laerdal.Dfu.Specific
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
             DfuInstallation.State = DfuState.Uploading;
-
-            DfuInstallation.Progress = percent / 100D;
-            DfuInstallation.CurrentSpeedBytesPerSecond = speed;
-            DfuInstallation.AvgSpeedBytesPerSecond = avgSpeed;
+            DfuInstallation.OnProgressChanged(percent / 100D, speed, avgSpeed);
         }
     }
 }

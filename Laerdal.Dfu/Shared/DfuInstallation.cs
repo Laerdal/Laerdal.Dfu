@@ -1,4 +1,5 @@
 using Laerdal.Dfu.Enums;
+using Laerdal.Dfu.EventArgs;
 
 using System;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Laerdal.Dfu
         }
 
         public abstract void Start();
-        
+
         public abstract void Pause();
 
         public abstract void Resume();
@@ -34,25 +35,7 @@ namespace Laerdal.Dfu
 
         public Task Task => ProgressTaskCompletionSource.Task;
 
-        private void RefreshEstimatedTimeLeft()
-        {
-            if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
-            {
-                EstimatedTimeLeft = TimeSpan.Zero;
-            }
-            else if (Progress <= 0) // Not started
-            {
-                EstimatedTimeLeft = null;
-            }
-            else // Running
-            {
-                Duration = DateTime.UtcNow - StartTime;
-                var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
-                var ticksTotal = ticksPerProgressPercent * 100;
-                var ticksLeft = ticksTotal - ticksPerProgressPercent;
-                EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
-            }
-        }
+        #region Progress
 
         public DateTime StartTime
         {
@@ -72,45 +55,55 @@ namespace Laerdal.Dfu
             set => SetValue(value);
         }
 
-        #region Updated by native imp
-
         public double Progress
         {
             get => GetValue(0d);
-            set
-            {
-                if (SetValue(value))
-                {
-                    RefreshEstimatedTimeLeft();
-                }
-            }
+            set => SetValue(value);
         }
 
         public double CurrentSpeedBytesPerSecond
         {
             get => GetValue(0d);
-            set
-            {
-                if (SetValue(value))
-                {
-                    RefreshEstimatedTimeLeft();
-                }
-            }
+            set => SetValue(value);
         }
 
         public double AvgSpeedBytesPerSecond
         {
             get => GetValue(0d);
-            set
-            {
-                if (SetValue(value))
-                {
-                    RefreshEstimatedTimeLeft();
-                }
-            }
+            set => SetValue(value);
         }
 
+        internal void OnProgressChanged(double progress, double currentSpeedBytesPerSecond, double avgSpeedBytesPerSecond)
+        {
+            Progress = progress;
+            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
+            AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
+
+            if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
+            {
+                EstimatedTimeLeft = TimeSpan.Zero;
+            }
+            else if (Progress <= 0) // Not started
+            {
+                EstimatedTimeLeft = null;
+            }
+            else // Running
+            {
+                Duration = DateTime.UtcNow - StartTime;
+                var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
+                var ticksTotal = ticksPerProgressPercent * 100;
+                var ticksLeft = ticksTotal - ticksPerProgressPercent;
+                EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
+            }
+
+            ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond));
+        }
+
+        public event EventHandler<DfuProgressChangedEventArgs> ProgressChanged;
+
         #endregion
+
+        #region State
 
         public DfuState State
         {
@@ -130,8 +123,14 @@ namespace Laerdal.Dfu
                 {
                     ProgressTaskCompletionSource.TrySetCompleted();
                 }
+
+                StateChanged?.Invoke(this, value);
             }
         }
+
+        public event EventHandler<DfuState> StateChanged;
+
+        #endregion
 
         #region Error
 
@@ -152,8 +151,11 @@ namespace Laerdal.Dfu
             Error = error;
             ErrorMessage = message;
             Events.OnDfuError(error, message);
+            ErrorOccured?.Invoke(this, new DfuErrorEventArgs(error, message));
             ProgressTaskCompletionSource.TrySetException(new DfuException(error, message));
         }
+
+        public static event EventHandler<DfuErrorEventArgs> ErrorOccured;
 
         #endregion
 
