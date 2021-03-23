@@ -17,12 +17,7 @@ namespace Laerdal.Dfu.Specific
                                    double currentSpeedBytesPerSecond,
                                    double avgSpeedBytesPerSecond)
         {
-            if (DfuInstallation != null)
-            {
-                DfuInstallation.Progress = (int) progress / 100D;
-                DfuInstallation.CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
-                DfuInstallation.AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
-            }
+            DfuInstallation?.OnProgressChanged((int) progress / 100D, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond);
         }
     }
 }

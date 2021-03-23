@@ -66,12 +66,14 @@ namespace Laerdal.Dfu
         }
 
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            Initiator?.Dispose();
-            Controller?.Dispose();
-            Firmware?.Dispose();
+            if (disposing)
+            {
+                Initiator?.Dispose();
+                Controller?.Dispose();
+                Firmware?.Dispose();
+            }
         }
     }
 }

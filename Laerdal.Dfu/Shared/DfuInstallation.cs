@@ -1,8 +1,10 @@
 using Laerdal.Dfu.Enums;
+using Laerdal.Dfu.EventArgs;
 
 using System;
 using System.Threading.Tasks;
 using System.Timers;
+
 using Laerdal.Dfu.Helpers;
 
 namespace Laerdal.Dfu
@@ -12,14 +14,11 @@ namespace Laerdal.Dfu
         public string DeviceId { get; }
 
         public string FileUrl { get; }
-        
+
         private TaskCompletionSource ProgressTaskCompletionSource { get; }
-        private System.Timers.Timer RefreshBindingValues { get; } = new System.Timers.Timer(1000);
 
         protected SharedDfuInstallation(string deviceId, string fileUrl)
         {
-            RefreshBindingValues.Start();
-            RefreshBindingValues.Elapsed += RefreshBindingValuesOnElapsed;
             ProgressTaskCompletionSource = new TaskCompletionSource();
 
             DeviceId = deviceId;
@@ -27,58 +26,29 @@ namespace Laerdal.Dfu
         }
 
         public abstract void Start();
+
         public abstract void Pause();
+
         public abstract void Resume();
+
         public abstract void Abort();
-        
+
         public Task Task => ProgressTaskCompletionSource.Task;
 
-        private void RefreshBindingValuesOnElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (StartTime != null)
-            {
-                Duration = DateTime.UtcNow - StartTime.Value;
+        #region Progress
 
-                if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
-                {
-                    EstimatedTimeLeft = TimeSpan.Zero;
-                    RefreshBindingValues?.Stop();
-                    RefreshBindingValues?.Dispose();
-                }
-                else if (Progress <= 0) // Not started
-                {
-                    EstimatedTimeLeft = null;
-                }
-                else // Running
-                {
-                    StartTime ??= DateTime.UtcNow;
-                    Duration = DateTime.UtcNow - StartTime.Value;
-                    var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
-                    var ticksTotal = ticksPerProgressPercent * 100;
-                    var ticksLeft = ticksTotal - ticksPerProgressPercent;
-                    EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
-                }
-            }
-        }
-        
-        public DateTime? StartTime
+        public DateTime StartTime
         {
-            get => GetValue<DateTime?>(null);
+            get => GetValue<DateTime>(DateTime.UtcNow);
             set => SetValue(value);
         }
-        
-        public DateTime? EndTime
-        {
-            get => GetValue<DateTime?>(null);
-            set => SetValue(value);
-        }
-        
+
         public TimeSpan? EstimatedTimeLeft
         {
             get => GetValue(new TimeSpan(0));
             set => SetValue(value);
         }
-        
+
         public TimeSpan Duration
         {
             get => GetValue(new TimeSpan(0));
@@ -103,6 +73,38 @@ namespace Laerdal.Dfu
             set => SetValue(value);
         }
 
+        internal void OnProgressChanged(double progress, double currentSpeedBytesPerSecond, double avgSpeedBytesPerSecond)
+        {
+            Progress = progress;
+            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
+            AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
+
+            if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
+            {
+                EstimatedTimeLeft = TimeSpan.Zero;
+            }
+            else if (Progress <= 0) // Not started
+            {
+                EstimatedTimeLeft = null;
+            }
+            else // Running
+            {
+                Duration = DateTime.UtcNow - StartTime;
+                var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
+                var ticksTotal = ticksPerProgressPercent * 100;
+                var ticksLeft = ticksTotal - ticksPerProgressPercent;
+                EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
+            }
+
+            ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond));
+        }
+
+        public event EventHandler<DfuProgressChangedEventArgs> ProgressChanged;
+
+        #endregion
+
+        #region State
+
         public DfuState State
         {
             get => GetValue(DfuState.Connecting);
@@ -121,8 +123,14 @@ namespace Laerdal.Dfu
                 {
                     ProgressTaskCompletionSource.TrySetCompleted();
                 }
+
+                StateChanged?.Invoke(this, value);
             }
         }
+
+        public event EventHandler<DfuState> StateChanged;
+
+        #endregion
 
         #region Error
 
@@ -143,8 +151,11 @@ namespace Laerdal.Dfu
             Error = error;
             ErrorMessage = message;
             Events.OnDfuError(error, message);
+            ErrorOccured?.Invoke(this, new DfuErrorEventArgs(error, message));
             ProgressTaskCompletionSource.TrySetException(new DfuException(error, message));
         }
+
+        public static event EventHandler<DfuErrorEventArgs> ErrorOccured;
 
         #endregion
 
@@ -153,9 +164,15 @@ namespace Laerdal.Dfu
             return $"DFU Installation on '{DeviceId}'";
         }
 
-        public virtual void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            RefreshBindingValues?.Dispose();
+            if (disposing) { }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

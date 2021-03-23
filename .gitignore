@@ -348,7 +348,7 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
-Laerdal.Dfu/Android/Jars/*
+Laerdal.Dfu/Android/Jars/dfu-release.aar
 Laerdal.Dfu/iOS/Frameworks/*
 
 Laerdal.Dfu.Output
@@ -359,3 +359,5 @@ Laerdal.Dfu.Source/iOS_Carthage
 
 Cartfile
 Carthage
+
+Laerdal.Dfu/Droid/Jars/dfu-release.aar
