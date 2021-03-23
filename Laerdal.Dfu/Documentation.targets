@@ -7,7 +7,7 @@
         <DocumentationFile>../$(RootNamespace).doc.xml</DocumentationFile>
         <DocumentationMarkdown>../$(RootNamespace).doc.md</DocumentationMarkdown>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
         <PackageReference Include="Vsxmd" Version="1.4.4" PrivateAssets="all" />
     </ItemGroup>
 </Project>
