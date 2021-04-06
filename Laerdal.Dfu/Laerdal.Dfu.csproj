@@ -94,6 +94,7 @@
         <EmbeddedReferenceJar Include="Droid\Jars\*.jar" />
         <LibraryProjectZip Include="Droid\Jars\*.aar" />
         <TransformFile Include="Droid\Transforms\*.xml" />
+        <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.Droid" Version="*" PrivateAssets="all" />
     </ItemGroup>
     <Target 
     Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) " 
@@ -117,6 +118,7 @@
         <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
         <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
         <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
+        <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all"  />
     </ItemGroup>
     <Target 
     Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " 
