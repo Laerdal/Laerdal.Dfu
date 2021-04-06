@@ -161,7 +161,7 @@ namespace Laerdal.Dfu
 
         public override string ToString()
         {
-            return $"DFU Installation on '{DeviceId}'";
+            return $"DFU Installation {State} on '{DeviceId}', {Progress:P}, {Error} / {ErrorMessage}";
         }
 
         protected virtual void Dispose(bool disposing)
