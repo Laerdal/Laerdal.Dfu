@@ -3,8 +3,10 @@ using Android.OS;
 
 using Java.Lang;
 
+using Laerdal.Dfu.Droid;
 using Laerdal.Dfu.Specific;
 
+using System;
 using System.Globalization;
 using System.Linq;
 
@@ -12,7 +14,17 @@ namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
-        public Laerdal.Dfu.Droid.DfuServiceInitiator Initiator { get; }
+        public Action<DfuServiceInitiator> DfuServiceInitiatorConfiguration { get; set; } = DefaultDfuServiceInitiatorConfiguration;
+
+        private static void DefaultDfuServiceInitiatorConfiguration(DfuServiceInitiator initiator)
+        {
+            initiator.SetPacketsReceiptNotificationsEnabled(true);
+            initiator.SetPacketsReceiptNotificationsValue(DfuServiceInitiator.DefaultPrnValue);
+            initiator.SetDisableNotification(true);
+            initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
+        }
+
+        public Laerdal.Dfu.Droid.DfuServiceInitiator Initiator { get; private set; }
 
         public Laerdal.Dfu.Droid.DfuServiceController Controller { get; private set; }
 
@@ -30,17 +42,18 @@ namespace Laerdal.Dfu
             {
                 Laerdal.Dfu.Droid.DfuServiceInitiator.CreateDfuNotificationChannel(Application.Context);
             }
-
-            Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(deviceId).SetZip(fileUrl).SetPacketsReceiptNotificationsEnabled(true).SetPacketsReceiptNotificationsValue(Laerdal.Dfu.Droid.DfuServiceInitiator.DefaultPrnValue).SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true).SetDisableNotification(true);
+            
+            Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
         }
-
+        
         public override void Start()
         {
             if (Controller != null)
             {
                 throw new System.Exception("Controller is already set.");
             }
-
+            
+            DfuServiceInitiatorConfiguration?.Invoke(Initiator);
             Controller = Initiator.Start(Application.Context, Class.FromType(typeof(DfuService)));
         }
 
