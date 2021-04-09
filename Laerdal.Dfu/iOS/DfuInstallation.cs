@@ -1,17 +1,29 @@
 using CoreFoundation;
 using Foundation;
+
+using Laerdal.Dfu.iOS;
 using Laerdal.Dfu.Specific;
+
+using System;
 
 namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
-        public Laerdal.Dfu.iOS.DFUServiceInitiator Initiator { get; }
+        public Action<DFUServiceInitiator> DfuServiceInitiatorConfiguration { get; set; } = DefaultDfuServiceInitiatorConfiguration;
+
+        private static void DefaultDfuServiceInitiatorConfiguration(DFUServiceInitiator initiator)
+        {
+            initiator.AlternativeAdvertisingNameEnabled = false;
+            initiator.EnableUnsafeExperimentalButtonlessServiceInSecureDfu = true;
+        }
+
+        public Laerdal.Dfu.iOS.DFUServiceInitiator Initiator { get; } 
 
         public Laerdal.Dfu.iOS.DFUServiceController Controller { get; private set; }
 
         public Laerdal.Dfu.iOS.DFUFirmware Firmware { get; }
-
+        
         private DfuProgressDelegate DfuProgressDelegate { get; }
 
         private DfuServiceDelegate DfuServiceDelegate { get; }
@@ -31,13 +43,10 @@ namespace Laerdal.Dfu
                 DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default), 
                 DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default))
             {
+                Logger = new DfuLogger(),
                 WeakProgressDelegate = DfuProgressDelegate,
                 WeakDelegate = DfuServiceDelegate,
-                Logger = new DfuLogger(),
-                AlternativeAdvertisingNameEnabled = false,
-                EnableUnsafeExperimentalButtonlessServiceInSecureDfu = true,
             };
-            
         }
 
         public override void Start()
@@ -46,7 +55,7 @@ namespace Laerdal.Dfu
             {
                 throw new System.Exception("Controller is already set.");
             }
-
+            DfuServiceInitiatorConfiguration?.Invoke(Initiator);
             Controller = Initiator.WithFirmware(Firmware).StartWithTargetWithIdentifier(new NSUuid(DeviceId));
         }
 
