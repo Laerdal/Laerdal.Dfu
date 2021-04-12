@@ -43,15 +43,15 @@ namespace Laerdal.Dfu
             set => SetValue(value);
         }
 
-        public TimeSpan? EstimatedTimeLeft
+        public TimeSpan EstimatedTimeLeft
         {
-            get => GetValue(new TimeSpan(0));
+            get => GetValue(TimeSpan.Zero);
             set => SetValue(value);
         }
 
         public TimeSpan Duration
         {
-            get => GetValue(new TimeSpan(0));
+            get => GetValue(TimeSpan.Zero);
             set => SetValue(value);
         }
 
@@ -85,7 +85,7 @@ namespace Laerdal.Dfu
             }
             else if (Progress <= 0) // Not started
             {
-                EstimatedTimeLeft = null;
+                EstimatedTimeLeft = TimeSpan.Zero;
             }
             else // Running
             {
