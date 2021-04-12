@@ -89,10 +89,11 @@ namespace Laerdal.Dfu
             }
             else // Running
             {
-                Duration = DateTime.UtcNow - StartTime;
+                var startTime = StartTime; // Force initialization of field by calling Get
+                Duration = DateTime.UtcNow - startTime;
                 var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
                 var ticksTotal = ticksPerProgressPercent * 100;
-                var ticksLeft = ticksTotal - ticksPerProgressPercent;
+                var ticksLeft = ticksTotal - Duration.Ticks;
                 EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
             }
 
