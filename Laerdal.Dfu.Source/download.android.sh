@@ -9,6 +9,10 @@ github_repo_owner=NordicSemiconductor
 github_repo=Android-DFU-Library
 github_release_id=34426039
 github_info_file="$github_repo_owner.$github_repo.$github_release_id.info.json"
+echo "github_repo_owner = $github_repo_owner"
+echo "github_repo = $github_repo"
+echo "github_release_id = $github_release_id"
+echo "github_info_file = $github_info_file"
 
 if [ ! -f "$github_info_file" ]; then
     echo
@@ -22,12 +26,18 @@ fi
 # Set version
 github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' `
 github_short_version=`echo "$github_tag_name" | sed 's/v//'`
+echo "github_tag_name = $github_tag_name"
+echo "github_short_version = $github_short_version"
 
 # Static configuration
 zip_folder="Android/Zips"
 zip_file_name="$github_short_version.zip"
 zip_file="$zip_folder/$zip_file_name"
 zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
+echo "zip_folder = $zip_folder"
+echo "zip_file_name = $zip_file_name"
+echo "zip_file = $zip_file"
+echo "zip_url = $zip_url"
 
 if [ ! -f "$zip_file" ]; then
     echo
@@ -50,6 +60,7 @@ echo "### UNZIP SOURCE ###"
 echo
 
 source_folder="Android/Source"
+echo "source_folder = $source_folder"
 rm -rf $source_folder
 unzip -qq -n -d "$source_folder" "$zip_file"
 if [ ! -d "$source_folder" ]; then
