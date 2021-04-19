@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/34426039",
+  "assets_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/34426039/assets",
+  "upload_url": "https://uploads.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/34426039/assets{?name,label}",
+  "html_url": "https://github.com/NordicSemiconductor/Android-DFU-Library/releases/tag/v1.11.1",
+  "id": 34426039,
+  "author": {
+    "login": "roshanrajaratnam",
+    "id": 8695565,
+    "node_id": "MDQ6VXNlcjg2OTU1NjU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8695565?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/roshanrajaratnam",
+    "html_url": "https://github.com/roshanrajaratnam",
+    "followers_url": "https://api.github.com/users/roshanrajaratnam/followers",
+    "following_url": "https://api.github.com/users/roshanrajaratnam/following{/other_user}",
+    "gists_url": "https://api.github.com/users/roshanrajaratnam/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/roshanrajaratnam/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/roshanrajaratnam/subscriptions",
+    "organizations_url": "https://api.github.com/users/roshanrajaratnam/orgs",
+    "repos_url": "https://api.github.com/users/roshanrajaratnam/repos",
+    "events_url": "https://api.github.com/users/roshanrajaratnam/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/roshanrajaratnam/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "MDc6UmVsZWFzZTM0NDI2MDM5",
+  "tag_name": "v1.11.1",
+  "target_commitish": "release",
+  "name": "DFU Library 1.11.1",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2020-11-25T14:11:33Z",
+  "published_at": "2020-11-25T17:08:10Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/tarball/v1.11.1",
+  "zipball_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/zipball/v1.11.1",
+  "body": "This version introduces the following change\r\n * Fixes #248 by adding a ScanFilter when scanning in order to receive scan results while the screen is turned off. This change was introduced from Android 8.1.0 onwards as mentioned [here](https://android.googlesource.com/platform/packages/apps/Bluetooth/+/319aeae6f4ebd13678b4f77375d1804978c4a1e1)"
+}
