@@ -5,9 +5,11 @@
     </ItemGroup>
     <PropertyGroup>
         <UpdateVersionProperties>true</UpdateVersionProperties>
-        <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
     </PropertyGroup>
     <Target Name="PrintBuildInfo" AfterTargets="GetVersion">
+        <PropertyGroup>
+            <PackageVersion>$(GitVersion_NuGetVersionV2)</PackageVersion>
+        </PropertyGroup>
         <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
         <Message Importance="High" Text="Configuration: $(Configuration)" />
         <Message Importance="High" Text="Platform: $(Platform)" />
@@ -16,6 +18,7 @@
         <Message Importance="High" Text="GitVersion_AssemblySemVer: $(GitVersion_AssemblySemVer)" />
         <Message Importance="High" Text="GitVersion_BranchName: $(GitVersion_BranchName)" />
         <Message Importance="High" Text="GitVersion_Sha: $(GitVersion_Sha)" />
+        <Message Importance="High" Text="GitVersion_NuGetVersionV2: $(GitVersion_NuGetVersionV2)" />
         <Message Importance="High" Text="##vso[build.updatebuildnumber]$(PackageVersion)" />
     </Target>
 
