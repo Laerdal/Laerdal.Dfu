@@ -9,6 +9,10 @@ github_repo_owner=NordicSemiconductor
 github_repo=IOS-Pods-DFU-Library
 github_release_id=32090814
 github_info_file="$github_repo_owner.$github_repo.$github_release_id.info.json"
+echo "github_repo_owner = $github_repo_owner"
+echo "github_repo = $github_repo"
+echo "github_release_id = $github_release_id"
+echo "github_info_file = $github_info_file"
 
 if [ ! -f "$github_info_file" ]; then
     echo
@@ -19,44 +23,56 @@ if [ ! -f "$github_info_file" ]; then
     curl -s $github_info_file_url > $github_info_file
 fi
 
-# Set version
-github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/v//'`
-github_short_version=`echo "$github_tag_name" | sed 's/.LTS//'`
+source_folder="iOS/Source_$github_release_id"
+echo "source_folder = $source_folder"
 
-# Static configuration
-zip_folder="iOS/Zips"
-zip_file_name="$github_short_version.zip"
-zip_file="$zip_folder/$zip_file_name"
-zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
+if [ ! -d "$source_folder" ]; then
 
-if [ ! -f "$zip_file" ]; then
-    echo
-    echo "### DOWNLOAD GITHUB RELEASE FILES ###"
-    echo
+    # Set version
+    github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/v//'`
+    github_short_version=`echo "$github_tag_name" | sed 's/.LTS//'`
+    echo "github_tag_name = $github_tag_name"
+    echo "github_short_version = $github_short_version"
 
-    mkdir -p $zip_folder
-    curl -L -o $zip_file $zip_url
+    # Static configuration
+    zip_folder="iOS/Zips"
+    zip_file_name="$github_short_version.zip"
+    zip_file="$zip_folder/$zip_file_name"
+    zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
+    echo "zip_folder = $zip_folder"
+    echo "zip_file_name = $zip_file_name"
+    echo "zip_file = $zip_file"
+    echo "zip_url = $zip_url"
 
     if [ ! -f "$zip_file" ]; then
-        echo "Failed to download $zip_url into $zip_file"
-        exit 1
+        echo
+        echo "### DOWNLOAD GITHUB RELEASE FILES ###"
+        echo
+
+        mkdir -p $zip_folder
+        curl -L -o $zip_file $zip_url
+
+        if [ ! -f "$zip_file" ]; then
+            echo "Failed to download $zip_url into $zip_file"
+            exit 1
+        fi
+
+        echo "Downloaded $zip_url into $zip_file"
     fi
 
-    echo "Downloaded $zip_url into $zip_file"
-fi
+    echo
+    echo "### UNZIP SOURCE ###"
+    echo
 
-echo
-echo "### UNZIP SOURCE ###"
-echo
-
-source_folder="iOS/Source"
-rm -rf $source_folder
-unzip -qq -n -d "$source_folder" "$zip_file"
-if [ ! -d "$source_folder" ]; then
-    echo "Failed"
-    exit 1
+    unzip -qq -n -d "$source_folder" "$zip_file"
+    if [ ! -d "$source_folder" ]; then
+        echo "Failed"
+        exit 1
+    fi
+    echo "Unzipped $zip_file into $source_folder"
+else
+    echo "Source folder $source_folder already exists, skipping download"
 fi
-echo "Unzipped $zip_file into $source_folder"
 
 echo
 echo "### XBUILD ###"

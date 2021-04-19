@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/32090814",
+  "assets_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/32090814/assets",
+  "upload_url": "https://uploads.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/32090814/assets{?name,label}",
+  "html_url": "https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library/releases/tag/4.9.0",
+  "id": 32090814,
+  "author": {
+    "login": "philips77",
+    "id": 6576580,
+    "node_id": "MDQ6VXNlcjY1NzY1ODA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6576580?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/philips77",
+    "html_url": "https://github.com/philips77",
+    "followers_url": "https://api.github.com/users/philips77/followers",
+    "following_url": "https://api.github.com/users/philips77/following{/other_user}",
+    "gists_url": "https://api.github.com/users/philips77/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/philips77/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/philips77/subscriptions",
+    "organizations_url": "https://api.github.com/users/philips77/orgs",
+    "repos_url": "https://api.github.com/users/philips77/repos",
+    "events_url": "https://api.github.com/users/philips77/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/philips77/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "MDc6UmVsZWFzZTMyMDkwODE0",
+  "tag_name": "4.9.0",
+  "target_commitish": "master",
+  "name": "4.9.0",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2020-10-02T12:42:20Z",
+  "published_at": "2020-10-02T12:44:02Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/tarball/4.9.0",
+  "zipball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/zipball/4.9.0",
+  "body": "This version introduces:\r\n\r\n* Fix ZIPFoundation version for carthage (#382)\r\n* Migration to Xcode 12 (#385)\r\n* Scan timeout and \"connect or scan\" feature (#386)\r\n* Bug fixed: Asynchronous firmware provider in sample app (#387)"
+}

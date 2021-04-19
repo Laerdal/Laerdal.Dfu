@@ -355,7 +355,6 @@ Laerdal.Dfu.Output
 Laerdal.Dfu.Source/iOS
 Laerdal.Dfu.Source/Android
 Laerdal.Dfu.Source/iOS_Carthage
-*.info.json
 
 Cartfile
 Carthage
