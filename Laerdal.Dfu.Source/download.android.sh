@@ -87,7 +87,7 @@ fi
 
 #chmod +x $gradle_base_folder/gradlew
 #$gradle_base_folder/gradlew dfu:assembleRelease --stacktrace --debug 
-gradle assembleRelease -p $gradle_base_folder
+gradle assembleRelease -p $gradle_base_folder --stacktrace
 gradle_output_file=`find ./$source_folder/ -ipath "*dfu/build/outputs/aar*" -iname "dfu-release.aar" | head -n 1`
 echo
 
