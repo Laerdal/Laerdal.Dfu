@@ -23,57 +23,66 @@ if [ ! -f "$github_info_file" ]; then
     curl -s $github_info_file_url > $github_info_file
 fi
 
-# Set version
-github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' `
-github_short_version=`echo "$github_tag_name" | sed 's/v//'`
-echo "github_tag_name = $github_tag_name"
-echo "github_short_version = $github_short_version"
+source_folder="Android/Source_$github_release_id"
+echo "source_folder = $source_folder"
 
-# Static configuration
-zip_folder="Android/Zips"
-zip_file_name="$github_short_version.zip"
-zip_file="$zip_folder/$zip_file_name"
-zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
-echo "zip_folder = $zip_folder"
-echo "zip_file_name = $zip_file_name"
-echo "zip_file = $zip_file"
-echo "zip_url = $zip_url"
+if [ ! -d "$source_folder" ]; then
+    # Set version
+    github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' `
+    github_short_version=`echo "$github_tag_name" | sed 's/v//'`
+    echo "github_tag_name = $github_tag_name"
+    echo "github_short_version = $github_short_version"
 
-if [ ! -f "$zip_file" ]; then
-    echo
-    echo "### DOWNLOAD GITHUB RELEASE FILES ###"
-    echo
-
-    mkdir -p $zip_folder
-    curl -L -o $zip_file $zip_url
+    # Static configuration
+    zip_folder="Android/Zips"
+    zip_file_name="$github_short_version.zip"
+    zip_file="$zip_folder/$zip_file_name"
+    zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
+    echo "zip_folder = $zip_folder"
+    echo "zip_file_name = $zip_file_name"
+    echo "zip_file = $zip_file"
+    echo "zip_url = $zip_url"
 
     if [ ! -f "$zip_file" ]; then
-        echo "Failed to download $zip_url into $zip_file"
-        exit 1
+        echo
+        echo "### DOWNLOAD GITHUB RELEASE FILES ###"
+        echo
+
+        mkdir -p $zip_folder
+        curl -L -o $zip_file $zip_url
+
+        if [ ! -f "$zip_file" ]; then
+            echo "Failed to download $zip_url into $zip_file"
+            exit 1
+        fi
+
+        echo "Downloaded $zip_url into $zip_file"
     fi
 
-    echo "Downloaded $zip_url into $zip_file"
-fi
+    echo
+    echo "### UNZIP SOURCE ###"
+    echo
 
-echo
-echo "### UNZIP SOURCE ###"
-echo
-
-source_folder="Android/Source"
-echo "source_folder = $source_folder"
-rm -rf $source_folder
-unzip -qq -n -d "$source_folder" "$zip_file"
-if [ ! -d "$source_folder" ]; then
-    echo "Failed"
-    exit 1
+    unzip -qq -n -d "$source_folder" "$zip_file"
+    if [ ! -d "$source_folder" ]; then
+        echo "Failed"
+        exit 1
+    fi
+    echo "Unzipped $zip_file into $source_folder"
+else
+    echo
+    echo "Source folder $source_folder already exists, skipping download"
 fi
-echo "Unzipped $zip_file into $source_folder"
 
 echo
 echo "### GRADLE BUILD ###"
 echo
 
 gradle_base_folder=$(dirname `find ./$source_folder/ -iname "gradlew" | head -n 1`)
+if [ ! -d "$gradle_base_folder" ]; then
+    echo "Can't find gradlew in ./$source_folder/"
+    exit 1
+fi
 echo "sdk.dir=$HOME/Library/Developer/Xamarin/android-sdk-macosx" > $gradle_base_folder/local.properties
 
 if [ -f "$gradle_base_folder/local.properties" ]; then
@@ -85,10 +94,17 @@ else
     exit 1
 fi
 
-gradle -version
-#chmod +x $gradle_base_folder/gradlew
-#$gradle_base_folder/gradlew dfu:assembleRelease -p $gradle_base_folder --stacktrace --debug --scan
-gradle assembleRelease -p $gradle_base_folder --stacktrace
+mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old
+sed -E 's/gradle-.*-all.zip/gradle-6.8.3-all.zip/' $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+echo "Edited :"
+echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
+echo "-----------------------"
+cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+echo "-----------------------"
+echo
+chmod +x $gradle_base_folder/gradlew
+$gradle_base_folder/gradlew -version
+$gradle_base_folder/gradlew assembleRelease -p $gradle_base_folder
 gradle_output_file=`find ./$source_folder/ -ipath "*dfu/build/outputs/aar*" -iname "dfu-release.aar" | head -n 1`
 echo
 
