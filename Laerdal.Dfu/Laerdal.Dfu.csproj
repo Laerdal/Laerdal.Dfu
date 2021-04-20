@@ -94,12 +94,9 @@
         <EmbeddedReferenceJar Include="Droid\Jars\*.jar" />
         <LibraryProjectZip Include="Droid\Jars\*.aar" />
         <TransformFile Include="Droid\Transforms\*.xml" />
-        <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.Droid" Version="*" PrivateAssets="all" />
+        <!-- <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.Droid" Version="*" PrivateAssets="all" /> -->
     </ItemGroup>
-    <Target 
-    Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) " 
-    Name="CheckAndroidLibraryFilesExist" 
-    BeforeTargets="PrepareForBuild">
+    <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) " Name="CheckAndroidLibraryFilesExist" BeforeTargets="PrepareForBuild">
         <Error Condition="!Exists('Droid\Jars\dfu-release.aar')" Text="Droid\Jars\dfu-release.aar does not exist" />
         <Error Condition="!Exists('Droid\Jars\gson-2.8.6.jar')" Text="Droid\Jars\gson-2.8.6.jar does not exist" />
     </Target>
@@ -118,19 +115,16 @@
         <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
         <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
         <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
-        <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all"  />
-    </ItemGroup>
-    <Target 
-    Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " 
-    Name="CheckIosLibraryFilesExist" 
-    BeforeTargets="PrepareForBuild">
-        <Error Condition="!Exists('iOS\Frameworks\iOSDFULibrary.framework')" Text="iOS\Frameworks\iOSDFULibrary.framework does not exist" />
-        <Error Condition="!Exists('iOS\Frameworks\ZIPFoundation.framework')" Text="iOS\Frameworks\ZIPFoundation.framework does not exist" />
-    </Target>
-    
-    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-        
-        <!-- Frameworks\iOSDFULibrary.framework -->
+        <!--  <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all" /> -->
+     </ItemGroup>
+     <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " Name="CheckIosLibraryFilesExist" BeforeTargets="PrepareForBuild">
+         <Error Condition="!Exists('iOS\Frameworks\iOSDFULibrary.framework')" Text="iOS\Frameworks\iOSDFULibrary.framework does not exist" />
+         <Error Condition="!Exists('iOS\Frameworks\ZIPFoundation.framework')" Text="iOS\Frameworks\ZIPFoundation.framework does not exist" />
+     </Target>
+     
+     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+         
+         <!-- Frameworks\iOSDFULibrary.framework -->
         <None Include="iOS\Frameworks\iOSDFULibrary.framework\iOSDFULibrary" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
             <Link>Frameworks\iOSDFULibrary.framework</Link>
         </None>
