@@ -98,10 +98,10 @@ mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_fol
 sed -E 's/gradle-.*-all.zip/gradle-6.8.3-all.zip/' $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
 echo "Edited :"
 echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
+echo
 echo "-----------------------"
 cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
 echo "-----------------------"
-echo
 chmod +x $gradle_base_folder/gradlew
 $gradle_base_folder/gradlew -version
 $gradle_base_folder/gradlew assembleRelease -p $gradle_base_folder
