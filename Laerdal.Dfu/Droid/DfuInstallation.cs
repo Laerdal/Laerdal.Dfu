@@ -14,14 +14,110 @@ namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
-        public Action<DfuServiceInitiator> DfuServiceInitiatorConfiguration { get; set; } = DefaultDfuServiceInitiatorConfiguration;
-
-        private static void DefaultDfuServiceInitiatorConfiguration(DfuServiceInitiator initiator)
+        private void SetInitiator()
         {
-            initiator.SetPacketsReceiptNotificationsEnabled(true);
-            initiator.SetPacketsReceiptNotificationsValue(DfuServiceInitiator.DefaultPrnValue);
-            initiator.SetDisableNotification(true);
-            initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
+            Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
+            
+            // PacketsReceiptNotifications
+            Initiator = Initiator.SetPacketsReceiptNotificationsEnabled(PacketReceiptNotificationParameter.HasValue);
+            Initiator = Initiator.SetPacketsReceiptNotificationsValue(PacketReceiptNotificationParameter ?? DfuServiceInitiator.DefaultPrnValue);
+            
+            // DataObjectPreparationDelay
+            Initiator = Initiator.SetPrepareDataObjectDelay((long) (DataObjectPreparationDelay ?? 0));
+
+            // DisableResume
+            if (DisableResume ?? false)
+            {
+                Initiator = Initiator.DisableResume();
+            }
+
+            // AlternativeAdvertisingName
+            if (!string.IsNullOrEmpty(AlternativeAdvertisingName))
+            {
+                Initiator = Initiator.SetDeviceName(AlternativeAdvertisingName);
+            }
+            
+            // ForceScanningForNewAddressInLegacyDfu
+            if (ForceScanningForNewAddressInLegacyDfu.HasValue)
+            {
+                Initiator = Initiator.SetForceScanningForNewAddressInLegacyDfu(ForceScanningForNewAddressInLegacyDfu.Value);
+            }
+            
+            // EnableUnsafeExperimentalButtonlessServiceInSecureDfu
+            if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
+            {
+                Initiator = Initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value);
+            }
+            
+            // ForceDfu
+            if (ForceDfu.HasValue)
+            {
+                Initiator = Initiator.SetForceDfu(ForceDfu.Value);
+            }
+            
+            // DisableMtuRequest
+            if (DisableMtuRequest ?? false)
+            {
+                Initiator = Initiator.DisableMtuRequest();
+            }
+
+            // DisableNotification
+            if (DisableNotification.HasValue)
+            {
+                Initiator = Initiator.SetDisableNotification(DisableNotification.Value);
+            }
+            
+            // MbrSize
+            Initiator = Initiator.SetMbrSize(MbrSize ?? DfuServiceInitiator.DefaultMbrSize);
+            
+            // Scope
+            if (Scope.HasValue)
+            {
+                Initiator = Initiator.SetScope((int) Scope.Value);
+            }
+            
+            // Foreground
+            if (Foreground.HasValue)
+            {
+                Initiator = Initiator.SetForeground(Foreground.Value);
+            }
+            
+            // KeepBond
+            if (KeepBond.HasValue)
+            {
+                Initiator = Initiator.SetKeepBond(KeepBond.Value);
+            }
+            
+            // RestoreBond
+            if (RestoreBond.HasValue)
+            {
+                Initiator = Initiator.SetRestoreBond(RestoreBond.Value);
+            }
+            
+            // Mtu
+            if (Mtu.HasValue)
+            {
+                Initiator = Initiator.SetMtu(Mtu.Value);
+            }
+            
+            // NumberOfRetries
+            if (NumberOfRetries.HasValue)
+            {
+                Initiator = Initiator.SetNumberOfRetries(NumberOfRetries.Value);
+            }
+            
+            // For Oreo progress
+            if ((int) Build.VERSION.SdkInt >= 26)
+            {
+                Laerdal.Dfu.Droid.DfuServiceInitiator.CreateDfuNotificationChannel(Application.Context);
+            }
+            
+            // public DfuServiceInitiator SetCurrentMtu(int mtu)
+            // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
+            // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithoutBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
+            // public DfuServiceInitiator SetCustomUuidsForExperimentalButtonlessDfu(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
+            // public DfuServiceInitiator SetCustomUuidsForLegacyDfu(UUID dfuServiceUuid, UUID dfuControlPointUuid, UUID dfuPacketUuid, UUID dfuVersionUuid)
+            // public DfuServiceInitiator SetCustomUuidsForSecureDfu(UUID dfuServiceUuid, UUID dfuControlPointUuid, UUID dfuPacketUuid)
         }
 
         public Laerdal.Dfu.Droid.DfuServiceInitiator Initiator { get; private set; }
@@ -36,14 +132,6 @@ namespace Laerdal.Dfu
         {
             DfuProgressListener = new DfuProgressListener(this);
             DfuLogger = new DfuLogger(deviceId);
-
-            // For Oreo progress
-            if ((int) Build.VERSION.SdkInt >= 26)
-            {
-                Laerdal.Dfu.Droid.DfuServiceInitiator.CreateDfuNotificationChannel(Application.Context);
-            }
-            
-            Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
         }
         
         public override void Start()
@@ -52,8 +140,8 @@ namespace Laerdal.Dfu
             {
                 throw new System.Exception("Controller is already set.");
             }
-            
-            DfuServiceInitiatorConfiguration?.Invoke(Initiator);
+
+            SetInitiator();
             Controller = Initiator.Start(Application.Context, Class.FromType(typeof(DfuService)));
         }
 
