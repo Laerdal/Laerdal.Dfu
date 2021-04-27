@@ -14,6 +14,8 @@ namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
+        public Func<DfuServiceInitiator, DfuServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
+        
         private void SetInitiator()
         {
             Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
@@ -111,6 +113,8 @@ namespace Laerdal.Dfu
             {
                 Laerdal.Dfu.Droid.DfuServiceInitiator.CreateDfuNotificationChannel(Application.Context);
             }
+            
+            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
             
             // public DfuServiceInitiator SetCurrentMtu(int mtu)
             // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)

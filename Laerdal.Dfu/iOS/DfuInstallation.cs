@@ -14,6 +14,8 @@ namespace Laerdal.Dfu
         public static Func<DispatchQueue> DelegateQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
         public static Func<DispatchQueue> ProgressQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
         public static Func<DispatchQueue> LoggerQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
+
+        public Func<DFUServiceInitiator, DFUServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
         
         private void SetInitiator()
         {
@@ -65,8 +67,9 @@ namespace Laerdal.Dfu
             // ConnectionTimeout
             if (ConnectionTimeout.HasValue)
                 Initiator.ConnectionTimeout = ConnectionTimeout.Value;
-            
-            
+
+            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
+
             // public DFUUuidHelper UuidHelper {get; set;}
         }
 
