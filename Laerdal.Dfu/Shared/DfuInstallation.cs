@@ -24,10 +24,13 @@ namespace Laerdal.Dfu
 
         private TaskCompletionSource ProgressTaskCompletionSource { get; }
 
-        protected SharedDfuInstallation(string deviceId, string fileUrl)
+        protected SharedDfuInstallation()
         {
             ProgressTaskCompletionSource = new TaskCompletionSource();
+        }
 
+        protected SharedDfuInstallation(string deviceId, string fileUrl) : this()
+        {
             DeviceId = deviceId;
             FileUrl = fileUrl;
         }

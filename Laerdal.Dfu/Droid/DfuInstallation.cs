@@ -18,6 +18,9 @@ namespace Laerdal.Dfu
         
         private void SetInitiator()
         {
+            DfuProgressListener = new DfuProgressListener(this);
+            DfuLogger = new DfuLogger(DeviceId);
+
             Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
             
             // PacketsReceiptNotifications
@@ -134,8 +137,9 @@ namespace Laerdal.Dfu
 
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
-            DfuProgressListener = new DfuProgressListener(this);
-            DfuLogger = new DfuLogger(deviceId);
+        }
+        public DfuInstallation() : base()
+        {
         }
         
         public override void Start()
