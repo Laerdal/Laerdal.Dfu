@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Laerdal.Dfu.Sample.ViewModels;assembly=Laerdal.Dfu.Sample"
+             x:Class="Laerdal.Dfu.Sample.Pages.DfuInstallationConfigurationPage"
+             BindingContext="{x:Static viewModels:DfuInstallationViewModel.Instance}"
+             Title="DFU Installation Configuration">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+        <ScrollView>
+            <StackLayout Padding="12" Spacing="12">
+                <Frame>
+                    <StackLayout>
+                        <Label Text="Alternative Advertising Name" VerticalOptions="Center" />
+                        <Entry Text="{Binding DfuInstallation.AlternativeAdvertisingName}" />
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout>
+                        <Label Text="Data Object Preparation Delay" />
+                        <Grid>
+                            <Label VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <FormattedString.Spans>
+                                            <Span Text="{Binding DfuInstallation.DataObjectPreparationDelay, FallbackValue='0'}" />
+                                            <Span Text=" seconds" />
+                                        </FormattedString.Spans>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Stepper Increment="0.1"
+                                     Minimum="0"
+                                     Maximum="1"
+                                     Value="{Binding DfuInstallation.DataObjectPreparationDelay, FallbackValue='0'}"
+                                     HorizontalOptions="End" />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Switch IsToggled="{Binding DfuInstallation.DisableResume}" />
+                        <Label Text="Disable Resume" VerticalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Switch IsToggled="{Binding DfuInstallation.EnableUnsafeExperimentalButtonlessServiceInSecureDfu}" />
+                        <Label Text="Enable Unsafe Experimental Buttonless Service In Secure Dfu" VerticalOptions="Center" HorizontalOptions="Fill" HorizontalTextAlignment="Start" />
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Switch IsToggled="{Binding DfuInstallation.ForceDfu}" />
+                        <Label Text="Force Dfu" VerticalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout Orientation="Horizontal">
+                        <Switch IsToggled="{Binding DfuInstallation.ForceScanningForNewAddressInLegacyDfu}" />
+                        <Label Text="Force Scanning For New Address In Legacy Dfu" VerticalOptions="Center" HorizontalOptions="Fill" HorizontalTextAlignment="Start" />
+                    </StackLayout>
+                </Frame>
+                <Frame>
+                    <StackLayout>
+                        <Label Text="Packet Receipt Notification Parameter" />
+                        <Grid>
+                            <Label VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <FormattedString.Spans>
+                                            <Span Text="{Binding DfuInstallation.PacketReceiptNotificationParameter, FallbackValue='12'}" />
+                                            <Span Text=" packets" />
+                                        </FormattedString.Spans>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Stepper Increment="1"
+                                     Minimum="0"
+                                     Maximum="29"
+                                     Value="{Binding DfuInstallation.PacketReceiptNotificationParameter, FallbackValue='12'}"
+                                     HorizontalOptions="End" />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+            <Button Grid.Row="1" Text="Reset" Clicked="Button_OnClicked"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
