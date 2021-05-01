@@ -131,9 +131,9 @@ namespace Laerdal.Dfu
 
         public Laerdal.Dfu.Droid.DfuServiceController Controller { get; private set; }
 
-        private DfuProgressListener DfuProgressListener { get; }
+        private DfuProgressListener DfuProgressListener { get; set;}
 
-        private DfuLogger DfuLogger { get; }
+        private DfuLogger DfuLogger { get; set;}
 
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
