@@ -10,9 +10,17 @@ namespace Laerdal.Dfu
 {
     public abstract class SharedDfuInstallation : BindableObject, IDisposable
     {
-        public string DeviceId { get; }
+        public string DeviceId
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
 
-        public string FileUrl { get; }
+        public string FileUrl
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
 
         private TaskCompletionSource ProgressTaskCompletionSource { get; }
 
