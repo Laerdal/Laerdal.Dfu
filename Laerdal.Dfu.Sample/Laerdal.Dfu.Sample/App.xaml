@@ -8,11 +8,13 @@
             <Style TargetType="Frame" ApplyToDerivedTypes="True" CanCascade="True">
                 <Setter Property="Padding" Value="12 , 9" />
                 <Setter Property="BorderColor" Value="Gray" />
+                <Setter Property="CornerRadius" Value="6" />
             </Style>
             <Style TargetType="Button" ApplyToDerivedTypes="True" CanCascade="True">
                 <Setter Property="BorderColor" Value="SteelBlue" />
                 <Setter Property="BorderWidth" Value="2" />
                 <Setter Property="TextColor" Value="Gray" />
+                <Setter Property="CornerRadius" Value="6" />
             </Style>
             <converters:HasDataConverter x:Key="HasDataConverter"/>
             <converters:HasNoDataConverter x:Key="HasNoDataConverter"/>

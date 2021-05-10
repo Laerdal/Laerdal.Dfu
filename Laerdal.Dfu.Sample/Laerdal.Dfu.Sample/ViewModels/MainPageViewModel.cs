@@ -1,7 +1,5 @@
 using Laerdal.Dfu.Sample.Helpers;
 
-using System.Collections.Generic;
-
 namespace Laerdal.Dfu.Sample.ViewModels
 {
     public class MainPageViewModel : BindableObject
@@ -16,7 +14,20 @@ namespace Laerdal.Dfu.Sample.ViewModels
         private static MainPageViewModel _instance;
 
         #endregion
-        
+
+        public bool HasStarted
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
+        public async void Start()
+        {
+            if (HasStarted)
+                return;
+            HasStarted = true;
+            DfuInstallationConfigurationPageViewModel.Instance.DfuInstallation.Start();
+        }
 
     }
 }

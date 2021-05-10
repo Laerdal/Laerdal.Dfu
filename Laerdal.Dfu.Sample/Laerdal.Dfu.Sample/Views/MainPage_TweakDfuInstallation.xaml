@@ -14,11 +14,13 @@
                HorizontalOptions="Start"
                Opacity="0.5" />
         <Label Grid.Row="0" Text="Tap to edit"
+               BindingContext="{x:Static viewModels:MainPageViewModel.Instance}"
+               IsVisible="{Binding HasStarted, Converter={StaticResource InvertedBooleanConverter}}"
                FontSize="10"
                HorizontalOptions="End"
                Opacity="0.5"/>
         <Frame Grid.Row="1"
-               BindingContext="{x:Static viewModels:DfuInstallationViewModel.Instance}">
+               BindingContext="{x:Static viewModels:DfuInstallationConfigurationPageViewModel.Instance}">
             <StackLayout Margin="6"
                          BindableLayout.ItemsSource="{Binding DfuInstallationConfiguration}">
                 <BindableLayout.EmptyView>

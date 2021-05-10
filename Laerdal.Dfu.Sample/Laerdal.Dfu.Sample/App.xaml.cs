@@ -1,4 +1,5 @@
 ﻿using Laerdal.Dfu.Sample.Helpers;
+using Laerdal.Dfu.Sample.Pages;
 
 using Plugin.BluetoothLE;
 
@@ -15,8 +16,6 @@ namespace Laerdal.Dfu.Sample
 {
     public partial class App : Application
     {
-        public static IDevice SelectedDevice { get; set; }
-        
         public App()
         {
             InitializeComponent();

@@ -11,16 +11,16 @@ using System.Threading;
 
 namespace Laerdal.Dfu.Sample.ViewModels
 {
-    public class BluetoothDeviceViewModel : BindableObject
+    public class SelectADevicePageViewModel : BindableObject
     {
         #region Singleton
 
         /// <summary>
         /// Singleton instance
         /// </summary>
-        public static BluetoothDeviceViewModel Instance => _instance ?? (_instance = new BluetoothDeviceViewModel());
+        public static SelectADevicePageViewModel Instance => _instance ?? (_instance = new SelectADevicePageViewModel());
 
-        private static BluetoothDeviceViewModel _instance;
+        private static SelectADevicePageViewModel _instance;
 
         #endregion
 
@@ -37,12 +37,15 @@ namespace Laerdal.Dfu.Sample.ViewModels
             {
                 if (SetValue(value))
                 {
-                    DfuInstallationViewModel.Instance.DfuInstallation.DeviceId = $"{value?.Device?.Uuid}";
+                    if (value?.Device?.Uuid != null)
+                    {
+                        DfuInstallationConfigurationPageViewModel.Instance.DfuInstallation.DeviceId = NativeDeviceIdHelper.GetIdFromNativeDevice?.Invoke(value.Device.NativeDevice);
+                    }
                 }
             }
         }
 
-        private BluetoothDeviceViewModel()
+        private SelectADevicePageViewModel()
         {
             ScanResults = new ObservableCollection<CustomScanResult>();
             CrossBleAdapter.Current.WhenStatusChanged()
@@ -78,6 +81,7 @@ namespace Laerdal.Dfu.Sample.ViewModels
         {
             if (Xamarin.Forms.Device.RuntimePlatform != Xamarin.Forms.Device.Android)
                 return;
+
             // Permission
             if (await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.LocationAlways>() != Xamarin.Essentials.PermissionStatus.Granted)
             {

@@ -23,7 +23,7 @@
         <DebugType>portable</DebugType>
         <Optimize>false</Optimize>
         <OutputPath>bin\Debug</OutputPath>
-        <DefineConstants>DEBUG;</DefineConstants>
+        <DefineConstants>DEBUG;__ANDROID__;</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <AndroidLinkMode>None</AndroidLinkMode>
@@ -46,7 +46,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Laerdal.Dfu" Version="0.2.16-beta0001" />
+        <PackageReference Include="Laerdal.Dfu" Version="0.2.16-beta0004" />
         <PackageReference Include="Plugin.BluetoothLE" Version="6.3.0.19" />
         <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />

@@ -1,11 +1,14 @@
 ﻿using System;
 
 using Android.App;
+using Android.Bluetooth;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+
+using Laerdal.Dfu.Sample.Helpers;
 
 namespace Laerdal.Dfu.Sample.Android
 {
@@ -14,6 +17,16 @@ namespace Laerdal.Dfu.Sample.Android
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            NativeDeviceIdHelper.GetIdFromNativeDevice = o =>
+            {
+                if (o is BluetoothDevice bt)
+                {
+                    return bt.Address;
+                }
+
+                return null;
+            };
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 

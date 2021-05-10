@@ -28,7 +28,7 @@ namespace Laerdal.Dfu.Sample.ViewModels
             {
                 if (SetValue(value))
                 {
-                    DfuInstallationViewModel.Instance.DfuInstallation.FileUrl = value?.FullName;
+                    DfuInstallationConfigurationPageViewModel.Instance.DfuInstallation.FileUrl = value?.FullName;
                 }
             }
         }

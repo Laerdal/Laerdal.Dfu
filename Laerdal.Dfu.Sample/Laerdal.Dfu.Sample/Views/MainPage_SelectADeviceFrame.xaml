@@ -3,6 +3,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Laerdal.Dfu.Sample.ViewModels;assembly=Laerdal.Dfu.Sample"
+             xmlns:views="clr-namespace:Laerdal.Dfu.Sample.Views;assembly=Laerdal.Dfu.Sample"
              x:Class="Laerdal.Dfu.Sample.Views.MainPage_SelectADeviceFrame">
     <Grid>
         <Grid.RowDefinitions>
@@ -15,25 +16,12 @@
                HorizontalOptions="Start"
                Opacity="0.5" />
         <Label Text="Tap to edit"
+               BindingContext="{x:Static viewModels:MainPageViewModel.Instance}"
+               IsVisible="{Binding HasStarted, Converter={StaticResource InvertedBooleanConverter}}"
                Grid.Row="0"
                FontSize="10"
                HorizontalOptions="End"
                Opacity="0.5" />
-        <Frame Grid.Row="1">
-            <StackLayout
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                BindingContext="{x:Static viewModels:BluetoothDeviceViewModel.Instance}">
-
-                <Label Text="{Binding SelectedDevice.Name}"
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center" />
-                <Label Text="{Binding SelectedDevice.Device.Uuid}"
-                       FontAttributes="Italic"
-                       Opacity="0.4"
-                       HorizontalOptions="Center"
-                       FontSize="10" />
-            </StackLayout>
-        </Frame>
+        <views:ScanResultFrame Grid.Row="1" BindingContext="{Binding SelectedDevice, Source={x:Static viewModels:SelectADevicePageViewModel.Instance}}" />
     </Grid>
 </ContentView>

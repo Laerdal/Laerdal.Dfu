@@ -1,8 +1,12 @@
-﻿using System;
+﻿using CoreBluetooth;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+
+using Laerdal.Dfu.Sample.Helpers;
 
 using UIKit;
 
@@ -23,6 +27,15 @@ namespace Laerdal.Dfu.Sample.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            NativeDeviceIdHelper.GetIdFromNativeDevice = o =>
+            {
+                if (o is CBPeripheral bt)
+                {
+                    return bt.UUID.ToString();
+                }
+
+                return null;
+            };
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 

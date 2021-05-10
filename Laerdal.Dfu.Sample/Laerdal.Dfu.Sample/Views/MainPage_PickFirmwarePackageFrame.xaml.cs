@@ -25,6 +25,8 @@ namespace Laerdal.Dfu.Sample.Views
 
         private async void OnCLicked()
         {
+            if (MainPageViewModel.Instance.HasStarted)
+                return;
             await FirmwarePackageViewModel.Instance.PickFileAsync();
         }
     }

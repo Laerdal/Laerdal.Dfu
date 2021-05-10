@@ -1,4 +1,5 @@
 using Laerdal.Dfu.Sample.Pages;
+using Laerdal.Dfu.Sample.ViewModels;
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Laerdal.Dfu.Sample.Views
 
         private void OnCLicked()
         {
+            if (MainPageViewModel.Instance.HasStarted)
+                return;
             Navigation.PushAsync(new SelectADevicePage());
         }
     }

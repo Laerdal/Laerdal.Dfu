@@ -1,11 +1,5 @@
 using Laerdal.Dfu.Sample.ViewModels;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,12 +16,12 @@ namespace Laerdal.Dfu.Sample.Pages
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            DfuInstallationViewModel.Instance.RefreshDfuInstallationConfiguration();
+            DfuInstallationConfigurationPageViewModel.Instance.RefreshDfuInstallationConfiguration();
         }
 
         private void Button_OnClicked(object sender, System.EventArgs e)
         {
-            DfuInstallationViewModel.Instance.Reset();
+            DfuInstallationConfigurationPageViewModel.Instance.Reset();
             Navigation.PopAsync();
         }
     }

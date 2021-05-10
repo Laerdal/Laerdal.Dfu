@@ -15,6 +15,8 @@
                HorizontalOptions="Start"
                Opacity="0.5" />
         <Label Text="Tap to edit"
+               BindingContext="{x:Static viewModels:MainPageViewModel.Instance}"
+               IsVisible="{Binding HasStarted, Converter={StaticResource InvertedBooleanConverter}}"
                Grid.Row="0"
                FontSize="10"
                HorizontalOptions="End"
@@ -25,10 +27,10 @@
                 VerticalOptions="Center"
                 BindingContext="{x:Static viewModels:FirmwarePackageViewModel.Instance}">
 
-                <Label Text="{Binding SelectedFirmwareFile.Name}"
+                <Label Text="{Binding SelectedFirmwareFile.Name, FallbackValue='No file selected'}"
                        FontAttributes="Bold"
                        HorizontalOptions="Center" />
-                <Label Text="{Binding SelectedFirmwareFile.Length, StringFormat='{0} bytes'}"
+                <Label Text="{Binding SelectedFirmwareFile.Length, StringFormat='{0} bytes', FallbackValue='? bytes'}"
                        FontAttributes="Italic"
                        Opacity="0.4"
                        HorizontalOptions="Center"

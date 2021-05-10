@@ -1,26 +1,56 @@
+using Laerdal.Dfu.Enums;
+using Laerdal.Dfu.EventArgs;
 using Laerdal.Dfu.Sample.Helpers;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Laerdal.Dfu.Sample.ViewModels
 {
-    public class DfuInstallationViewModel : BindableObject
+    public class DfuInstallationConfigurationPageViewModel : BindableObject
     {
         #region Singleton
 
         /// <summary>
         /// Singleton instance
         /// </summary>
-        public static DfuInstallationViewModel Instance => _instance ?? (_instance = new DfuInstallationViewModel());
+        public static DfuInstallationConfigurationPageViewModel Instance => _instance ?? (_instance = new DfuInstallationConfigurationPageViewModel());
 
-        private static DfuInstallationViewModel _instance;
+        private static DfuInstallationConfigurationPageViewModel _instance;
 
         #endregion
-        
+
+        private static DfuInstallation GetDfuInstallation()
+        {
+            var output = new DfuInstallation($"{SelectADevicePageViewModel.Instance.SelectedDevice?.Device?.Uuid}", $"{FirmwarePackageViewModel.Instance.SelectedFirmwareFile?.FullName}");
+            
+            output.ErrorOccured += DfuInstallationOnErrorOccured;
+            output.StateChanged += DfuInstallationOnStateChanged;
+            output.ProgressChanged += DfuInstallationOnProgressChanged;
+
+            return output;
+        }
+
+        private static void DfuInstallationOnProgressChanged(object sender, DfuProgressChangedEventArgs e)
+        {
+            Debug.WriteLine($"Progress : {e.Progress} ");
+        }
+
+        private static void DfuInstallationOnStateChanged(object sender, DfuState e)
+        {
+            Debug.WriteLine($"State : {e} ({(int)e}) ");
+        }
+
+        private static void DfuInstallationOnErrorOccured(object sender, DfuErrorEventArgs e)
+        {
+            Debug.WriteLine($"Error : {e.Error} ({(int)e.Error}) ");
+            Debug.WriteLine($"Error Message : {e.Message}");
+        }
+
         public DfuInstallation DfuInstallation
         {
-            get => GetValue(new DfuInstallation($"{BluetoothDeviceViewModel.Instance.SelectedDevice?.Device?.Uuid}", $"{FirmwarePackageViewModel.Instance.SelectedFirmwareFile?.FullName}"));
+            get => GetValue(GetDfuInstallation());
             set => SetValue(value);
         }
         
@@ -74,7 +104,7 @@ namespace Laerdal.Dfu.Sample.ViewModels
 
         public void Reset()
         {
-            DfuInstallation = new DfuInstallation($"{BluetoothDeviceViewModel.Instance.SelectedDevice?.Device?.Uuid}", $"{FirmwarePackageViewModel.Instance.SelectedFirmwareFile?.FullName}");
+            DfuInstallation = GetDfuInstallation();
         }
     }
 }

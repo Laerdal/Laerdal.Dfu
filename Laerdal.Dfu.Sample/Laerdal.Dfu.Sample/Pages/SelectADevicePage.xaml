@@ -4,43 +4,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:Laerdal.Dfu.Sample.Models;assembly=Laerdal.Dfu.Sample"
              xmlns:viewModels="clr-namespace:Laerdal.Dfu.Sample.ViewModels;assembly=Laerdal.Dfu.Sample"
+             xmlns:views="clr-namespace:Laerdal.Dfu.Sample.Views;assembly=Laerdal.Dfu.Sample"
              x:Class="Laerdal.Dfu.Sample.Pages.SelectADevicePage"
-             BindingContext="{x:Static viewModels:BluetoothDeviceViewModel.Instance}"
+             BindingContext="{x:Static viewModels:SelectADevicePageViewModel.Instance}"
              Title="Available devices">
     <ContentPage.Content>
-        <CollectionView x:Name="DevicesListView"
-                        Margin="6"
-                        SelectionMode="Single"
-                        ItemsSource="{Binding ScanResults}"
-                        SelectedItem="{Binding SelectedDevice}"
-                        SelectionChanged="DevicesListView_OnSelectionChanged">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.EmptyView>
-                <Label Text="No device found ..." HorizontalOptions="Fill" VerticalOptions="Fill" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:CustomScanResult">
-                    <Frame>
-                        <StackLayout
-                            Padding="6"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
+        <Grid Padding="12" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CollectionView x:Name="DevicesListView"
+                            Margin="6"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding ScanResults}"
+                            SelectedItem="{Binding SelectedDevice}"
+                            SelectionChanged="DevicesListView_OnSelectionChanged">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <Label Text="No device found ..." HorizontalOptions="Fill" VerticalOptions="Fill" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CustomScanResult">
+                        <views:ScanResultFrame />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-                            <Label Text="{Binding Name}"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center" />
-                            <Label Text="{Binding Device.Uuid}"
-                                   FontAttributes="Italic"
-                                   Opacity="0.4"
-                                   HorizontalOptions="Center"
-                                   FontSize="10" />
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-        </CollectionView>
+            </CollectionView>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

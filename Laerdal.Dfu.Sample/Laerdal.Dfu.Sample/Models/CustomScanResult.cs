@@ -8,23 +8,53 @@ using System.Linq;
 
 namespace Laerdal.Dfu.Sample.Models
 {
-    public class CustomScanResult : BindableObject, IScanResult, IEquatable<CustomScanResult>
+    public class CustomScanResult : Helpers.BindableObject, IScanResult, IEquatable<CustomScanResult>
     {
         public string Name
         {
             get => GetValue("No name");
             private set
             {
-                if(!string.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                     SetValue(value);
             }
+        }
+
+        public string IdPlaceholder => GetValue(Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.Android ? "00:00:00:00:00:00" : Guid.Empty.ToString());
+
+        public string Id
+        {
+            get => GetValue(IdPlaceholder);
+            private set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    SetValue(value);
+            }
+        }
+
+        public ManufacturerIdConstants Manufacturer
+        {
+            get => GetValue(ManufacturerIdConstants.None);
+            private set
+            {
+                if (SetValue(value))
+                {
+                    ManufacturerString = value.GetDescription();
+                }
+            }
+        }
+
+        public string ManufacturerString
+        {
+            get => GetValue(ManufacturerIdConstants.None.GetDescription());
+            private set => SetValue(value);
         }
 
         public CustomScanResult(IDevice device, int rssi, IAdvertisementData advertisementData)
         {
             UpdateFrom(device, rssi, advertisementData);
         }
-        
+
         public CustomScanResult(IScanResult scanResult)
         {
             UpdateFrom(scanResult);
@@ -34,47 +64,53 @@ namespace Laerdal.Dfu.Sample.Models
         {
             UpdateFrom(scanResult.Device, scanResult.Rssi, scanResult.AdvertisementData);
         }
-        
+
         public void UpdateFrom(IDevice device, int rssi, IAdvertisementData advertisementData)
         {
             Device = device;
             Rssi = rssi;
             AdvertisementData = advertisementData;
             Name = device.Name;
+            Id = NativeDeviceIdHelper.GetIdFromNativeDevice?.Invoke(device.NativeDevice);
+            Manufacturer = advertisementData.GetManufacturer();
         }
 
-        public IDevice Device 
+        public IDevice Device
         {
             get => GetValue<IDevice>();
             private set => SetValue(value);
         }
 
         private readonly ConcurrentQueue<int> _rssiHistory = new ConcurrentQueue<int>();
+
         public int Rssi
         {
             get => GetValue<int>();
-            private set
+            internal set
             {
                 SetValue(value);
                 _rssiHistory.Enqueue(value, 10);
                 SignalStrengthPercent = RssiHelper.RssiToSignalStrengthConverter(_rssiHistory.Average());
+                RaisePropertyChanged(nameof(SignalStrengthPercent));
             }
         }
-        
+
         /// <summary>
         /// Signal strength in % (between 0.00 and 1.00)
         /// </summary>
-        public double SignalStrengthPercent 
+        public double SignalStrengthPercent
         {
             get => GetValue<double>();
             private set => SetValue(value);
         }
 
-        public IAdvertisementData AdvertisementData 
+        public IAdvertisementData AdvertisementData
         {
             get => GetValue<IAdvertisementData>();
             private set => SetValue(value);
         }
+
+        #region IEquatable
 
         public bool Equals(CustomScanResult other)
         {
@@ -117,5 +153,7 @@ namespace Laerdal.Dfu.Sample.Models
         {
             return !Equals(left, right);
         }
+
+        #endregion
     }
 }

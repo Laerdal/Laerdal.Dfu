@@ -1,4 +1,5 @@
 ﻿using Laerdal.Dfu.Sample.Helpers;
+using Laerdal.Dfu.Sample.ViewModels;
 
 using Plugin.BluetoothLE;
 
@@ -13,19 +14,14 @@ namespace Laerdal.Dfu.Sample
 {
     public partial class MainPage : ContentPage
     {
-        public bool ScanResultFilter(IScanResult scanResult)
-        {
-            var manufacturer = scanResult.AdvertisementData.GetManufacturer();
-            return manufacturer == ManufacturerIdConstants.Laerdal_Medical_AS;
-        }
-
-        public ObservableCollection<IDevice> Devices { get; set; }
-
         public MainPage()
         {
             InitializeComponent();
-            Devices = new ObservableCollection<IDevice>();
         }
 
+        private void Button_OnClicked(object sender, System.EventArgs e)
+        {
+            MainPageViewModel.Instance.Start();
+        }
     }
 }
