@@ -49,12 +49,7 @@ namespace Laerdal.Dfu.Sample.Models
             get => GetValue(ManufacturerIdConstants.None.GetDescription());
             private set => SetValue(value);
         }
-
-        public CustomScanResult(IDevice device, int rssi, IAdvertisementData advertisementData)
-        {
-            UpdateFrom(device, rssi, advertisementData);
-        }
-
+        
         public CustomScanResult(IScanResult scanResult)
         {
             UpdateFrom(scanResult);
@@ -81,26 +76,9 @@ namespace Laerdal.Dfu.Sample.Models
             private set => SetValue(value);
         }
 
-        private readonly ConcurrentQueue<int> _rssiHistory = new ConcurrentQueue<int>();
-
         public int Rssi
         {
             get => GetValue<int>();
-            internal set
-            {
-                SetValue(value);
-                _rssiHistory.Enqueue(value, 10);
-                SignalStrengthPercent = RssiHelper.RssiToSignalStrengthConverter(_rssiHistory.Average());
-                RaisePropertyChanged(nameof(SignalStrengthPercent));
-            }
-        }
-
-        /// <summary>
-        /// Signal strength in % (between 0.00 and 1.00)
-        /// </summary>
-        public double SignalStrengthPercent
-        {
-            get => GetValue<double>();
             private set => SetValue(value);
         }
 

@@ -1,12 +1,5 @@
-﻿using Laerdal.Dfu.Sample.Helpers;
-using Laerdal.Dfu.Sample.Pages;
-
-using Plugin.BluetoothLE;
-
-using System;
-using System.Collections.ObjectModel;
+﻿using Laerdal.Dfu.EventArgs;
 using System.Diagnostics;
-using System.Linq;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,7 +12,19 @@ namespace Laerdal.Dfu.Sample
         public App()
         {
             InitializeComponent();
+            Laerdal.Dfu.Events.DfuErrorOccured += EventsOnDfuErrorOccured;
+            Laerdal.Dfu.Events.DfuMessageReceived += EventsOnDfuMessageReceived;
             MainPage = new NavigationPage(new MainPage());
+        }
+
+        private void EventsOnDfuMessageReceived(object sender, DfuMessageReceivedEventArgs e)
+        {
+            Debug.WriteLine($"{e.LogLevel} : {e.Message}");
+        }
+
+        private void EventsOnDfuErrorOccured(object sender, DfuErrorEventArgs e)
+        {
+            Debug.WriteLine($"{e.Error}({(int)e.Error}) : {e.Message}");
         }
 
         protected override void OnStart()
