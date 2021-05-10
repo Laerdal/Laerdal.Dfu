@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laerdal.Dfu.Sample", "Laerdal.Dfu.Sample\Laerdal.Dfu.Sample.csproj", "{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laerdal.Dfu.Sample.Android", "Laerdal.Dfu.Sample.Android\Laerdal.Dfu.Sample.Android.csproj", "{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laerdal.Dfu.Sample.iOS", "Laerdal.Dfu.Sample.iOS\Laerdal.Dfu.Sample.iOS.csproj", "{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
+		AppStore|Any CPU = AppStore|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{2DEE75E6-0896-457E-9829-2B45CE6FFD1E}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAEF122-9F0F-4EE0-AA59-6E68DC0EA630}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Ad-Hoc|Any CPU.ActiveCfg = Ad-Hoc|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Ad-Hoc|Any CPU.Build.0 = Ad-Hoc|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Ad-Hoc|Any CPU.Deploy.0 = Ad-Hoc|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Debug|Any CPU.ActiveCfg = Debug|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Debug|Any CPU.Build.0 = Debug|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Debug|Any CPU.Deploy.0 = Debug|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Release|Any CPU.ActiveCfg = Release|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Release|Any CPU.Build.0 = Release|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.Release|Any CPU.Deploy.0 = Release|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.AppStore|Any CPU.ActiveCfg = Release|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.AppStore|Any CPU.Build.0 = Release|iPhone
+		{DD5118FA-DCE9-4A1B-8F2F-B8A28BDEF32E}.AppStore|Any CPU.Deploy.0 = Release|iPhone
+	EndGlobalSection
+EndGlobal
