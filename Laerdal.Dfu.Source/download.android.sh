@@ -96,15 +96,17 @@ else
     exit 1
 fi
 
-mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old
-sed -E "s/gradle-.*-all.zip/gradle-$gradle_version-all.zip/" $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
-echo "Edited :"
-echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
-echo
-echo "-----------------------"
-cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
-echo "-----------------------"
-echo
+if [ ! "$gradle_version" = "" ]; then
+    mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old
+    sed -E "s/gradle-.*-all.zip/gradle-$gradle_version-all.zip/" $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+    echo "Edited :"
+    echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
+    echo
+    echo "-----------------------"
+    cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+    echo "-----------------------"
+    echo
+fi
 
 chmod +x $gradle_base_folder/gradlew
 $gradle_base_folder/gradlew -version
@@ -117,7 +119,7 @@ if [ -f "$gradle_output_file" ]; then
     echo "  - $gradle_output_file"
     rm -rf $nuget_frameworks_folder
 else
-    echo "Failed : Can't find '$gradle_output_file'"
+    echo "Failed : Can't find dfu-release.aar"
     exit 1
 fi
 

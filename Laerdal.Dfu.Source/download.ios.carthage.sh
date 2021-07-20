@@ -8,7 +8,7 @@ output_folder="iOS_Carthage"
 echo "output_folder = $output_folder"
 
 mkdir -p $output_folder
-echo "github \"NordicSemiconductor/IOS-Pods-DFU-Library\" == 4.9.0" > $output_folder/Cartfile
+echo "github \"NordicSemiconductor/IOS-Pods-DFU-Library\" == 4.10.4" > $output_folder/Cartfile
 pushd $output_folder
 carthage update --use-xcframeworks --platform iOS
 popd
@@ -34,6 +34,14 @@ rm -rf $fat_lib_path
 cp -a $(dirname $iphoneos_framework)/. $fat_lib_path
 
 rm -rf $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary
+
+lipo -info $iphoneos_framework/iOSDFULibrary
+echo "+"
+lipo -info $iphonesimulator_framework/iOSDFULibrary
+echo "-"
+echo "arm64"
+lipo -remove arm64 -output $iphonesimulator_framework/iOSDFULibrary $iphonesimulator_framework/iOSDFULibrary
+echo "="
 lipo -create -output $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary $iphoneos_framework/iOSDFULibrary $iphonesimulator_framework/iOSDFULibrary
 lipo -info $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary
 
@@ -58,10 +66,16 @@ rm -rf $fat_lib_path
 cp -a $(dirname $iphoneos_framework)/. $fat_lib_path
 
 rm -rf $fat_lib_path/ZIPFoundation.framework/ZIPFoundation
+lipo -info $iphoneos_framework/ZIPFoundation
+echo "+"
+lipo -info $iphonesimulator_framework/ZIPFoundation
+echo "-"
+echo "arm64"
 lipo -remove arm64 -output $iphonesimulator_framework/ZIPFoundation $iphonesimulator_framework/ZIPFoundation
+echo "="
 lipo -create -output $fat_lib_path/ZIPFoundation.framework/ZIPFoundation $iphoneos_framework/ZIPFoundation $iphonesimulator_framework/ZIPFoundation
 lipo -info $fat_lib_path/ZIPFoundation.framework/ZIPFoundation
-
+echo
 
 iOSDFULibrary_fat_framework=`find ./$output_folder/Carthage/Build/iOSDFULibrary.xcframework/ios-fat -iname "iOSDFULibrary.framework" | head -n 1`
 if [ ! -d "$iOSDFULibrary_fat_framework" ]; then
