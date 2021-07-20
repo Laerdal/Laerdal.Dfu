@@ -7,7 +7,7 @@ echo
 # find the latest ID here : https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/latest
 github_repo_owner=NordicSemiconductor
 github_repo=IOS-Pods-DFU-Library
-github_release_id=32090814
+github_release_id=45229904
 github_info_file="$github_repo_owner.$github_repo.$github_release_id.info.json"
 echo "github_repo_owner = $github_repo_owner"
 echo "github_repo = $github_repo"
@@ -125,24 +125,47 @@ echo "  - $ZIPFoundation_iphoneos_framework"
 echo "  - $iOSDFULibrary_iphonesimulator_framework"
 echo "  - $ZIPFoundation_iphonesimulator_framework"
 
-echo
-echo "### LIPO / CREATE FAT LIBRARY ###"
-echo
-
 frameworks_folder="iOS/Frameworks"
-
 rm -rf $frameworks_folder
 cp -a $(dirname $iOSDFULibrary_iphoneos_framework)/. $frameworks_folder
 cp -a $(dirname $ZIPFoundation_iphoneos_framework)/. $frameworks_folder
 
+echo
+echo "### CREATE FAT LIBRARIES iOSDFULibrary ###"
+echo
+
 rm -rf $frameworks_folder/iOSDFULibrary.framework/iOSDFULibrary
+lipo -info $iOSDFULibrary_iphoneos_framework/iOSDFULibrary
+echo "+"
+lipo -info $iOSDFULibrary_iphonesimulator_framework/iOSDFULibrary
+echo "-"
+echo "arm64"
+lipo -remove arm64 -output $iOSDFULibrary_iphonesimulator_framework/iOSDFULibrary $iOSDFULibrary_iphonesimulator_framework/iOSDFULibrary
+echo "="
 lipo -create -output $frameworks_folder/iOSDFULibrary.framework/iOSDFULibrary $iOSDFULibrary_iphoneos_framework/iOSDFULibrary $iOSDFULibrary_iphonesimulator_framework/iOSDFULibrary
 lipo -info $frameworks_folder/iOSDFULibrary.framework/iOSDFULibrary
+
+echo
+echo "### CREATE FAT LIBRARIES ZIPFoundation ###"
+echo
+
+rm -rf $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
+lipo -info $ZIPFoundation_iphoneos_framework/ZIPFoundation
+echo "+"
+lipo -info $ZIPFoundation_iphonesimulator_framework/ZIPFoundation
+echo "-"
+echo "arm64"
+lipo -remove arm64 -output $ZIPFoundation_iphonesimulator_framework/ZIPFoundation $ZIPFoundation_iphonesimulator_framework/ZIPFoundation
+echo "="
+lipo -create -output $frameworks_folder/ZIPFoundation.framework/ZIPFoundation $ZIPFoundation_iphoneos_framework/ZIPFoundation $ZIPFoundation_iphonesimulator_framework/ZIPFoundation
+lipo -info $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
+echo 
 
 # TODO : Create Laerdal.Xamarin.ZipFoundation.iOS
 #rm -rf $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
 #lipo -create -output $frameworks_folder/ZIPFoundation.framework/ZIPFoundation $ZIPFoundation_iphoneos_framework/ZIPFoundation $ZIPFoundation_iphonesimulator_framework/ZIPFoundation
-lipo -info $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
+#echo
+#lipo -info $frameworks_folder/ZIPFoundation.framework/ZIPFoundation
 
 iOSDFULibrary_fat_framework=`find ./$frameworks_folder -iname "iOSDFULibrary.framework" | head -n 1`
 if [ ! -d "$iOSDFULibrary_fat_framework" ]; then

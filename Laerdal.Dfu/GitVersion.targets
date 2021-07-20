@@ -6,7 +6,7 @@
     <PropertyGroup>
         <UpdateVersionProperties>true</UpdateVersionProperties>
     </PropertyGroup>
-    <Target Name="PrintBuildInfo" AfterTargets="GetVersion">
+    <Target Name="PrintGitVersionInfo" AfterTargets="GetVersion">
         <PropertyGroup>
             <PackageVersion>$(GitVersion_NuGetVersionV2)</PackageVersion>
         </PropertyGroup>
