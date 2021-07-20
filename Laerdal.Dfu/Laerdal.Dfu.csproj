@@ -1,6 +1,5 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.23">
-
-    <Import Project="GitVersion.targets" />
+    <Import Project="GitVersion.targets" Condition=" '$(Configuration)' == 'Release' " />
 
     <!-- SHARED -->
     <PropertyGroup>
@@ -115,6 +114,7 @@
         <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
         <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
         <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
+        <PackageReference Include="Xamarin.Swift" Version="1.0.8" />
         <!--  <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all" /> -->
      </ItemGroup>
      <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " Name="CheckIosLibraryFilesExist" BeforeTargets="PrepareForBuild">
@@ -142,4 +142,11 @@
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
     </ItemGroup>
+
+    <Target Name="PrintBuildInfo" BeforeTargets="CoreCompile">
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="Platform: $(Platform)" />
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+    </Target>
 </Project>

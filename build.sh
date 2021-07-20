@@ -58,6 +58,7 @@ echo "nuget_output_folder = $nuget_output_folder"
 echo "nuget_project_name = $nuget_project_name"
 echo "nuget_csproj_path = $nuget_csproj_path"
 echo "nuget_sharpie_folder = $nuget_sharpie_folder"
+echo "gradle_version = $gradle_version"
 
 if [ "$clean_output" = "1" ]; then
     echo
@@ -68,6 +69,7 @@ if [ "$clean_output" = "1" ]; then
 fi
 
 pushd $nuget_source_folder
+
 . ./download.android.sh
 if [ "$use_carthage" = "1" ]; then
     . ./download.ios.carthage.sh

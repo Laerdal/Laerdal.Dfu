@@ -14,8 +14,13 @@ namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
+        public Func<DfuServiceInitiator, DfuServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
+        
         private void SetInitiator()
         {
+            DfuProgressListener = new DfuProgressListener(this);
+            DfuLogger = new DfuLogger(DeviceId);
+
             Initiator = new Laerdal.Dfu.Droid.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
             
             // PacketsReceiptNotifications
@@ -112,6 +117,8 @@ namespace Laerdal.Dfu
                 Laerdal.Dfu.Droid.DfuServiceInitiator.CreateDfuNotificationChannel(Application.Context);
             }
             
+            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
+            
             // public DfuServiceInitiator SetCurrentMtu(int mtu)
             // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
             // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithoutBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
@@ -124,14 +131,15 @@ namespace Laerdal.Dfu
 
         public Laerdal.Dfu.Droid.DfuServiceController Controller { get; private set; }
 
-        private DfuProgressListener DfuProgressListener { get; }
+        private DfuProgressListener DfuProgressListener { get; set;}
 
-        private DfuLogger DfuLogger { get; }
+        private DfuLogger DfuLogger { get; set;}
 
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
-            DfuProgressListener = new DfuProgressListener(this);
-            DfuLogger = new DfuLogger(deviceId);
+        }
+        public DfuInstallation() : base()
+        {
         }
         
         public override void Start()

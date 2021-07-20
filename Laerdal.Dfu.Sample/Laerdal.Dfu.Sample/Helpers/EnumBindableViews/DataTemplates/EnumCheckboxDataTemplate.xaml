@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Laerdal.Dfu.Sample.Helpers.EnumBindableViews.Models;assembly=Laerdal.Dfu.Sample"
+             x:DataType="models:EnumModel"
+             Orientation="Horizontal"
+             x:Class="Laerdal.Dfu.Sample.Helpers.EnumBindableViews.DataTemplates.EnumCheckboxDataTemplate">
+    <StackLayout.GestureRecognizers>
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped" />
+    </StackLayout.GestureRecognizers>
+    <CheckBox IsChecked="{Binding IsChecked}" x:Name="MainCheckBox" />
+    <Label Text="{Binding .}"
+           LineBreakMode="TailTruncation"
+           HorizontalOptions="Fill"
+           VerticalOptions="Fill"
+           HorizontalTextAlignment="Start"
+           VerticalTextAlignment="Center"
+           MaxLines="1" />
+</StackLayout>
