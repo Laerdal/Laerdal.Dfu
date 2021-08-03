@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <ItemGroup>
-        <PackageReference Include="GitVersion.MsBuild" Version="5.6.10" PrivateAssets="all" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.6.11" PrivateAssets="all" />
     </ItemGroup>
     <PropertyGroup>
         <UpdateVersionProperties>true</UpdateVersionProperties>

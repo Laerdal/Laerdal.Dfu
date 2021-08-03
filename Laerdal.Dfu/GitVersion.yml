@@ -1,15 +1,20 @@
-mode: MainLine
+mode: ContinuousDelivery
 branches:
-  feature:
-    tag: alpha
+  master:
+    tag: ''
+    regex: (^master$|^main$)
+    increment: Minor
+  release:
+    tag: rc
     increment: Patch
+  feature:
+    tag: useBranchName
+    regex: ^features?[/-]
+    increment: Inherit
+  pull-request:
+    tag: pr
+    increment: Inherit
   develop:
     tag: beta
     increment: Patch
     regex: ^dev(elop)?(ment)?$
-  master:
-    tag: ''
-    regex: (^master$|^origin\/master$|^main$|^origin\/main$)
-    increment: Minor
-  pull-request:
-    tag: pr
