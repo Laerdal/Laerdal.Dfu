@@ -1,0 +1,41 @@
+{
+  "url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/47049447",
+  "assets_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/47049447/assets",
+  "upload_url": "https://uploads.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/releases/47049447/assets{?name,label}",
+  "html_url": "https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library/releases/tag/4.11.0",
+  "id": 47049447,
+  "author": {
+    "login": "philips77",
+    "id": 6576580,
+    "node_id": "MDQ6VXNlcjY1NzY1ODA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6576580?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/philips77",
+    "html_url": "https://github.com/philips77",
+    "followers_url": "https://api.github.com/users/philips77/followers",
+    "following_url": "https://api.github.com/users/philips77/following{/other_user}",
+    "gists_url": "https://api.github.com/users/philips77/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/philips77/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/philips77/subscriptions",
+    "organizations_url": "https://api.github.com/users/philips77/orgs",
+    "repos_url": "https://api.github.com/users/philips77/repos",
+    "events_url": "https://api.github.com/users/philips77/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/philips77/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "MDc6UmVsZWFzZTQ3MDQ5NDQ3",
+  "tag_name": "4.11.0",
+  "target_commitish": "master",
+  "name": "4.11.0",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2021-07-30T14:17:59Z",
+  "published_at": "2021-07-30T14:22:52Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/tarball/4.11.0",
+  "zipball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-Pods-DFU-Library/zipball/4.11.0",
+  "body": "This version introduces the following features:\r\n- Sending Abort command in case of an error to a DFU bootloader from SDK 15 or newer to quickly reset the target into application mode (#447). Devices from SDK 12-14 will continue to just be disconnected.\r\n- Using connection timeout during reconnections, instead of hardcoded 5 second timeout (#442).\r\n- Bug fix: Handling situations when object size is reported to be 0 bytes (#443 and #444). \r\n- Bug fix: Missing error codes added. That was causing crashes (#446). \r\n- Minor code improvements (#448, #445).\r\n- Read Object Info was renamed to Select Object, to be more inline with Secure DFU specification (cb29e88a06944ba559e2015cef61d4a4e677330c)."
+}
