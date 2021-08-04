@@ -6,16 +6,10 @@
     <PropertyGroup>
         <UpdateVersionProperties>true</UpdateVersionProperties>
     </PropertyGroup>
-    <Target Name="PrintGitVersionInfo" AfterTargets="GetVersion">
+    <Target Name="SetPackageVersion" AfterTargets="GetVersion">
         <PropertyGroup>
             <PackageVersion>$(GitVersion_NuGetVersionV2)</PackageVersion>
         </PropertyGroup>
-        <Message Importance="High" Text="GitVersion_InformationalVersion: $(GitVersion_InformationalVersion)" />
-        <Message Importance="High" Text="GitVersion_AssemblySemVer: $(GitVersion_AssemblySemVer)" />
-        <Message Importance="High" Text="GitVersion_BranchName: $(GitVersion_BranchName)" />
-        <Message Importance="High" Text="GitVersion_Sha: $(GitVersion_Sha)" />
-        <Message Importance="High" Text="GitVersion_NuGetVersionV2: $(GitVersion_NuGetVersionV2)" />
         <Message Importance="High" Text="##vso[build.updatebuildnumber]$(PackageVersion)" />
     </Target>
-
 </Project>
