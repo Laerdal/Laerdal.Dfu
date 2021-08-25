@@ -83,7 +83,7 @@ xbuild=/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild
 xbuild_parameters=""
 xbuild_parameters="${xbuild_parameters} ONLY_ACTIVE_ARCH=NO"
 xbuild_parameters="${xbuild_parameters} ENABLE_BITCODE=NO"
-xbuild_parameters="${xbuild_parameters} ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES=YES"
+xbuild_parameters="${xbuild_parameters} ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES=NO"
 
 if [ ! "$verbose" = "1" ]; then
     xbuild_parameters="${xbuild_parameters} -quiet"

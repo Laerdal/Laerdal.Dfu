@@ -20,7 +20,7 @@
         <PackageProjectUrl>https://github.com/Laerdal/Laerdal.Dfu</PackageProjectUrl>
         <PackageVersion>1.0.0</PackageVersion>
         <PackageOutputPath>../$(RootNamespace).Output</PackageOutputPath>
-        <!-- <PackageIcon>icon.png</PackageIcon> -->
+        <PackageIcon>icon.png</PackageIcon>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -60,7 +60,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <!-- <None Include="../icon.png" Pack="true" PackagePath="\" /> -->
+        <None Include="../icon.png" Pack="true" PackagePath="\" />
         <None Include="../LICENSE" Pack="true" PackagePath="\" />
     </ItemGroup>
 
