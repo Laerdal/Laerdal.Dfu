@@ -113,6 +113,8 @@
         <Compile Include="iOS\Specific\*.cs" />
         <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
         <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
+        <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
+        <PackageReference Include="Xamarin.Swift" Version="1.0.8" />
         <!--  <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all" /> -->
      </ItemGroup>
      <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " Name="CheckIosLibraryFilesExist" BeforeTargets="PrepareForBuild">
