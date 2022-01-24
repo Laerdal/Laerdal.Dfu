@@ -1,0 +1,42 @@
+{
+  "url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/54880704",
+  "assets_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/54880704/assets",
+  "upload_url": "https://uploads.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/54880704/assets{?name,label}",
+  "html_url": "https://github.com/NordicSemiconductor/Android-DFU-Library/releases/tag/1.12.1-beta01",
+  "id": 54880704,
+  "author": {
+    "login": "philips77",
+    "id": 6576580,
+    "node_id": "MDQ6VXNlcjY1NzY1ODA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6576580?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/philips77",
+    "html_url": "https://github.com/philips77",
+    "followers_url": "https://api.github.com/users/philips77/followers",
+    "following_url": "https://api.github.com/users/philips77/following{/other_user}",
+    "gists_url": "https://api.github.com/users/philips77/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/philips77/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/philips77/subscriptions",
+    "organizations_url": "https://api.github.com/users/philips77/orgs",
+    "repos_url": "https://api.github.com/users/philips77/repos",
+    "events_url": "https://api.github.com/users/philips77/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/philips77/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "RE_kwDOAdiWUM4DRWnA",
+  "tag_name": "1.12.1-beta01",
+  "target_commitish": "main",
+  "name": "DFU Library 1.12.1 beta 1",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2021-12-08T15:04:28Z",
+  "published_at": "2021-12-08T15:06:55Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/tarball/1.12.1-beta01",
+  "zipball_url": "https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/zipball/1.12.1-beta01",
+  "body": "## Note\r\nThis is a beta version with improvements that require verification. A final version may be released afterwards with no changes.\r\n\r\n## What's Changed\r\n* Workaround for hard disconnect and long supervision timeout by @philips77 in https://github.com/NordicSemiconductor/Android-DFU-Library/pull/319\r\n* Fix the problem that resuming the upgrade may be stuck and cannot continue after the upgrade is interrupted by @dev-cqkct in https://github.com/NordicSemiconductor/Android-DFU-Library/pull/317\r\n\r\n## New Contributors\r\n* @dev-cqkct made their first contribution in https://github.com/NordicSemiconductor/Android-DFU-Library/pull/317\r\n\r\n**Full Changelog**: https://github.com/NordicSemiconductor/Android-DFU-Library/compare/1.12.0...1.12.1-beta01",
+  "mentions_count": 2
+}

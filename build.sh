@@ -135,7 +135,7 @@ if [ "$sharpie" = "1" ]; then
     sharpie_version=$(sharpie -v)
     echo "sharpie_version = $sharpie_version"
 
-    sharpie bind -sdk iphoneos -o $nuget_sharpie_folder -f $nuget_frameworks_folder/iOSDFULibrary.framework
+    sharpie bind -sdk iphoneos -o $nuget_sharpie_folder --namespace=Laerdal.Dfu.iOS -f $nuget_frameworks_folder/iOSDFULibrary.framework
 fi
 
 echo ""
@@ -146,7 +146,7 @@ msbuild_parameters=""
 if [ ! "$verbose" = "1" ]; then
     msbuild_parameters="${msbuild_parameters} -nologo -verbosity:quiet"
 fi
-msbuild_parameters="${msbuild_parameters} -t:Rebuild"
+#msbuild_parameters="${msbuild_parameters} -t:Rebuild"
 msbuild_parameters="${msbuild_parameters} -restore:True"
 msbuild_parameters="${msbuild_parameters} -p:Configuration=Release"
 echo "msbuild_parameters = $msbuild_parameters"

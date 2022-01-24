@@ -1,0 +1,42 @@
+{
+  "url": "https://api.github.com/repos/NordicSemiconductor/IOS-DFU-Library/releases/50841622",
+  "assets_url": "https://api.github.com/repos/NordicSemiconductor/IOS-DFU-Library/releases/50841622/assets",
+  "upload_url": "https://uploads.github.com/repos/NordicSemiconductor/IOS-DFU-Library/releases/50841622/assets{?name,label}",
+  "html_url": "https://github.com/NordicSemiconductor/IOS-DFU-Library/releases/tag/4.11.1",
+  "id": 50841622,
+  "author": {
+    "login": "philips77",
+    "id": 6576580,
+    "node_id": "MDQ6VXNlcjY1NzY1ODA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6576580?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/philips77",
+    "html_url": "https://github.com/philips77",
+    "followers_url": "https://api.github.com/users/philips77/followers",
+    "following_url": "https://api.github.com/users/philips77/following{/other_user}",
+    "gists_url": "https://api.github.com/users/philips77/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/philips77/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/philips77/subscriptions",
+    "organizations_url": "https://api.github.com/users/philips77/orgs",
+    "repos_url": "https://api.github.com/users/philips77/repos",
+    "events_url": "https://api.github.com/users/philips77/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/philips77/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "node_id": "RE_kwDOA14Foc4DB8gW",
+  "tag_name": "4.11.1",
+  "target_commitish": "master",
+  "name": "4.11.1",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2021-10-05T19:48:28Z",
+  "published_at": "2021-10-05T19:50:10Z",
+  "assets": [
+
+  ],
+  "tarball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-DFU-Library/tarball/4.11.1",
+  "zipball_url": "https://api.github.com/repos/NordicSemiconductor/IOS-DFU-Library/zipball/4.11.1",
+  "body": "## What's Changed\r\n* Repo renamed to IOS-DFU-Library in https://github.com/NordicSemiconductor/IOS-DFU-Library/pull/450\r\n* Fix for build issues on Xcode 13 and Mac Targets by @dinesharjani in https://github.com/NordicSemiconductor/IOS-DFU-Library/pull/455\r\n\r\n\r\n**Full Changelog**: https://github.com/NordicSemiconductor/IOS-DFU-Library/compare/4.11.0...4.11.1",
+  "mentions_count": 1
+}
