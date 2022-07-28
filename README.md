@@ -27,7 +27,7 @@ brew cask install objectivesharpie
 
 [More about Objective Sharpie](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/binding/objective-sharpie/get-started)
 
-## Steps to build
+## Steps to build on Local-Dev
 
 ### 1) Checkout
 
@@ -35,7 +35,9 @@ brew cask install objectivesharpie
 git clone https://github.com/Laerdal/Laerdal.Dfu.git
 ```
 
-### 2) Run build script
+### 2) Comment out in the .csproj files any mention of Git-related properties
+
+### 3) Run build script
 
 There are 2 sources for the iOS package : via building the release code or using the CocoaPods.
 
