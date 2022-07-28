@@ -360,3 +360,5 @@ Cartfile
 Carthage
 
 Laerdal.Dfu/Droid/Jars/dfu-release.aar
+
+**/.idea/**
