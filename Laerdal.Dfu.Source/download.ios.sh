@@ -6,7 +6,7 @@ echo
 
 # now here : https://api.github.com/repositories/56493473/releases/latest
 github_repository_id=56493473
-github_release_id=50841622
+github_release_id=70971995
 github_info_file="$github_repository_id.$github_release_id.info.json"
 echo "github_repository_id = $github_repository_id"
 echo "github_release_id = $github_release_id"

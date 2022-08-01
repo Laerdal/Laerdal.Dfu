@@ -6,11 +6,12 @@ echo
 
 # now here : https://api.github.com/repositories/30971472/releases/latest
 github_repository_id=30971472
-github_release_id=54880704
+github_release_id=67539652
 github_info_file="$github_repository_id.$github_release_id.info.json"
 echo "github_repo = $github_repo"
 echo "github_release_id = $github_release_id"
 echo "github_info_file = $github_info_file"
+echo "gradle_version = $gradle_version"
 
 if [ ! -f "$github_info_file" ]; then
     echo
