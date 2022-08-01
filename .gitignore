@@ -355,6 +355,7 @@ Laerdal.Dfu.Output
 Laerdal.Dfu.Source/iOS
 Laerdal.Dfu.Source/Android
 Laerdal.Dfu.Source/iOS_Carthage
+Laerdal.Dfu.Source/Android_Maven
 
 Cartfile
 Carthage
@@ -362,3 +363,5 @@ Carthage
 Laerdal.Dfu/Droid/Jars/dfu-release.aar
 
 **/.idea/**
+
+.DS_Store

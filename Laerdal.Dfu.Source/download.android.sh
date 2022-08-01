@@ -1,26 +1,23 @@
 #!/bin/bash
 
-gradle_version=6.4.1
-
 echo
 echo "### DOWNLOAD ANDROID SOURCE ###"
 echo
 
-# find the latest ID here : https://api.github.com/repos/NordicSemiconductor/Android-DFU-Library/releases/latest
-github_repo_owner=NordicSemiconductor
-github_repo=Android-DFU-Library
-github_release_id=34426039
-github_info_file="$github_repo_owner.$github_repo.$github_release_id.info.json"
-echo "github_repo_owner = $github_repo_owner"
+# now here : https://api.github.com/repositories/30971472/releases/latest
+github_repository_id=30971472
+github_release_id=67539652
+github_info_file="$github_repository_id.$github_release_id.info.json"
 echo "github_repo = $github_repo"
 echo "github_release_id = $github_release_id"
 echo "github_info_file = $github_info_file"
+echo "gradle_version = $gradle_version"
 
 if [ ! -f "$github_info_file" ]; then
     echo
     echo "### DOWNLOAD GITHUB INFORMATION ###"
     echo
-    github_info_file_url=https://api.github.com/repos/$github_repo_owner/$github_repo/releases/$github_release_id
+    github_info_file_url=https://api.github.com/repositories/$github_repository_id/releases/$github_release_id
     echo "Downloading $github_info_file_url to $github_info_file"
     curl -s $github_info_file_url > $github_info_file
 fi
@@ -29,17 +26,12 @@ source_folder="Android/Source_$github_release_id"
 echo "source_folder = $source_folder"
 
 if [ ! -d "$source_folder" ]; then
-    # Set version
-    github_tag_name=`cat $github_info_file | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' `
-    github_short_version=`echo "$github_tag_name" | sed 's/v//'`
-    echo "github_tag_name = $github_tag_name"
-    echo "github_short_version = $github_short_version"
 
     # Static configuration
     zip_folder="Android/Zips"
-    zip_file_name="$github_short_version.zip"
+    zip_file_name="$github_release_id.zip"
     zip_file="$zip_folder/$zip_file_name"
-    zip_url="http://github.com/$github_repo_owner/$github_repo/zipball/$github_tag_name"
+    zip_url=`cat $github_info_file | grep 'zipball_url' | sed -E 's/.*"([^"]+)".*/\1/'`
     echo "zip_folder = $zip_folder"
     echo "zip_file_name = $zip_file_name"
     echo "zip_file = $zip_file"
@@ -91,26 +83,35 @@ if [ -f "$gradle_base_folder/local.properties" ]; then
     echo "Created :"
     echo "  - $gradle_base_folder/local.properties"
     echo
+    echo "-----------------------"
+    cat $gradle_base_folder/local.properties
+    echo "-----------------------"
+    echo
 else
     echo "Failed : Can't create '$gradle_base_folder/local.properties'"
     exit 1
 fi
 
-if [ ! "$gradle_version" = "" ]; then
-    mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old
-    sed -E "s/gradle-.*-all.zip/gradle-$gradle_version-all.zip/" $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
-    echo "Edited :"
-    echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
-    echo
-    echo "-----------------------"
-    cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
-    echo "-----------------------"
-    echo
-fi
+if [ "$gradle_version" = "local" ]; then
+    gradle -version
+    gradle assembleRelease -p $gradle_base_folder
+else
+    if [ ! "$gradle_version" = "" ]; then
+        mv $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old
+        sed -E "s/gradle-.*-bin.zip/gradle-$gradle_version-bin.zip/" $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties.old > $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+        echo "Edited :"
+        echo "  - $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties :"
+        echo
+        echo "-----------------------"
+        cat $gradle_base_folder/gradle/wrapper/gradle-wrapper.properties
+        echo "-----------------------"
+        echo
+    fi
 
-chmod +x $gradle_base_folder/gradlew
-$gradle_base_folder/gradlew -version
-$gradle_base_folder/gradlew assembleRelease -p $gradle_base_folder
+    chmod +x $gradle_base_folder/gradlew
+    $gradle_base_folder/gradlew -version
+    $gradle_base_folder/gradlew assembleRelease -p $gradle_base_folder
+fi
 gradle_output_file=`find ./$source_folder/ -ipath "*dfu/build/outputs/aar*" -iname "dfu-release.aar" | head -n 1`
 echo
 

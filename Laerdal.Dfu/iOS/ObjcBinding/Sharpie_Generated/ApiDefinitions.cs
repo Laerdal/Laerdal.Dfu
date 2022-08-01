@@ -1,5 +1,4 @@
 using System;
-using CoreBluetooth;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -31,7 +30,7 @@ namespace Laerdal.Dfu.iOS
 
 		// @property (readonly, copy, nonatomic) NSURL * _Nullable fileUrl;
 		[NullAllowed, Export ("fileUrl", ArgumentSemantic.Copy)]
-		NSUrl FileUrl { get; }
+		NSURL FileUrl { get; }
 
 		// @property (readonly, nonatomic) BOOL valid;
 		[Export ("valid")]
@@ -47,12 +46,12 @@ namespace Laerdal.Dfu.iOS
 
 		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile;
 		[Export ("initWithUrlToZipFile:")]
-		IntPtr Constructor (NSUrl urlToZipFile);
+		IntPtr Constructor (NSURL urlToZipFile);
 
 		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
 		[Export ("initWithUrlToZipFile:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl urlToZipFile, DFUFirmwareType type);
+		IntPtr Constructor (NSURL urlToZipFile, DFUFirmwareType type);
 
 		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile;
 		[Export ("initWithZipFile:")]
@@ -66,7 +65,7 @@ namespace Laerdal.Dfu.iOS
 		// -(instancetype _Nullable)initWithUrlToBinOrHexFile:(NSURL * _Nonnull)urlToBinOrHexFile urlToDatFile:(NSURL * _Nullable)urlToDatFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
 		[Export ("initWithUrlToBinOrHexFile:urlToDatFile:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl urlToBinOrHexFile, [NullAllowed] NSUrl urlToDatFile, DFUFirmwareType type);
+		IntPtr Constructor (NSURL urlToBinOrHexFile, [NullAllowed] NSURL urlToDatFile, DFUFirmwareType type);
 
 		// -(instancetype _Nullable)initWithBinFile:(NSData * _Nonnull)binFile datFile:(NSData * _Nullable)datFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
 		[Export ("initWithBinFile:datFile:type:")]
@@ -279,7 +278,7 @@ namespace Laerdal.Dfu.iOS
 		// -(DFUServiceController * _Nullable)startWithTargetWithIdentifier:(NSUUID * _Nonnull)uuid __attribute__((warn_unused_result("")));
 		[Export ("startWithTargetWithIdentifier:")]
 		[return: NullAllowed]
-		DFUServiceController StartWithTargetWithIdentifier (NSUuid uuid);
+		DFUServiceController StartWithTargetWithIdentifier (NSUUID uuid);
 	}
 
 	// @interface DFUUuid : NSObject
@@ -367,7 +366,7 @@ namespace Laerdal.Dfu.iOS
 		// -(DFUServiceController * _Nullable)startWithTargetWithIdentifier:(NSUUID * _Nonnull)uuid __attribute__((warn_unused_result("")));
 		[Export ("startWithTargetWithIdentifier:")]
 		[return: NullAllowed]
-		DFUServiceController StartWithTargetWithIdentifier (NSUuid uuid);
+		DFUServiceController StartWithTargetWithIdentifier (NSUUID uuid);
 
 		// -(instancetype _Nonnull)initWithCentralManager:(CBCentralManager * _Nonnull)centralManager target:(CBPeripheral * _Nonnull)target __attribute__((objc_designated_initializer)) __attribute__((deprecated("")));
 		[Export ("initWithCentralManager:target:")]
@@ -397,7 +396,7 @@ namespace Laerdal.Dfu.iOS
 		// -(DFUServiceController * _Nullable)startWithTargetWithIdentifier:(NSUUID * _Nonnull)uuid __attribute__((warn_unused_result("")));
 		[Export ("startWithTargetWithIdentifier:")]
 		[return: NullAllowed]
-		DFUServiceController StartWithTargetWithIdentifier (NSUuid uuid);
+		DFUServiceController StartWithTargetWithIdentifier (NSUUID uuid);
 
 		// -(instancetype _Nonnull)initWithCentralManager:(CBCentralManager * _Nonnull)centralManager target:(CBPeripheral * _Nonnull)target __attribute__((objc_designated_initializer)) __attribute__((deprecated("")));
 		[Export ("initWithCentralManager:target:")]

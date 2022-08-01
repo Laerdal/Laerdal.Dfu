@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
     <Import Project="GitVersion.targets" Condition=" '$(Configuration)' == 'Release' " />
 
     <!-- SHARED -->
@@ -80,7 +80,7 @@
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
         <IsBindingProject>true</IsBindingProject>
-        <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
         <AndroidClassParser>class-parse</AndroidClassParser>
         <AndroidCodegenTarget>XAJavaInterop1</AndroidCodegenTarget>
         <DebugType>pdbonly</DebugType>
@@ -93,6 +93,7 @@
         <EmbeddedReferenceJar Include="Droid\Jars\*.jar" />
         <LibraryProjectZip Include="Droid\Jars\*.aar" />
         <TransformFile Include="Droid\Transforms\*.xml" />
+        <PackageReference Include="Xamarin.AndroidX.Core" Version="1.6.0.3" />
         <!-- <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.Droid" Version="*" PrivateAssets="all" /> -->
     </ItemGroup>
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) " Name="CheckAndroidLibraryFilesExist" BeforeTargets="PrepareForBuild">
