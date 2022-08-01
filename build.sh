@@ -13,6 +13,10 @@ usage(){
     echo "  -h | --help                             Prints this message"
 }
 
+# Using Maven and Carthage by default now
+use_maven=1
+use_carthage=1
+
 while [ "$1" != "" ]; do
     case $1 in
         -o | --output )         shift

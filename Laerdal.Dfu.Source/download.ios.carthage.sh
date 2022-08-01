@@ -5,9 +5,17 @@ echo "### DOWNLOAD IOS SOURCE (via Carthage) ###"
 echo
 
 output_folder="iOS_Carthage"
+carthage_version=$(carthage version)
 echo "output_folder = $output_folder"
 
 mkdir -p $output_folder
+
+echo
+echo "-----------------------"
+echo "Carthage version : $carthage_version"
+echo "-----------------------"
+echo
+
 echo "github \"NordicSemiconductor/IOS-Pods-DFU-Library\" == 4.13.0" > $output_folder/Cartfile
 pushd $output_folder
 carthage update --use-xcframeworks --platform iOS
@@ -40,6 +48,7 @@ echo "+"
 lipo -info $iphonesimulator_framework/iOSDFULibrary
 echo "-"
 echo "arm64"
+lipo -remove arm64 -output $iphoneos_framework/iOSDFULibrary $iphoneos_framework/iOSDFULibrary
 lipo -remove arm64 -output $iphonesimulator_framework/iOSDFULibrary $iphonesimulator_framework/iOSDFULibrary
 echo "="
 lipo -create -output $fat_lib_path/iOSDFULibrary.framework/iOSDFULibrary $iphoneos_framework/iOSDFULibrary $iphonesimulator_framework/iOSDFULibrary
@@ -72,6 +81,7 @@ lipo -info $iphonesimulator_framework/ZIPFoundation
 echo "-"
 echo "arm64"
 lipo -remove arm64 -output $iphonesimulator_framework/ZIPFoundation $iphonesimulator_framework/ZIPFoundation
+lipo -remove arm64 -output $iphoneos_framework/ZIPFoundation $iphoneos_framework/ZIPFoundation
 echo "="
 lipo -create -output $fat_lib_path/ZIPFoundation.framework/ZIPFoundation $iphoneos_framework/ZIPFoundation $iphonesimulator_framework/ZIPFoundation
 lipo -info $fat_lib_path/ZIPFoundation.framework/ZIPFoundation
