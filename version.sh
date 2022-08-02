@@ -2,7 +2,7 @@
  
 master_branch="main"
 develop_branch="develop"
-if [ "$TF_BUILD" = "true" ]; then
+if [ "$(TF_BUILD)" = "True" ]; then
     branch_name=$(Build.SourceBranchName)
 else
     branch_name=$(git name-rev HEAD --name-only)

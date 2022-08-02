@@ -52,6 +52,7 @@ nuget_frameworks_folder="$nuget_project_folder/iOS/Frameworks"
 nuget_sharpie_folder="$nuget_project_folder/iOS/ObjcBinding/Sharpie_Generated"
 
 # Generates variables
+echo "version = $version"
 echo "nuget_project_folder = $nuget_project_folder"
 echo "nuget_jars_folder = $nuget_jars_folder"
 echo "nuget_frameworks_folder = $nuget_frameworks_folder"
