@@ -2,7 +2,11 @@
  
 master_branch="main"
 develop_branch="develop"
-branch_name=$(git name-rev HEAD --name-only)
+if [ "$TF_BUILD" = "true" ]; then
+    branch_name=$(Build.SourceBranchName)
+else
+    branch_name=$(git name-rev HEAD --name-only)
+fi
 first_commit=$(git rev-list --max-parents=0 HEAD)
 major=1
 minor=0
