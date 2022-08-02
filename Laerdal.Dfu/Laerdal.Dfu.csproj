@@ -1,7 +1,5 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
-    <Import Project="GitVersion.targets" Condition=" '$(Configuration)' == 'Release' " />
 
-    <!-- SHARED -->
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;monoandroid10.0;xamarin.ios10</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
@@ -12,8 +10,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <RootNamespace>Laerdal.Dfu</RootNamespace>
-
         <PackageId>Laerdal.Dfu</PackageId>
         <PackageTags>Xamarin;Dfu</PackageTags>
         <PackageDescription>Xamarin wrapper around Nordic.Dfu for iOS and Android.</PackageDescription>
@@ -29,17 +25,16 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <AssemblyName>Laerdal.Dfu</AssemblyName>
+        <AssemblyName>$(PackageId)</AssemblyName>
 
-        <Title>Laerdal.Dfu</Title>
+        <RootNamespace>$(PackageId)</RootNamespace>
+        <Title>$(PackageId)</Title>
         <Summary>Xamarin Dfu</Summary>
-        <Description>Xamarin wrapper around Nordic.Dfu for iOS and Android</Description>
+        <Description>$(PackageDescription)</Description>
         <Authors>François Raminosona, Laerdal</Authors>
-        <Owners>François Raminosona, Laerdal</Owners>
-        <Copyright>François Raminosona, Laerdal</Copyright>
+        <Owners>$(Authors)</Owners>
+        <Copyright>$(Authors)</Copyright>
         <RepositoryUrl>https://github.com/Laerdal/Laerdal.Dfu.git</RepositoryUrl>
-        <RepositoryBranch>$(GitVersion_BranchName)</RepositoryBranch>
-        <RepositoryCommit>$(GitVersion_Sha)</RepositoryCommit>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryType>git</RepositoryType>
 
@@ -77,77 +72,15 @@
         <Compile Include="NetStandard\*.cs" />
     </ItemGroup>
 
-    <!-- ANDROID -->
-    <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
-        <IsBindingProject>true</IsBindingProject>
-        <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
-        <AndroidClassParser>class-parse</AndroidClassParser>
-        <AndroidCodegenTarget>XAJavaInterop1</AndroidCodegenTarget>
-        <DebugType>pdbonly</DebugType>
-        <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
-        <Reference Include="Mono.Android" />
-        <Compile Include="Droid\*.cs" />
-        <Compile Include="Droid\Specific\*.cs" />
-        <EmbeddedReferenceJar Include="Droid\Jars\*.jar" />
-        <LibraryProjectZip Include="Droid\Jars\*.aar" />
-        <TransformFile Include="Droid\Transforms\*.xml" />
-        <PackageReference Include="Xamarin.AndroidX.Core" Version="1.6.0.3" />
-        <!-- <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.Droid" Version="*" PrivateAssets="all" /> -->
-    </ItemGroup>
-    <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) " Name="CheckAndroidLibraryFilesExist" BeforeTargets="PrepareForBuild">
-        <Error Condition="!Exists('Droid\Jars\dfu-release.aar')" Text="Droid\Jars\dfu-release.aar does not exist" />
-        <Error Condition="!Exists('Droid\Jars\gson-2.8.6.jar')" Text="Droid\Jars\gson-2.8.6.jar does not exist" />
-    </Target>
-
-    <!-- IOS -->
-    <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-        <IsBindingProject>true</IsBindingProject>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    </PropertyGroup>
-    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-        <Reference Include="Xamarin.iOS" />
-        <Reference Include="netstandard" />
-        <Compile Include="iOS\*.cs" />
-        <Compile Include="iOS\Specific\*.cs" />
-        <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
-        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
-        <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.0" />
-        <PackageReference Include="Xamarin.Swift" Version="1.0.8" />
-        <!--  <PackageReference Condition=" '$(Configuration)' == 'Debug' " Include="Laerdal.Dfu.iOS" Version="*" PrivateAssets="all" /> -->
-     </ItemGroup>
-     <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) " Name="CheckIosLibraryFilesExist" BeforeTargets="PrepareForBuild">
-         <Error Condition="!Exists('iOS\Frameworks\iOSDFULibrary.framework')" Text="iOS\Frameworks\iOSDFULibrary.framework does not exist" />
-         <Error Condition="!Exists('iOS\Frameworks\ZIPFoundation.framework')" Text="iOS\Frameworks\ZIPFoundation.framework does not exist" />
-     </Target>
-     
-     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-         
-         <!-- Frameworks\iOSDFULibrary.framework -->
-        <None Include="iOS\Frameworks\iOSDFULibrary.framework\iOSDFULibrary" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
-            <Link>Frameworks\iOSDFULibrary.framework</Link>
-        </None>
-        <NativeReference Include="iOS\Frameworks\iOSDFULibrary.framework" Condition="Exists('iOS\Frameworks\iOSDFULibrary.framework')">
-            <Kind>Framework</Kind>
-            <Frameworks>Foundation</Frameworks>
-        </NativeReference>
-
-        <!-- Frameworks\ZIPFoundation.framework -->
-        <None Include="iOS\Frameworks\ZIPFoundation.framework\ZIPFoundation" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
-            <Link>Frameworks\ZIPFoundation.framework</Link>
-        </None>
-        <NativeReference Include="iOS\Frameworks\ZIPFoundation.framework" Condition="Exists('iOS\Frameworks\ZIPFoundation.framework')">
-            <Kind>Framework</Kind>
-            <Frameworks>Foundation</Frameworks>
-        </NativeReference>
-    </ItemGroup>
+    <Import Project="Laerdal.Dfu.Droid.targets" />
+    <Import Project="Laerdal.Dfu.iOS.targets" />
 
     <Target Name="PrintBuildInfo" BeforeTargets="CoreCompile">
+        <Message Importance="High" Text="PackageId: $(PackageId)" />
         <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
         <Message Importance="High" Text="Configuration: $(Configuration)" />
         <Message Importance="High" Text="Platform: $(Platform)" />
         <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
     </Target>
 </Project>
