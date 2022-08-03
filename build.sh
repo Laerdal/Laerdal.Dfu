@@ -10,10 +10,15 @@ usage(){
     echo "  -h | --help                             Prints this message"
 }
 
+output_version=1.0.0
+
 while [ "$1" != "" ]; do
     case $1 in
         -o | --output )         shift
                                 output_path=$1
+                                ;;
+        -ov | --output-version ) shift
+                                output_version=$1
                                 ;;
         -g | --gradle-version ) shift
                                 gradle_version=$1
@@ -37,9 +42,6 @@ done
 echo
 echo "### INFORMATION ###"
 echo
-
-version=$(. ./version.sh)
-echo "##vso[build.updatebuildnumber]$version"
 
 # Static configuration
 nuget_project_folder="Laerdal.Dfu"
@@ -95,7 +97,7 @@ fi
 #msbuild_parameters="${msbuild_parameters} -t:Rebuild"
 msbuild_parameters="${msbuild_parameters} -restore:True"
 msbuild_parameters="${msbuild_parameters} -p:Configuration=Release"
-msbuild_parameters="${msbuild_parameters} -p:PackageVersion=$version"
+msbuild_parameters="${msbuild_parameters} -p:PackageVersion=$output_version"
 msbuild_parameters="${msbuild_parameters} -p:PackageDescription=\"Xamarin wrapper around Nordic.Dfu for iOS (NordicSemiconductor:IOS-Pods-DFU-Library:$ios_lib_version) and Android (no.nordicsemi.android:dfu:$android_lib_version:aar).\""
 
 echo "msbuild_parameters = $msbuild_parameters"
