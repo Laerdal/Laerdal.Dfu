@@ -1,7 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;monoandroid10.0;xamarin.ios10</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;monoandroid12.0;xamarin.ios10</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
         <DebugSymbols>true</DebugSymbols>
         <OutputPath>bin\</OutputPath>

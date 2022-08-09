@@ -4,7 +4,7 @@
 # Default values
 artifact_group_id=no.nordicsemi.android
 artifact_id=dfu
-artifact_version=2.0.3
+artifact_version=2.1.0
 artifact_type=aar
 
 echo

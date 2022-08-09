@@ -3,7 +3,7 @@
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
         <IsBindingProject>true</IsBindingProject>
-        <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
         <AndroidClassParser>class-parse</AndroidClassParser>
         <AndroidCodegenTarget>XAJavaInterop1</AndroidCodegenTarget>
         <DebugType>pdbonly</DebugType>

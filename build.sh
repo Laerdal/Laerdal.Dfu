@@ -47,9 +47,12 @@ echo
 # Static configuration
 nuget_project_folder="Laerdal.Dfu"
 nuget_project_name="Laerdal.Dfu"
+
 nuget_output_folder="$nuget_project_name.Output"
 nuget_source_folder="$nuget_project_name.Source"
+
 nuget_csproj_path="$nuget_project_folder/$nuget_project_name.csproj"
+
 nuget_jars_folder="$nuget_project_folder/Droid/Jars"
 nuget_frameworks_folder="$nuget_project_folder/iOS/Frameworks"
 nuget_sharpie_folder="$nuget_project_folder/iOS/ObjcBinding/Sharpie_Generated"
