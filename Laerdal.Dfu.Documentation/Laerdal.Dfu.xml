@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Laerdal.Dfu</name>
+    </assembly>
+    <members>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.AlternativeAdvertisingName">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetDeviceName(string name)
+            iOS :
+                public string? AlternativeAdvertisingName {get; set;}
+                public bool AlternativeAdvertisingNameEnabled {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.DataObjectPreparationDelay">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetPrepareDataObjectDelay(long delay)
+            iOS :
+                public double DataObjectPreparationDelay {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.DisableResume">
+            <summary>
+            Android :
+                public DfuServiceInitiator DisableResume()
+            iOS :
+                public bool DisableResume {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.EnableUnsafeExperimentalButtonlessServiceInSecureDfu">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(bool enable)
+            iOS :
+                public bool EnableUnsafeExperimentalButtonlessServiceInSecureDfu {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.ForceDfu">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetForceDfu(bool force)
+            iOS :
+                public bool ForceDfu {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.ForceScanningForNewAddressInLegacyDfu">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetForceScanningForNewAddressInLegacyDfu(bool force)
+            iOS :
+                public bool ForceScanningForNewAddressInLegacyDfu {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.PacketReceiptNotificationParameter">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetPacketsReceiptNotificationsEnabled(bool enabled)
+                public DfuServiceInitiator SetPacketsReceiptNotificationsValue(int number)
+            iOS :
+                public ushort PacketReceiptNotificationParameter {get; set;}
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.DisableMtuRequest">
+            <summary>
+            Android :
+                public DfuServiceInitiator DisableMtuRequest()
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.DisableNotification">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetDisableNotification(bool disableNotification)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.MbrSize">
+            <summary>
+            Android :
+                public const int DefaultMbrSize = 4096;
+                public DfuServiceInitiator SetMbrSize(int mbrSize)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.Scope">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetScope(int scope)
+                public const int ScopeApplication = 2;
+                public const int ScopeSystemComponents = 1;
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.Foreground">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetForeground(bool foreground)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.KeepBond">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetKeepBond(bool keepBond)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.RestoreBond">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetRestoreBond(bool keepBond)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.Mtu">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetMtu(int mtu)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.NumberOfRetries">
+            <summary>
+            Android :
+                public DfuServiceInitiator SetNumberOfRetries(int max)
+            </summary>
+        </member>
+        <member name="P:Laerdal.Dfu.SharedDfuInstallation.ConnectionTimeout">
+            <summary>
+            iOS :
+                public double ConnectionTimeout {get; set;}
+            </summary>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.SetProperty``1(``0@,``0,System.String)">
+            <summary>
+                Sets the value of a property.
+            </summary>
+            <param name="storage">Reference variable to store it in.</param>
+            <param name="value">The property value.</param>
+            <param name="propertyName">Name of the property</param>
+            <typeparam name="T">The type of the property value.</typeparam>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.SetValue``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+                Sets the value of a property.
+            </summary>
+            <typeparam name="T">The type of the property value.</typeparam>
+            <param name="propertySelector">Expression tree contains the property definition.</param>
+            <param name="value">The property value.</param>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.SetValue``1(``0,System.String)">
+            <summary>
+                Sets the value of a property.
+            </summary>
+            <param name="value">The property value.</param>
+            <param name="propertyName">The name of the property.</param>
+            <typeparam name="T">The type of the property value.</typeparam>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.SetValue``1(System.String,``0)">
+            <summary>
+                Sets the value of a property.
+            </summary>
+            <typeparam name="T">The type of the property value.</typeparam>
+            <param name="propertyName">The name of the property.</param>
+            <param name="value">The property value.</param>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.GetValue``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+                Gets the value of a property.
+            </summary>
+            <typeparam name="T">The type of the property value.</typeparam>
+            <param name="propertySelector">Expression tree contains the property definition.</param>
+            <returns>The value of the property or default value if not exist.</returns>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.GetValue``1(``0,System.String)">
+            <summary>
+                Gets the value of a property.
+            </summary>
+            <typeparam name="T">The type of the property value.</typeparam>
+            <param name="propertyName">The name of the property.</param>
+            <param name="defaultValue"></param>
+            <returns>The value of the property or default value if not exist.</returns>
+        </member>
+        <member name="M:Laerdal.Dfu.Helpers.BindableObject.RaisePropertyChanged(System.String)">
+            <summary>
+                Raises the PropertyChanged event for the given property
+            </summary>
+            <param name="propertyName"></param>
+        </member>
+    </members>
+</doc>

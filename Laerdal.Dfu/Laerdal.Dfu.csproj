@@ -2,76 +2,15 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;monoandroid12.0;xamarin.ios10</TargetFrameworks>
-        <LangVersion>8.0</LangVersion>
-        <DebugSymbols>true</DebugSymbols>
-        <OutputPath>bin\</OutputPath>
-        <OutputType>Library</OutputType>
-        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+        <LaerdalPackageName>Laerdal.Dfu</LaerdalPackageName>
+        <LaerdalPackageTags>Ble;Tools;Xamarin;Dfu;Bluetooth;Nordic;Semiconductor</LaerdalPackageTags>
+        <LaerdalPackageCopyright>François Raminosona, Laerdal Medical</LaerdalPackageCopyright>
+        <LaerdalPackageDescription>Xamarin wrapper around Nordic.Dfu for iOS and Android.</LaerdalPackageDescription>
+        <LaerdalRepositoryUrl>https://github.com/Laerdal/Laerdal.Dfu</LaerdalRepositoryUrl>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <PackageId>Laerdal.Dfu</PackageId>
-        <PackageTags>Xamarin;Dfu</PackageTags>
-        <PackageDescription>Xamarin wrapper around Nordic.Dfu for iOS and Android.</PackageDescription>
-        <PackageProjectUrl>https://github.com/Laerdal/Laerdal.Dfu</PackageProjectUrl>
-        <PackageVersion>1.0.0</PackageVersion>
-        <PackageOutputPath>../$(RootNamespace).Output</PackageOutputPath>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <!-- sourcelink: Include PDB in the built .nupkg -->
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <AssemblyName>$(PackageId)</AssemblyName>
-
-        <RootNamespace>$(PackageId)</RootNamespace>
-        <Title>$(PackageId)</Title>
-        <Summary>Xamarin Dfu</Summary>
-        <Description>$(PackageDescription)</Description>
-        <Authors>François Raminosona, Laerdal</Authors>
-        <Owners>$(Authors)</Owners>
-        <Copyright>$(Authors)</Copyright>
-        <RepositoryUrl>https://github.com/Laerdal/Laerdal.Dfu.git</RepositoryUrl>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-
-        <IncludeSource>True</IncludeSource>
-        <IncludeSymbols>True</IncludeSymbols>
-
-        <!-- see : https://cezarypiatek.github.io/post/managing-output-in-sdk-projects/ -->
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <!-- sourcelink: Embed source files that are not tracked by the source control manager to the PDB -->
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <!-- warning MSB9004: ManifestResourceWithNoCulture item type is deprecated. Emit EmbeddedResource items instead, with metadata WithCulture='false', Type='Resx', and optional LogicalName. -->
-        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB9004</MSBuildWarningsAsMessages>
-        <!-- WARN : SecureDFUServiceInitiator.g.cs: [CS0114] 'SecureDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 
-        'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. 
-        Otherwise add the new keyword.
-        Can be ignored. -->
-        <NoWarn>CS0114</NoWarn>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <None Include="../icon.png" Pack="true" PackagePath="\" />
-        <None Include="../LICENSE" Pack="true" PackagePath="\" />
-    </ItemGroup>
-
-    <!-- SHARED -->
-    <ItemGroup>
-        <Compile Include="Shared\**\*.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-    </ItemGroup>
-    
-    <!-- NETSTANDARD -->
-    <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
-    </PropertyGroup>
-    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
-        <Compile Include="NetStandard\*.cs" />
-    </ItemGroup>
-
+    <Import Project="Laerdal.Dfu.Shared.targets" />
     <Import Project="Laerdal.Dfu.Droid.targets" />
     <Import Project="Laerdal.Dfu.iOS.targets" />
 

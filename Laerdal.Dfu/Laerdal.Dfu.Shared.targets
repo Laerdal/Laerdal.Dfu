@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <Optimize Condition=" '$(Configuration)' == 'Release' ">true</Optimize>
+        <Optimize Condition=" '$(Configuration)' == 'Debug' ">false</Optimize>
+        <LangVersion>9</LangVersion>
+        <DebugSymbols>true</DebugSymbols>
+        <OutputPath>bin\</OutputPath>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <PackOnBuild>true</PackOnBuild>
+        <OutputType>Library</OutputType>
+
+        <RootNamespace>$(LaerdalPackageName)</RootNamespace>
+
+        <PackageId>$(LaerdalPackageName)</PackageId>
+        <PackageTags>$(LaerdalPackageTags)</PackageTags>
+        <PackageDescription>$(LaerdalPackageDescription)</PackageDescription>
+        <PackageProjectUrl>$(LaerdalRepositoryUrl)</PackageProjectUrl>
+        <PackageVersion>0.0.1</PackageVersion>
+        <PackageOutputPath>../$(LaerdalPackageName).Output</PackageOutputPath>
+        <PackageIcon Condition="Exists('icon.png')">icon.png</PackageIcon>
+        <PackageLicenseFile Condition="Exists('LICENSE')">LICENSE</PackageLicenseFile>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <!-- sourcelink: Include PDB in the built .nupkg -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyName>$(LaerdalPackageName)</AssemblyName>
+
+        <Title>$(LaerdalPackageName)</Title>
+        <Summary>$(LaerdalPackageDescription)</Summary>
+        <Description>$(LaerdalPackageDescription)</Description>
+        <Authors>$(LaerdalPackageCopyright)</Authors>
+        <Owners>$(LaerdalPackageCopyright)</Owners>
+        <Copyright>$(LaerdalPackageCopyright)</Copyright>
+        <RepositoryUrl>$(LaerdalRepositoryUrl)</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <IncludeSource>True</IncludeSource>
+        <IncludeSymbols>True</IncludeSymbols>
+
+        <!-- see : https://cezarypiatek.github.io/post/managing-output-in-sdk-projects/ -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <!-- sourcelink: Embed source files that are not tracked by the source control manager to the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- warning MSB9004: ManifestResourceWithNoCulture item type is deprecated. Emit EmbeddedResource items instead, with metadata WithCulture='false', Type='Resx', and optional LogicalName. -->
+        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB9004</MSBuildWarningsAsMessages>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+        <!-- Vsxmd : https://github.com/lijunle/Vsxmd -->
+        <GenerateDocumentation>true</GenerateDocumentation>
+        <DocumentationFile>..\$(LaerdalPackageName).Documentation\$(LaerdalPackageName).xml</DocumentationFile>
+        <DocumentationMarkdown>..\$(LaerdalPackageName).Documentation\$(LaerdalPackageName).$(TargetFramework).md</DocumentationMarkdown>
+        <!-- Missing XML comment for publicly visible type or member -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+        <!-- Only se-->
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../icon.png" Pack="true" PackagePath="\" Condition="Exists('icon.png')" />
+        <None Include="../LICENSE" Pack="true" PackagePath="\" Condition="Exists('LICENSE')" />
+    </ItemGroup>
+
+    <!-- SHARED -->
+    <ItemGroup>
+        <Compile Include="Shared\**\*.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    
+    <!-- NETSTANDARD -->
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
+        <Compile Include="NetStandard\*.cs" />
+    </ItemGroup>
+
+    <Target Name="PrintBuildInfo" BeforeTargets="CoreCompile">
+        <Message Importance="High" Text="PackageId: $(PackageId)" />
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="Platform: $(Platform)" />
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
+    </Target>
+</Project>
