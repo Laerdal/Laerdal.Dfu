@@ -13,13 +13,4 @@
     <Import Project="Laerdal.Dfu.Shared.targets" />
     <Import Project="Laerdal.Dfu.Droid.targets" />
     <Import Project="Laerdal.Dfu.iOS.targets" />
-
-    <Target Name="PrintBuildInfo" BeforeTargets="CoreCompile">
-        <Message Importance="High" Text="PackageId: $(PackageId)" />
-        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
-        <Message Importance="High" Text="Configuration: $(Configuration)" />
-        <Message Importance="High" Text="Platform: $(Platform)" />
-        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
-        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
-    </Target>
 </Project>
