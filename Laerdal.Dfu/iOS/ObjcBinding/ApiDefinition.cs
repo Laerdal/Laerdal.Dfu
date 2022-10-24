@@ -42,6 +42,15 @@ namespace Laerdal.Dfu.iOS
 
 		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile;
 		[Export ("initWithZipFile:")]
+		IntPtr Constructor (NSData zipFile);
+
+		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
+		[Export ("initWithZipFile:type:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSData zipFile, DFUFirmwareType type);
+		
+		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile;
+		[Export ("initWithZipFile:")]
 		IntPtr InitWithZipFile (NSData zipFile);
 
 		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
