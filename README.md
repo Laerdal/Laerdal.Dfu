@@ -27,7 +27,7 @@ brew cask install objectivesharpie
 
 [More about Objective Sharpie](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/binding/objective-sharpie/get-started)
 
-## Steps to build
+## Steps to build on Local-Dev
 
 ### 1) Checkout
 
@@ -35,20 +35,18 @@ brew cask install objectivesharpie
 git clone https://github.com/Laerdal/Laerdal.Dfu.git
 ```
 
-### 2) Run build script
+### 2) Comment out in the .csproj files any mention of Git-related properties
+
+### 3) Set the MSBuild version to 15.0 in Rider's settings (MSBuild 17.0+ won't build)
+
+### 4) Run build script
 
 There are 2 sources for the iOS package : via building the release code or using the CocoaPods.
 
 To build the nuget via building the source code, run :
 
 ```bash
-./build.sh
-```
-
-Otherwise, to download cocoapods xcframeworks :
-
-```bash
-./build.sh --use-carthage
+./build.sh -v
 ```
 
 You'll find the nuget in `Laerdal.Dfu.Output/`

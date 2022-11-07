@@ -31,38 +31,38 @@ namespace Laerdal.Dfu.iOS
 		[Export ("parts")]
 		nint Parts { get; }
 
-		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile;
-		[Export ("initWithUrlToZipFile:")]
-		IntPtr Constructor (NSUrl urlToZipFile);
+		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile error:(NSError * _Nullable * _Nullable)error;
+		[Export ("initWithUrlToZipFile:error:")]
+		IntPtr Constructor (NSUrl urlToZipFile, [NullAllowed] out NSError error);
 
-		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
-		[Export ("initWithUrlToZipFile:type:")]
+		// -(instancetype _Nullable)initWithUrlToZipFile:(NSURL * _Nonnull)urlToZipFile type:(enum DFUFirmwareType)type error:(NSError * _Nullable * _Nullable)error __attribute__((objc_designated_initializer));
+		[Export ("initWithUrlToZipFile:type:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl urlToZipFile, DFUFirmwareType type);
+		IntPtr Constructor (NSUrl urlToZipFile, DFUFirmwareType type, [NullAllowed] out NSError error);
 
-		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile;
-		[Export ("initWithZipFile:")]
-		IntPtr InitWithZipFile (NSData zipFile);
+		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile error:(NSError * _Nullable * _Nullable)error;
+		[Export ("initWithZipFile:error:")]
+		IntPtr Constructor (NSData zipFile, [NullAllowed] out NSError error);
 
-		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
-		[Export ("initWithZipFile:type:")]
+		// -(instancetype _Nullable)initWithZipFile:(NSData * _Nonnull)zipFile type:(enum DFUFirmwareType)type error:(NSError * _Nullable * _Nullable)error __attribute__((objc_designated_initializer));
+		[Export ("initWithZipFile:type:error:")]
 		[DesignatedInitializer]
-		IntPtr InitWithZipFile (NSData zipFile, DFUFirmwareType type);
+		IntPtr Constructor (NSData zipFile, DFUFirmwareType type, [NullAllowed] out NSError error);
 
-		// -(instancetype _Nullable)initWithUrlToBinOrHexFile:(NSURL * _Nonnull)urlToBinOrHexFile urlToDatFile:(NSURL * _Nullable)urlToDatFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
-		[Export ("initWithUrlToBinOrHexFile:urlToDatFile:type:")]
+		// -(instancetype _Nullable)initWithUrlToBinOrHexFile:(NSURL * _Nonnull)urlToBinOrHexFile urlToDatFile:(NSURL * _Nullable)urlToDatFile type:(enum DFUFirmwareType)type error:(NSError * _Nullable * _Nullable)error __attribute__((objc_designated_initializer));
+		[Export ("initWithUrlToBinOrHexFile:urlToDatFile:type:error:")]
 		[DesignatedInitializer]
-		IntPtr InitWithUrlToBinOrHexFile (NSUrl urlToBinOrHexFile, [NullAllowed] NSUrl urlToDatFile, DFUFirmwareType type);
+		IntPtr InitWithUrlToBinOrHexFile (NSUrl urlToBinOrHexFile, [NullAllowed] NSUrl urlToDatFile, DFUFirmwareType type, [NullAllowed] out NSError error);
 
-		// -(instancetype _Nullable)initWithBinFile:(NSData * _Nonnull)binFile datFile:(NSData * _Nullable)datFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
+		// -(instancetype _Nonnull)initWithBinFile:(NSData * _Nonnull)binFile datFile:(NSData * _Nullable)datFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
 		[Export ("initWithBinFile:datFile:type:")]
 		[DesignatedInitializer]
 		IntPtr InitWithBinFile (NSData binFile, [NullAllowed] NSData datFile, DFUFirmwareType type);
 
-		// -(instancetype _Nullable)initWithHexFile:(NSData * _Nonnull)hexFile datFile:(NSData * _Nullable)datFile type:(enum DFUFirmwareType)type __attribute__((objc_designated_initializer));
-		[Export ("initWithHexFile:datFile:type:")]
+		// -(instancetype _Nullable)initWithHexFile:(NSData * _Nonnull)hexFile datFile:(NSData * _Nullable)datFile type:(enum DFUFirmwareType)type error:(NSError * _Nullable * _Nullable)error __attribute__((objc_designated_initializer));
+		[Export ("initWithHexFile:datFile:type:error:")]
 		[DesignatedInitializer]
-		IntPtr InitWithHexFile (NSData hexFile, [NullAllowed] NSData datFile, DFUFirmwareType type);
+		IntPtr InitWithHexFile (NSData hexFile, [NullAllowed] NSData datFile, DFUFirmwareType type, [NullAllowed] out NSError error);
 	}
 
 	// @interface DFUFirmwareSize : NSObject
@@ -245,10 +245,10 @@ namespace Laerdal.Dfu.iOS
 		[DesignatedInitializer]
 		IntPtr Constructor (CBCentralManager centralManager, CBPeripheral target);
 
-		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue __attribute__((objc_designated_initializer));
-		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:")]
+		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue centralManagerOptions:(NSDictionary<NSString *,id> * _Nullable)centralManagerOptions __attribute__((objc_designated_initializer));
+		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:centralManagerOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue);
+		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue, [NullAllowed] NSDictionary<NSString, NSObject> centralManagerOptions);
 
 		// -(DFUServiceInitiator * _Nonnull)withFirmware:(DFUFirmware * _Nonnull)file __attribute__((warn_unused_result("")));
 		[Export ("withFirmware:")]
@@ -256,6 +256,7 @@ namespace Laerdal.Dfu.iOS
 
 		// -(DFUServiceController * _Nullable)start __attribute__((warn_unused_result(""))) __attribute__((deprecated("Use start(target: CBPeripheral) instead.")));
 		[Export ("start")]
+		[return: NullAllowed]
 		DFUServiceController Start ();
 
 		// -(DFUServiceController * _Nullable)startWithTarget:(CBPeripheral * _Nonnull)target __attribute__((warn_unused_result("")));
@@ -351,7 +352,6 @@ namespace Laerdal.Dfu.iOS
 	[BaseType (typeof(DFUServiceInitiator), Name = "_TtC13iOSDFULibrary25LegacyDFUServiceInitiator")]
 	interface LegacyDFUServiceInitiator
 	{
-		// warning CS0114: 'LegacyDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword.
 		// -(DFUServiceController * _Nullable)startWithTargetWithIdentifier:(NSUUID * _Nonnull)uuid __attribute__((warn_unused_result("")));
 		[Export ("startWithTargetWithIdentifier:")]
 		[return: NullAllowed]
@@ -362,10 +362,10 @@ namespace Laerdal.Dfu.iOS
 		[DesignatedInitializer]
 		IntPtr Constructor (CBCentralManager centralManager, CBPeripheral target);
 
-		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue __attribute__((objc_designated_initializer));
-		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:")]
+		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue centralManagerOptions:(NSDictionary<NSString *,id> * _Nullable)centralManagerOptions __attribute__((objc_designated_initializer));
+		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:centralManagerOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue);
+		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue, [NullAllowed] NSDictionary<NSString, NSObject> centralManagerOptions);
 	}
 
 	// @protocol LoggerDelegate
@@ -382,7 +382,6 @@ namespace Laerdal.Dfu.iOS
 	[BaseType (typeof(DFUServiceInitiator), Name = "_TtC13iOSDFULibrary25SecureDFUServiceInitiator")]
 	interface SecureDFUServiceInitiator
 	{
-		// warning CS0114: 'SecureDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword.
 		// -(DFUServiceController * _Nullable)startWithTargetWithIdentifier:(NSUUID * _Nonnull)uuid __attribute__((warn_unused_result("")));
 		[Export ("startWithTargetWithIdentifier:")]
 		[return: NullAllowed]
@@ -393,9 +392,9 @@ namespace Laerdal.Dfu.iOS
 		[DesignatedInitializer]
 		IntPtr Constructor (CBCentralManager centralManager, CBPeripheral target);
 
-		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue __attribute__((objc_designated_initializer));
-		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:")]
+		// -(instancetype _Nonnull)initWithQueue:(dispatch_queue_t _Nullable)queue delegateQueue:(dispatch_queue_t _Nonnull)delegateQueue progressQueue:(dispatch_queue_t _Nonnull)progressQueue loggerQueue:(dispatch_queue_t _Nonnull)loggerQueue centralManagerOptions:(NSDictionary<NSString *,id> * _Nullable)centralManagerOptions __attribute__((objc_designated_initializer));
+		[Export ("initWithQueue:delegateQueue:progressQueue:loggerQueue:centralManagerOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue);
+		IntPtr Constructor ([NullAllowed] DispatchQueue queue, DispatchQueue delegateQueue, DispatchQueue progressQueue, DispatchQueue loggerQueue, [NullAllowed] NSDictionary<NSString, NSObject> centralManagerOptions);
 	}
 }

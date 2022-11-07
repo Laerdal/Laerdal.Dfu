@@ -8,7 +8,6 @@ namespace Laerdal.Dfu
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
             throw new NotImplementedException();
-            
         }
 
         protected override void Dispose(bool disposing)
