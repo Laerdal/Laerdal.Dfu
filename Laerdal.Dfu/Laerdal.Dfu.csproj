@@ -8,9 +8,152 @@
         <LaerdalPackageCopyright>François Raminosona, Laerdal Medical</LaerdalPackageCopyright>
         <LaerdalPackageDescription>Xamarin wrapper around Nordic.Dfu for iOS and Android.</LaerdalPackageDescription>
         <LaerdalRepositoryUrl>https://github.com/Laerdal/Laerdal.Dfu</LaerdalRepositoryUrl>
+
+        <DownloadNativeFiles>true</DownloadNativeFiles>
     </PropertyGroup>
 
-    <Import Project="Laerdal.Dfu.Shared.targets" />
-    <Import Project="Laerdal.Dfu.Droid.targets" />
-    <Import Project="Laerdal.Dfu.iOS.targets" />
+    <PropertyGroup>
+        <LangVersion>9</LangVersion>
+        <DebugSymbols>true</DebugSymbols>
+        <OutputPath>bin\</OutputPath>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <PackOnBuild>true</PackOnBuild>
+        <OutputType>Library</OutputType>
+
+        <RootNamespace>$(LaerdalPackageName)</RootNamespace>
+
+        <PackageId>$(LaerdalPackageName)</PackageId>
+        <PackageTags>$(LaerdalPackageTags)</PackageTags>
+        <PackageDescription>$(LaerdalPackageDescription)</PackageDescription>
+        <PackageProjectUrl>$(LaerdalRepositoryUrl)</PackageProjectUrl>
+        <PackageVersion>0.0.1</PackageVersion>
+        <PackageOutputPath>../$(LaerdalPackageName).Output</PackageOutputPath>
+        <PackageIcon Condition="Exists('../icon.png')">icon.png</PackageIcon>
+        <PackageLicenseFile Condition="Exists('../LICENSE')">LICENSE</PackageLicenseFile>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <!-- sourcelink: Include PDB in the built .nupkg -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyName>$(LaerdalPackageName)</AssemblyName>
+
+        <Title>$(LaerdalPackageName)</Title>
+        <Summary>$(LaerdalPackageDescription)</Summary>
+        <Description>$(LaerdalPackageDescription)</Description>
+        <Authors>$(LaerdalPackageCopyright)</Authors>
+        <Owners>$(LaerdalPackageCopyright)</Owners>
+        <Copyright>$(LaerdalPackageCopyright)</Copyright>
+        <RepositoryUrl>$(LaerdalRepositoryUrl)</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <IncludeSource>True</IncludeSource>
+        <IncludeSymbols>True</IncludeSymbols>
+
+        <!-- see : https://cezarypiatek.github.io/post/managing-output-in-sdk-projects/ -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <!-- sourcelink: Embed source files that are not tracked by the source control manager to the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- warning MSB9004: ManifestResourceWithNoCulture item type is deprecated. Emit EmbeddedResource items instead, with metadata WithCulture='false', Type='Resx', and optional LogicalName. -->
+        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB9004</MSBuildWarningsAsMessages>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../icon.png" Pack="true" PackagePath="\" Condition="Exists('../icon.png')" />
+        <None Include="../LICENSE" Pack="true" PackagePath="\" Condition="Exists('../LICENSE')" />
+    </ItemGroup>
+
+    <!-- SHARED -->
+    <ItemGroup>
+        <Compile Include="Shared\**\*.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    </ItemGroup>
+    
+    <!-- NETSTANDARD -->
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
+        <Compile Include="NetStandard\*.cs" />
+    </ItemGroup>
+
+    <Target Name="PrintBuildInfo" BeforeTargets="BeforeBuild">
+        <Message Importance="High" Text="PackageId: $(PackageId)" />
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="Platform: $(Platform)" />
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
+    </Target>
+    <!-- ANDROID -->
+    <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
+        <IsBindingProject>true</IsBindingProject>
+        <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
+        <AndroidClassParser>class-parse</AndroidClassParser>
+        <AndroidCodegenTarget>XAJavaInterop1</AndroidCodegenTarget>
+        <DebugType>pdbonly</DebugType>
+        <DefineConstants>TRACE</DefineConstants>
+        <!-- warning CS0618: 'IntentService' is obsolete: 'This class is obsoleted in this android platform' -->
+        <!-- warning CS0618: 'IDfuSettingsConstants' is obsolete: 'This class is obsoleted in this android platform' -->
+        <NoWarn>CS0618</NoWarn>
+    </PropertyGroup>
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
+        <Reference Include="Mono.Android" />
+        <Compile Include="Droid\*.cs" />
+        <Compile Include="Droid\Specific\*.cs" />
+        <EmbeddedReferenceJar Include="Droid\Jars\gson.jar" />
+        <LibraryProjectZip Include="Droid\Jars\dfu.aar" />
+        <TransformFile Include="Droid\Transforms\*.xml" />
+        <PackageReference Include="Xamarin.AndroidX.Core" Version="1.8.0.1" />
+    </ItemGroup>
+    <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) AND $(DownloadNativeFiles) " Name="_DownloadAndroidNativeFiles" BeforeTargets="_CreateBindingResourceArchive">
+        <DownloadFile DestinationFileName="dfu.aar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/no/nordicsemi/android/dfu/2.2.2/dfu-2.2.2.aar"/>
+        <DownloadFile DestinationFileName="gson.jar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10/gson-2.10.jar"/>
+    </Target>
+
+    <!-- IOS -->
+    <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+        <IsBindingProject>true</IsBindingProject>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+        <!-- warning CS0114: 'LegacyDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword. -->
+        <!-- warning CS0114: 'SecureDFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)' hides inherited member 'DFUServiceInitiator.StartWithTargetWithIdentifier(NSUuid)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword. -->
+        <NoWarn>CS0114</NoWarn>
+    </PropertyGroup>
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+        <Reference Include="Xamarin.iOS" />
+        <Reference Include="netstandard" />
+        <Compile Include="iOS\*.cs" />
+        <Compile Include="iOS\Specific\*.cs" />
+        <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
+        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
+        <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.1" />
+        <PackageReference Include="Xamarin.Swift" Version="1.0.11" />
+     </ItemGroup>
+     
+    <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)" Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild">
+        <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library"' Overwrite="true"/>
+        <Exec WorkingDirectory="iOS\Carthage\" Command="carthage update --use-xcframeworks --platform iOS"/>
+        <Exec Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework"/>
+     </Target>
+     
+     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+         <!-- Frameworks\iOSDFULibrary.framework -->
+        <NativeReference Include="iOS\Carthage\Carthage\Build\iOSDFULibrary.xcframework">
+            <Kind>Framework</Kind>
+            <SmartLink>False</SmartLink>
+            <Frameworks>Foundation</Frameworks>
+        </NativeReference>
+        <!-- Frameworks\ZIPFoundation.framework -->
+        <NativeReference Include="iOS\Carthage\Carthage\Build\ZIPFoundation.xcframework">
+            <Kind>Framework</Kind>
+            <SmartLink>False</SmartLink>
+            <Frameworks>Foundation</Frameworks>
+        </NativeReference>
+    </ItemGroup>
 </Project>

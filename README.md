@@ -46,13 +46,7 @@ There are 2 sources for the iOS package : via building the release code or using
 To build the nuget via building the source code, run :
 
 ```bash
-./build.sh
-```
-
-Otherwise, to download cocoapods xcframeworks :
-
-```bash
-./build.sh --use-carthage
+./build.sh -v
 ```
 
 You'll find the nuget in `Laerdal.Dfu.Output/`

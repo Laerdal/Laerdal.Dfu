@@ -350,12 +350,9 @@ MigrationBackup/
 
 
 Laerdal.Dfu.Output
-Laerdal.Dfu.Source/*/
 
-Laerdal.Dfu/iOS/Frameworks/*
-Laerdal.Dfu/iOS/Frameworks/version.txt
-Laerdal.Dfu/Droid/Jars/*.aar
-Laerdal.Dfu/Droid/Jars/version.txt
+Laerdal.Dfu/iOS/Carthage
+Laerdal.Dfu/Droid/Jars
 
 **/.idea/**
 
