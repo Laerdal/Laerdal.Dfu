@@ -91,6 +91,7 @@
         <Message Importance="High" Text="Platform: $(Platform)" />
         <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
         <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
+        <Message Importance="High" Text="LaerdalGithubAccessToken: $(LaerdalGithubAccessToken)" />
     </Target>
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
