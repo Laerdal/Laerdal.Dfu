@@ -1,7 +1,9 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;monoandroid12.0;xamarin.ios10</TargetFrameworks>
+        <!-- it only makes sense to build xamarin.ios under osx because xcodebuild is only available there -->
+        <TargetFrameworks>netstandard2.0;monoandroid12.0</TargetFrameworks>
+        <TargetFrameworks Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">$(TargetFrameworks);xamarin.ios10</TargetFrameworks>
 
         <LaerdalPackageName>Laerdal.Dfu</LaerdalPackageName>
         <LaerdalPackageTags>Ble;Tools;Xamarin;Dfu;Bluetooth;Nordic;Semiconductor</LaerdalPackageTags>
