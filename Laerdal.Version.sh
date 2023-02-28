@@ -196,49 +196,32 @@ version_full=$version_core$version_extension
 version_assembly=$version_core.$revision
 
 
-log "Laerdal.Version.Major:$major"
-log "Laerdal.Version.Minor:$minor"
-log "Laerdal.Version.Patch:$patch"
-log "Laerdal.Version.Suffix:$suffix"
-log "Laerdal.Version.Revision:$revision"
-log "Laerdal.Version.BuildId:$build_id"
-log "Laerdal.Version.Core:$version_core"
-log "Laerdal.Version.Extension:$version_extension"
-log "Laerdal.Version.Full:$version_full"
-log "Laerdal.Version.Assembly:$version_assembly"
-log "Laerdal.Version.BranchName:$branch_name"
-log "Laerdal.Version.ScriptCalled:true"
-
-
-if [[ $azure_dev_ops_build -eq 1 ]]; then
-    echo "##vso[task.setvariable variable=Laerdal.Version.Major;]$major"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Minor;]$minor"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Patch;]$patch"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Suffix;]$suffix"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Revision;]$revision"
-    echo "##vso[task.setvariable variable=Laerdal.Version.BuildId;]$build_id"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Core;]$version_core"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Extension;]$version_extension"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Full;]$version_full"
-    echo "##vso[task.setvariable variable=Laerdal.Version.Assembly;]$version_assembly"
-    echo "##vso[task.setvariable variable=Laerdal.Version.BranchName;]$branch_name"
-    echo "##vso[build.updatebuildnumber]$version_full"
-    echo "##vso[task.setvariable variable=Laerdal.Version.ScriptCalled;]true"
-fi
+log "Laerdal_Version_Major:$major"
+log "Laerdal_Version_Minor:$minor"
+log "Laerdal_Version_Patch:$patch"
+log "Laerdal_Version_Suffix:$suffix"
+log "Laerdal_Version_Revision:$revision"
+log "Laerdal_Version_BuildId:$build_id"
+log "Laerdal_Version_Core:$version_core"
+log "Laerdal_Version_Extension:$version_extension"
+log "Laerdal_Version_Full:$version_full"
+log "Laerdal_Version_Assembly:$version_assembly"
+log "Laerdal_Version_BranchName:$branch_name"
+log "Laerdal_Version_ScriptCalled:true"
 
 if [ "$output" != "" ]; then
     mkdir -p "$(dirname "$output")" && touch "$output" ;
-    echo "Laerdal.Version.Major=$major" > $output
-    echo "Laerdal.Version.Minor=$minor" >> $output
-    echo "Laerdal.Version.Patch=$patch" >> $output
-    echo "Laerdal.Version.Suffix=$suffix" >> $output
-    echo "Laerdal.Version.Revision=$revision" >> $output
-    echo "Laerdal.Version.BuildId=$build_id" >> $output
-    echo "Laerdal.Version.Core=$version_core" >> $output
-    echo "Laerdal.Version.Extension=$version_extension" >> $output
-    echo "Laerdal.Version.Full=$version_full" >> $output
-    echo "Laerdal.Version.Assembly=$version_assembly" >> $output
-    echo "Laerdal.Version.BranchName=$branch_name" >> $output
+    echo "Laerdal_Version_Major=$major" > $output
+    echo "Laerdal_Version_Minor=$minor" >> $output
+    echo "Laerdal_Version_Patch=$patch" >> $output
+    echo "Laerdal_Version_Suffix=$suffix" >> $output
+    echo "Laerdal_Version_Revision=$revision" >> $output
+    echo "Laerdal_Version_BuildId=$build_id" >> $output
+    echo "Laerdal_Version_Core=$version_core" >> $output
+    echo "Laerdal_Version_Extension=$version_extension" >> $output
+    echo "Laerdal_Version_Full=$version_full" >> $output
+    echo "Laerdal_Version_Assembly=$version_assembly" >> $output
+    echo "Laerdal_Version_BranchName=$branch_name" >> $output
 fi
 
 echo $version_full
