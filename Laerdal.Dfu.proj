@@ -64,6 +64,7 @@
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Assembly=$(Laerdal_Version_Assembly)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Full=$(Laerdal_Version_Full)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);GithubAccessToken=$(GithubAccessToken)</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters  Condition=" '$(TF_BUILD)' != '' ">$(_Laerdal_Build_Parameters);RunSharpie=false</_Laerdal_Build_Parameters>
         </PropertyGroup>
 
         <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
