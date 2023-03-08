@@ -1,6 +1,6 @@
 #!/bin/bash
 usage(){
-    echo "usage: ./Laerdal.Version.sh [--master-branch master] [--develop-branch develop] [--major 1] [--minor 0] [--patch 0] [--revision 0] [--build-id 0] [--branch branchname] [-o | --output CHANGELOG.md] [-h | --help]"
+    echo "usage: ./Laerdal.Version.sh [--master-branch master] [--develop-branch develop] [--major 1] [--minor 0] [--patch 0] [--revision 0] [--build-id 0] [--branch branchname] [-o | --output version.txt] [-h | --help]"
     echo "parameters:"
     echo "  --master-branch [branch]           Name of the master branch (default is master)"
     echo "  --develop-branch [branch]          Name of the develop branch (default is develop)"

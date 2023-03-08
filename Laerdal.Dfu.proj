@@ -2,7 +2,7 @@
 <!-- Run with "msbuild Laerdal.Dfu.proj" -->
 <Project DefaultTargets="BuildProjects">
     <PropertyGroup>
-        <PackageOutputPath Condition="'$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.Dfu.Output/`))</PackageOutputPath>
+        <PackageOutputPath Condition="'$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Output/`))</PackageOutputPath>
         <PackageOutputPath Condition="'$(PackageOutputPath)' == '' AND '$(TF_BUILD)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
         <RunSharpie Condition="'$(TF_BUILD)' != '' ">false</RunSharpie>
 
@@ -64,7 +64,7 @@
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Assembly=$(Laerdal_Version_Assembly)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Full=$(Laerdal_Version_Full)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);GithubAccessToken=$(GithubAccessToken)</_Laerdal_Build_Parameters>
-            <_Laerdal_Build_Parameters  Condition=" '$(TF_BUILD)' != '' ">$(_Laerdal_Build_Parameters);RunSharpie=false</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters  Condition=" '$(RunSharpie)' != '' ">$(_Laerdal_Build_Parameters);RunSharpie=$(RunSharpie)</_Laerdal_Build_Parameters>
         </PropertyGroup>
 
         <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
