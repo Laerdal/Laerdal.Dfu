@@ -165,7 +165,6 @@
         <Compile Include="Droid\*.cs" />
         <Compile Include="Droid\Specific\*.cs" />
         <EmbeddedReferenceJar Include="Droid\Jars\gson.jar" />
-        <LibraryProjectZip Include="Droid\Jars\dfu.aar" />
         <!-- Using locally built dfu.aar -->
         <!--<LibraryProjectZip Include="Droid\Jars\dfu.aar" /> -->
         <LibraryProjectZip Include="Droid\dfu-release.aar" />
