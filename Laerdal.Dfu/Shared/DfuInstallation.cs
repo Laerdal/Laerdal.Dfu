@@ -215,6 +215,16 @@ namespace Laerdal.Dfu
             get => GetValue<int?>();
             set => SetValue(value);
         }
+
+        /// <summary>
+        /// Android :
+        ///     public DfuServiceInitiator SetPhy(int phy)
+        /// </summary>
+        public int? Phy
+        {
+            get => GetValue<int?>();
+            set => SetValue(value);
+        }
         
         /// <summary>
         /// Android :

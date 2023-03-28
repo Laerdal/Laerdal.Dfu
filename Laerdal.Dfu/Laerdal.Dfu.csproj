@@ -166,11 +166,15 @@
         <Compile Include="Droid\Specific\*.cs" />
         <EmbeddedReferenceJar Include="Droid\Jars\gson.jar" />
         <LibraryProjectZip Include="Droid\Jars\dfu.aar" />
+        <!-- Using locally built dfu.aar -->
+        <!--<LibraryProjectZip Include="Droid\Jars\dfu.aar" /> -->
+        <LibraryProjectZip Include="Droid\dfu-release.aar" />
         <TransformFile Include="Droid\Transforms\*.xml" />
         <PackageReference Include="Xamarin.AndroidX.Core" Version="1.8.0.1" />
     </ItemGroup>
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) AND $(DownloadNativeFiles) " Name="_DownloadAndroidNativeFiles" BeforeTargets="_CreateBindingResourceArchive">
-        <DownloadFile DestinationFileName="dfu.aar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/no/nordicsemi/android/dfu/$(Laerdal_Package_Android_Dfu_Version)/dfu-$(Laerdal_Package_Android_Dfu_Version).aar"/>
+        <!-- Using locally built dfu.aar -->
+        <!--<DownloadFile DestinationFileName="dfu.aar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/no/nordicsemi/android/dfu/$(Laerdal_Package_Android_Dfu_Version)/dfu-$(Laerdal_Package_Android_Dfu_Version).aar"/>-->
         <DownloadFile DestinationFileName="gson.jar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/com/google/code/gson/gson/$(Laerdal_Package_Android_Gson_Version)/gson-$(Laerdal_Package_Android_Gson_Version).jar"/>
     </Target>
 

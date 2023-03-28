@@ -105,6 +105,12 @@ namespace Laerdal.Dfu
                 Initiator = Initiator.SetMtu(Mtu.Value);
             }
             
+            // Phy
+            if (Phy.HasValue)
+            {
+                Initiator = Initiator.SetPhy(Phy.Value);
+            }
+            
             // NumberOfRetries
             if (NumberOfRetries.HasValue)
             {
