@@ -108,7 +108,7 @@ namespace Laerdal.Dfu
             // Phy
             if (Phy.HasValue)
             {
-                Initiator = Initiator.SetPhy(Phy.Value);
+                Initiator = Initiator.SetPhy((int) Phy.Value);
             }
             
             // NumberOfRetries
