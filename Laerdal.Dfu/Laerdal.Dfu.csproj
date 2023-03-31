@@ -48,7 +48,6 @@
         <NoBindingEmbedding>false</NoBindingEmbedding>
 
         <Deterministic>true</Deterministic>
-        <DebugType>pdbonly</DebugType>
     </PropertyGroup>
 
 
@@ -150,6 +149,7 @@
 
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
+        <DebugType>pdbonly</DebugType>
         <IsBindingProject>true</IsBindingProject>
         <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
         <AndroidClassParser>class-parse</AndroidClassParser>
