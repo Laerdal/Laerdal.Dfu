@@ -117,6 +117,18 @@ namespace Laerdal.Dfu
                 Initiator = Initiator.SetNumberOfRetries(NumberOfRetries.Value);
             }
             
+            // ConnectionTimeout
+            if (RebootTime.HasValue)
+            {
+                Initiator = Initiator.SetRebootTime(RebootTime.Value);
+            }
+
+            // ConnectionTimeout
+            if (ScanTimeout.HasValue)
+            {
+                Initiator = Initiator.SetScanTimeout(ScanTimeout.Value);
+            }
+
             // For Oreo progress
             if ((int) Build.VERSION.SdkInt >= 26)
             {

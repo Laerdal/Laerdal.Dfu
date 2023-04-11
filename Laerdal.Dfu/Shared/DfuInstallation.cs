@@ -246,6 +246,26 @@ namespace Laerdal.Dfu
             set => SetValue(value);
         }
         
+        /// <summary>
+        /// Android :
+        ///     public DfuServiceInitiator SetScanTimeout(long scanTimeout)
+        /// </summary>
+        public long? ScanTimeout
+        {
+            get => GetValue<long?>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Android :
+        ///     public DfuServiceInitiator SetRebootTime(long rebootTime)
+        /// </summary>
+        public long? RebootTime
+        {
+            get => GetValue<long?>();
+            set => SetValue(value);
+        }
+        
         // TODO : CustomUuids
         
         #endregion

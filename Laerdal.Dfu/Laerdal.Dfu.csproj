@@ -15,7 +15,7 @@
         <Laerdal_Package_Description>Xamarin wrapper around Nordic.Dfu for iOS (NordicSemiconductor:IOS-Pods-DFU-Library:$(Laerdal_Package_iOS_Dfu_Version)) and Android (no.nordicsemi.android:dfu:$(Laerdal_Package_Android_Dfu_Version)).</Laerdal_Package_Description>
         <Laerdal_Package_Tags>Ble;Tools;Xamarin;Dfu;Bluetooth;Nordic;Semiconductor</Laerdal_Package_Tags>
         <!--<GithubAccessToken>ghp_XXXXXXXXX</GithubAccessToken>-->
-        
+
         <DownloadNativeFiles Condition="'$(DownloadNativeFiles)' == ''">true</DownloadNativeFiles>
         <RunSharpie Condition="'$(RunSharpie)' == ''">true</RunSharpie>
     </PropertyGroup>
@@ -141,7 +141,7 @@
         <Compile Include="Shared\**\*.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
-    
+
     <!-- NETSTANDARD -->
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
         <Compile Include="NetStandard\*.cs" />
@@ -195,25 +195,84 @@
         <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
         <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.1" />
         <PackageReference Include="Xamarin.Swift" Version="1.0.11" />
-     </ItemGroup>
-     
-    <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)" Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild">
+    </ItemGroup>
+    <!-- Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)"-->
+    <Target Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild" Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)">
+        <!-- Download iOSDFULibrary.xcframework with Carthage-->
         <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-DFU-Library" == $(Laerdal_Package_iOS_Dfu_Version)' Overwrite="true"/>
         <Exec WorkingDirectory="iOS\Carthage\" Command="carthage update --use-xcframeworks --platform iOS"/>
-        <Exec Condition=" $(RunSharpie)" Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(GithubAccessToken)"/>
-     </Target>
-     
-     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+
+    </Target>
+    <Target Name="_BuildFatiOSDFULibrary" AfterTargets="_DownloadIosNativeFiles" Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)">
+        <PropertyGroup>
+            <_library_name>iOSDFULibrary</_library_name>
+            <_xcframework>iOS/Carthage/Carthage/Build/$(_library_name).xcframework</_xcframework>
+
+            <_iphonesimulator>$(_xcframework)/ios-arm64_x86_64-simulator</_iphonesimulator>
+            <_iphoneos>$(_xcframework)/ios-arm64</_iphoneos>
+
+            <_iphonesimulator_framework>$(_iphonesimulator)/$(_library_name).framework</_iphonesimulator_framework>
+            <_iphoneos_framework>$(_iphoneos)/$(_library_name).framework</_iphoneos_framework>
+
+            <_iphonesimulator_dSYM>$(_iphonesimulator)/dSYMs/$(_library_name).framework.dSYM</_iphonesimulator_dSYM>
+            <_iphoneos_dSYM>$(_iphoneos)/dSYMs/$(_library_name).framework.dSYM</_iphoneos_dSYM>
+        </PropertyGroup>
+        <Error Text="'$(_iphoneos_framework)' could not be found. Please run 'carthage update' in the iOS folder." Condition=" !Exists('$(_iphoneos_framework)') " />
+        <Error Text="'$(_iphonesimulator_framework)' could not be found. Please run 'carthage update' in the iOS folder." Condition=" !Exists('$(_iphonesimulator_framework)') " />
+
+        <Exec WorkingDirectory="$(_iphonesimulator_framework)" Command="lipo -info $(_library_name)"/>
+        <Exec WorkingDirectory="$(_iphoneos_framework)" Command="lipo -info $(_library_name)"/>
+
+        <Exec WorkingDirectory="$(_iphonesimulator_framework)" Command="lipo -remove arm64 -output $(_library_name) $(_library_name)"/>
+        <Exec Command="lipo -create $(_iphoneos_framework)/$(_library_name) $(_iphonesimulator_framework)/$(_library_name) -output $(_iphoneos_framework)/$(_library_name)"/>
+
+        <Exec WorkingDirectory="$(_iphoneos_framework)" Command="lipo -info $(_library_name)"/>
+    </Target>
+
+    <Target Name="_BuildFatZIPFoundation" AfterTargets="_BuildFatiOSDFULibrary" Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)">
+        <PropertyGroup>
+            <_library_name>ZIPFoundation</_library_name>
+            <_xcframework>iOS/Carthage/Carthage/Build/$(_library_name).xcframework</_xcframework>
+
+            <_iphonesimulator>$(_xcframework)/ios-arm64_x86_64-simulator</_iphonesimulator>
+            <_iphoneos>$(_xcframework)/ios-arm64</_iphoneos>
+
+            <_iphonesimulator_framework>$(_iphonesimulator)/$(_library_name).framework</_iphonesimulator_framework>
+            <_iphoneos_framework>$(_iphoneos)/$(_library_name).framework</_iphoneos_framework>
+
+            <_iphonesimulator_dSYM>$(_iphonesimulator)/dSYMs/$(_library_name).framework.dSYM</_iphonesimulator_dSYM>
+            <_iphoneos_dSYM>$(_iphoneos)/dSYMs/$(_library_name).framework.dSYM</_iphoneos_dSYM>
+        </PropertyGroup>
+        <Error Text="'$(_iphoneos_framework)' could not be found. Please run 'carthage update' in the iOS folder." Condition=" !Exists('$(_iphoneos_framework)') " />
+        <Error Text="'$(_iphonesimulator_framework)' could not be found. Please run 'carthage update' in the iOS folder." Condition=" !Exists('$(_iphonesimulator_framework)') " />
+
+        <Exec WorkingDirectory="$(_iphonesimulator_framework)" Command="lipo -info $(_library_name)"/>
+        <Exec WorkingDirectory="$(_iphoneos_framework)" Command="lipo -info $(_library_name)"/>
+
+        <Exec WorkingDirectory="$(_iphonesimulator_framework)" Command="lipo -remove arm64 -output $(_library_name) $(_library_name)"/>
+        <Exec Command="lipo -create $(_iphoneos_framework)/$(_library_name) $(_iphonesimulator_framework)/$(_library_name) -output $(_iphoneos_framework)/$(_library_name)"/>
+
+        <Exec WorkingDirectory="$(_iphoneos_framework)" Command="lipo -info $(_library_name)"/>
+    </Target>
+    <Target Name="_RunSharpie" Condition=" $(RunSharpie)" AfterTargets="_BuildFatZIPFoundation">
+        <Exec Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(GithubAccessToken)"/>
+    </Target>
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
          <!-- Frameworks\iOSDFULibrary.framework -->
-        <NativeReference Include="iOS\Carthage\Carthage\Build\iOSDFULibrary.xcframework">
+         <None Include="iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework\iOSDFULibrary">
+            <Link>Frameworks\iOSDFULibrary.framework</Link>
+        </None>
+        <NativeReference Include="iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework">
             <Kind>Framework</Kind>
-            <SmartLink>False</SmartLink>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
+
         <!-- Frameworks\ZIPFoundation.framework -->
-        <NativeReference Include="iOS\Carthage\Carthage\Build\ZIPFoundation.xcframework">
+        <None Include="iOS/Carthage/Carthage/Build/ZIPFoundation.xcframework/ios-arm64/ZIPFoundation.framework\ZIPFoundation">
+            <Link>Frameworks\ZIPFoundation.framework</Link>
+        </None>
+        <NativeReference Include="iOS/Carthage/Carthage/Build/ZIPFoundation.xcframework/ios-arm64/ZIPFoundation.framework">
             <Kind>Framework</Kind>
-            <SmartLink>False</SmartLink>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
     </ItemGroup>
