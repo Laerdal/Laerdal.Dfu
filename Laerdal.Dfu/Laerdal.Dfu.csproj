@@ -31,7 +31,7 @@
         <PackageTags>$(LaerdalPackageTags)</PackageTags>
         <PackageDescription>$(LaerdalPackageDescription)</PackageDescription>
         <PackageProjectUrl>$(LaerdalRepositoryUrl)</PackageProjectUrl>
-        <PackageVersion>0.0.1</PackageVersion>
+        <PackageVersion>0.0.2</PackageVersion>
         <PackageOutputPath>../$(LaerdalPackageName).Output</PackageOutputPath>
         <PackageIcon Condition="Exists('../icon.png')">icon.png</PackageIcon>
         <PackageLicenseFile Condition="Exists('../LICENSE')">LICENSE</PackageLicenseFile>
@@ -70,30 +70,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="../icon.png" Pack="true" PackagePath="\" Condition="Exists('../icon.png')" />
-        <None Include="../LICENSE" Pack="true" PackagePath="\" Condition="Exists('../LICENSE')" />
+        <None Include="../icon.png" Pack="true" PackagePath="\" Condition="Exists('../icon.png')"/>
+        <None Include="../LICENSE" Pack="true" PackagePath="\" Condition="Exists('../LICENSE')"/>
     </ItemGroup>
 
     <!-- SHARED -->
     <ItemGroup>
-        <Compile Include="Shared\**\*.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Shared\**\*.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
     </ItemGroup>
-    
+
     <!-- NETSTANDARD -->
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('netstandard')) ">
-        <Compile Include="NetStandard\*.cs" />
+        <Compile Include="NetStandard\*.cs"/>
     </ItemGroup>
 
     <Target Name="PrintBuildInfo" BeforeTargets="BeforeBuild">
-        <Message Importance="High" Text="PackageId: $(PackageId)" />
-        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
-        <Message Importance="High" Text="Configuration: $(Configuration)" />
-        <Message Importance="High" Text="Platform: $(Platform)" />
-        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
-        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
-        <Message Importance="High" Text="LaerdalGithubAccessToken: $(LaerdalGithubAccessToken)" />
+        <Message Importance="High" Text="PackageId: $(PackageId)"/>
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)"/>
+        <Message Importance="High" Text="Configuration: $(Configuration)"/>
+        <Message Importance="High" Text="Platform: $(Platform)"/>
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)"/>
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)"/>
+        <Message Importance="High" Text="LaerdalGithubAccessToken: $(LaerdalGithubAccessToken)"/>
     </Target>
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
@@ -108,13 +108,13 @@
         <NoWarn>CS0618</NoWarn>
     </PropertyGroup>
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
-        <Reference Include="Mono.Android" />
-        <Compile Include="Droid\*.cs" />
-        <Compile Include="Droid\Specific\*.cs" />
-        <EmbeddedReferenceJar Include="Droid\Jars\gson.jar" />
-        <LibraryProjectZip Include="Droid\Jars\dfu.aar" />
-        <TransformFile Include="Droid\Transforms\*.xml" />
-        <PackageReference Include="Xamarin.AndroidX.Core" Version="1.8.0.1" />
+        <Reference Include="Mono.Android"/>
+        <Compile Include="Droid\*.cs"/>
+        <Compile Include="Droid\Specific\*.cs"/>
+        <EmbeddedReferenceJar Include="Droid\Jars\gson.jar"/>
+        <LibraryProjectZip Include="Droid\Jars\dfu.aar"/>
+        <TransformFile Include="Droid\Transforms\*.xml"/>
+        <PackageReference Include="Xamarin.AndroidX.Core" Version="1.8.0.1"/>
     </ItemGroup>
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) AND $(DownloadNativeFiles) " Name="_DownloadAndroidNativeFiles" BeforeTargets="_CreateBindingResourceArchive">
         <DownloadFile DestinationFileName="dfu.aar" DestinationFolder="Droid\Jars\" SourceUrl="https://repo1.maven.org/maven2/no/nordicsemi/android/dfu/2.2.2/dfu-2.2.2.aar"/>
@@ -131,34 +131,44 @@
         <NoWarn>CS0114</NoWarn>
     </PropertyGroup>
     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-        <Reference Include="Xamarin.iOS" />
-        <Reference Include="netstandard" />
-        <Compile Include="iOS\*.cs" />
-        <Compile Include="iOS\Specific\*.cs" />
-        <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs" />
-        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs" />
-        <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.1" />
-        <PackageReference Include="Xamarin.Swift" Version="1.0.11" />
-     </ItemGroup>
-     
+        <Reference Include="Xamarin.iOS"/>
+        <Reference Include="netstandard"/>
+        <Compile Include="iOS\*.cs"/>
+        <Compile Include="iOS\Specific\*.cs"/>
+        <ObjcBindingCoreSource Include="iOS\ObjcBinding\Structs.cs"/>
+        <ObjcBindingApiDefinition Include="iOS\ObjcBinding\ApiDefinition.cs"/>
+        <PackageReference Include="Xamarin.iOS.SwiftRuntimeSupport" Version="0.2.1"/>
+        <PackageReference Include="Xamarin.Swift" Version="1.0.11"/>
+    </ItemGroup>
+
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)" Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild">
         <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library"' Overwrite="true"/>
         <Exec WorkingDirectory="iOS\Carthage\" Command="carthage update --use-xcframeworks --platform iOS"/>
         <Exec Condition=" $(RunSharpie)" Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(LaerdalGithubAccessToken)"/>
-     </Target>
-     
-     <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
-         <!-- Frameworks\iOSDFULibrary.framework -->
-        <NativeReference Include="iOS\Carthage\Carthage\Build\iOSDFULibrary.xcframework">
+
+        <!-- to future maintainers     we need to keep this dummy files around in git so as to ensure that the .framework folders will always be        -->
+        <!-- to future maintainers     automatically created upon git checkout in the azure pipelines   if we dont do this then the azure pipelines     -->
+        <!-- to future maintainers     will generate a nuget without the .framework folders as a <NativeReference> causing the iOS nuget to be poisoned -->
+        <!-- to future maintainers     and cause cryptic errors in runtime about missing symbols                                                        -->
+        <Touch Files="iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/.keepme_in_git_otherwise_azure_pipelines_will_break" AlwaysCreate="true"/>
+        <Touch Files="iOS/Carthage/Carthage/Build/ZIPFoundation.xcframework/.keepme_in_git_otherwise_azure_pipelines_will_break" AlwaysCreate="true"/>
+    </Target>
+
+    <ItemGroup Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) ">
+
+        <!-- Frameworks\iOSDFULibrary.framework -->
+        <NativeReference Include="iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework">
             <Kind>Framework</Kind>
             <SmartLink>False</SmartLink>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
+
         <!-- Frameworks\ZIPFoundation.framework -->
-        <NativeReference Include="iOS\Carthage\Carthage\Build\ZIPFoundation.xcframework">
+        <NativeReference Include="iOS/Carthage/Carthage/Build/ZIPFoundation.xcframework">
             <Kind>Framework</Kind>
             <SmartLink>False</SmartLink>
             <Frameworks>Foundation</Frameworks>
         </NativeReference>
+
     </ItemGroup>
 </Project>
