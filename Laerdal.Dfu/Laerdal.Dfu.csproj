@@ -95,6 +95,7 @@
         <Message Importance="High" Text="DefineConstants: $(DefineConstants)"/>
         <Message Importance="High" Text="LaerdalGithubAccessToken: $(LaerdalGithubAccessToken)"/>
     </Target>
+
     <!-- ANDROID -->
     <PropertyGroup Condition=" $(TargetFramework.ToLower().StartsWith('monoandroid')) ">
         <IsBindingProject>true</IsBindingProject>
@@ -142,7 +143,7 @@
     </ItemGroup>
 
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)" Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild">
-        <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library"' Overwrite="true"/>
+        <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library" "4.13.0"' Overwrite="true"/>
         <Exec WorkingDirectory="iOS\Carthage\" Command="carthage update --use-xcframeworks --platform iOS"/>
         <Exec Condition=" $(RunSharpie)" Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(LaerdalGithubAccessToken)"/>
 
