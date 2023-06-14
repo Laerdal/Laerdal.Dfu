@@ -31,7 +31,7 @@
         <PackageTags>$(LaerdalPackageTags)</PackageTags>
         <PackageDescription>$(LaerdalPackageDescription)</PackageDescription>
         <PackageProjectUrl>$(LaerdalRepositoryUrl)</PackageProjectUrl>
-        <PackageVersion>0.0.2</PackageVersion>
+        <PackageVersion>0.0.3</PackageVersion>
         <PackageOutputPath>../$(LaerdalPackageName).Output</PackageOutputPath>
         <PackageIcon Condition="Exists('../icon.png')">icon.png</PackageIcon>
         <PackageLicenseFile Condition="Exists('../LICENSE')">LICENSE</PackageLicenseFile>
