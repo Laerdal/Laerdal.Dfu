@@ -1,5 +1,4 @@
-﻿using System;
-using ObjCRuntime;
+﻿using ObjCRuntime;
 
 namespace Laerdal.Dfu.iOS
 {
@@ -40,6 +39,9 @@ namespace Laerdal.Dfu.iOS
 		RemoteButtonlessDFUSuccess = 91,
 		RemoteButtonlessDFUOpCodeNotSupported = 92,
 		RemoteButtonlessDFUOperationFailed = 94,
+		RemoteButtonlessDFUInvalidAdvertisementName = 95,
+		RemoteButtonlessDFUBusy = 96,
+		RemoteButtonlessDFUNotBonded = 97,
 		FileNotSpecified = 101,
 		FileInvalid = 102,
 		ExtendedInitPacketRequired = 103,
@@ -55,7 +57,8 @@ namespace Laerdal.Dfu.iOS
 		ReceivingNotificationFailed = 306,
 		UnsupportedResponse = 307,
 		BytesLost = 308,
-		CrcError = 309
+		CrcError = 309,
+		InvalidInternalState = 500
 	}
 
 	public enum DFUFirmwareType : byte
