@@ -143,12 +143,12 @@
     </ItemGroup>
 
     <Target Condition=" $(TargetFramework.ToLower().StartsWith('xamarin.ios')) AND $(DownloadNativeFiles)" Name="_DownloadIosNativeFiles" BeforeTargets="BeforeBuild">
-        <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library" "4.13.0"' Overwrite="true"/>
+        <WriteLinesToFile File="iOS\Carthage\Cartfile" Lines='github "NordicSemiconductor/IOS-Pods-DFU-Library" "4.11.1"' Overwrite="true"/>
         <Exec WorkingDirectory="iOS\Carthage\" Command="carthage update --use-xcframeworks --platform iOS"/>
         <Exec Condition="$(RunSharpie)" Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(LaerdalGithubAccessToken)"/>
 
-        <!--        <Exec Command="cat iOS/Sharpie/ApiDefinitions.cs" />-->
-        <!--        <Exec Command="cat iOS/Sharpie/StructsAndEnums.cs" />-->
+        <Exec Command="cat iOS/Sharpie/ApiDefinitions.cs" ContinueOnError="true" />
+        <Exec Command="cat iOS/Sharpie/StructsAndEnums.cs" ContinueOnError="true" />
 
         <!-- to future maintainers     we need to keep this dummy files around in git so as to ensure that the .framework folders will always be        -->
         <!-- to future maintainers     automatically created upon git checkout in the azure pipelines   if we dont do this then the azure pipelines     -->
