@@ -3,21 +3,21 @@ using CoreBluetooth;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
-using iOSDFULibrary;
+//using iOSDFULibrary;
 
 namespace Laerdal.Dfu.iOS
 {
-	[Static]
-	partial interface Constants
-	{
-		// extern double iOSDFULibraryVersionNumber;
-		[Field ("iOSDFULibraryVersionNumber", "__Internal")]
-		double iOSDFULibraryVersionNumber { get; }
-
-		// extern const unsigned char[] iOSDFULibraryVersionString;
-		[Field ("iOSDFULibraryVersionString", "__Internal")]
-		byte[] iOSDFULibraryVersionString { get; }
-	}
+	// [Static]
+	// partial interface Constants
+	// {
+	// 	// extern double iOSDFULibraryVersionNumber;
+	// 	[Field ("iOSDFULibraryVersionNumber", "__Internal")]
+	// 	double iOSDFULibraryVersionNumber { get; }
+	//
+	// 	// extern const unsigned char[] iOSDFULibraryVersionString;
+	// 	[Field ("iOSDFULibraryVersionString", "__Internal")]
+	// 	byte[] iOSDFULibraryVersionString { get; }
+	// }
 
 	// @interface DFUFirmware : NSObject
 	[BaseType (typeof(NSObject), Name = "_TtC13iOSDFULibrary11DFUFirmware")]
@@ -112,6 +112,21 @@ namespace Laerdal.Dfu.iOS
 		[Export ("filterByHint:")]
 		[return: NullAllowed]
 		CBUUID[] FilterByHint (CBUUID dfuServiceUUID);
+	}
+	
+	[Protocol(Name = "_TtP13iOSDFULibrary29DFUPeripheralSelectorDelegate_")]
+	public interface IDFUPeripheralSelectorDelegate
+	{
+		[Export("select:advertisementData:RSSI:hint:")]
+		bool Select(
+			CBPeripheral peripheral,
+			NSDictionary<NSString, NSObject> advertisementData,
+			NSNumber RSSI,
+			string? name
+		);
+
+		[Export("filterByHint:")]
+		CBUUID[]? FilterByHint(CBUUID dfuServiceUUID);
 	}
 
 	// @interface DFUPeripheralSelector : NSObject <DFUPeripheralSelectorDelegate>
