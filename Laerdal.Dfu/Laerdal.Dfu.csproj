@@ -148,7 +148,7 @@
         <Exec Condition="$(RunSharpie)" Command="sharpie bind -sdk iphoneos -o iOS/Sharpie --namespace=Laerdal.Dfu.iOS -f iOS/Carthage/Carthage/Build/iOSDFULibrary.xcframework/ios-arm64/iOSDFULibrary.framework" EnvironmentVariables="GITHUB_ACCESS_TOKEN=$(LaerdalGithubAccessToken)"/>
 
         <!--        <Exec Command="cat iOS/Sharpie/ApiDefinitions.cs" />-->
-        <Exec Command="cat iOS/Sharpie/StructsAndEnums.cs" />
+        <!--        <Exec Command="cat iOS/Sharpie/StructsAndEnums.cs" />-->
 
         <!-- to future maintainers     we need to keep this dummy files around in git so as to ensure that the .framework folders will always be        -->
         <!-- to future maintainers     automatically created upon git checkout in the azure pipelines   if we dont do this then the azure pipelines     -->
