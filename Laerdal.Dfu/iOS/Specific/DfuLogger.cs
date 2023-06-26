@@ -7,5 +7,4 @@ namespace Laerdal.Dfu.Specific
             Events.OnDfuMessageReceived((Laerdal.Dfu.Enums.DfuLogLevel) level, message);
         }
     }
-    
 }

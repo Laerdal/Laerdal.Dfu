@@ -35,6 +35,7 @@ namespace Laerdal.Dfu
                 WeakProgressDelegate = DfuProgressDelegate,
                 WeakDelegate = DfuServiceDelegate,
             };
+
             Initiator = Initiator.WithFirmware(Firmware);
 
             // PacketsReceiptNotifications
