@@ -10,6 +10,8 @@ pool:
 steps:
   - checkout: self
     clean: true
+    #https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch
+    fetchDepth: 0
     persistCredentials: true
 
   - task: DotNetCoreCLI@2
