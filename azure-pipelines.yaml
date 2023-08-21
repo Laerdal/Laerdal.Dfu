@@ -14,19 +14,16 @@ steps:
     fetchDepth: 0
     persistCredentials: true
 
-  - task: DotNetCoreCLI@2
-    displayName: dotnet workload install
+  - task: NuGetToolInstaller@1
+    displayName: 'Use NuGet'
     inputs:
-      command: custom
-      custom: 'workload'
-      arguments: 'install maui ios android'
+      checkLatest: true
 
-  - task: DotNetCoreCLI@2
-    displayName: dotnet build
+  - task: MSBuild@1
+    displayName: MSBuild
     inputs:
-      projects: $(Build.SourcesDirectory)/Laerdal.Build.proj
+      solution: Laerdal.Build.proj
       configuration: Release
-      arguments: '--verbosity detailed'
 
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: output

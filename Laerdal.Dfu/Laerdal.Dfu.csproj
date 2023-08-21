@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.44">
     
     <PropertyGroup>
         <Laerdal_Package_Name>Laerdal.Dfu</Laerdal_Package_Name>
@@ -8,26 +8,28 @@
     </PropertyGroup>
  
     <PropertyGroup>
-        <TargetFrameworks>net7.0-android;net7.0-ios;net6.0-android;net6.0-ios</TargetFrameworks>
-        <UseMaui>true</UseMaui>
-        <SingleProject>true</SingleProject>
-        <ImplicitUsings>enable</ImplicitUsings> 
-
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <TargetFrameworks>netstandard2.0;monoandroid12.0;xamarin.ios10</TargetFrameworks>
+        <LangVersion>9</LangVersion>
     </PropertyGroup> 
 
     <Import Project="Laerdal.targets" />
 
     <ItemGroup> 
-      <Compile Remove="Platforms\NetStandard\*.cs"/>
+        <Compile Remove="Platforms\**\*.cs"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(TargetFramework.Contains('ios'))">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43857" />
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <Compile Include="Platforms\NetStandard\*.cs"/>
     </ItemGroup>
-
-    <ItemGroup Condition="$(TargetFramework.Contains('android'))">
-      <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43670" />
+    
+    <ItemGroup Condition="'$(TargetFramework)' == 'xamarin.ios10'">
+        <Compile Include="Platforms\iOS\*.cs"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0-xamarin.43596" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid12.0'">
+        <Compile Include="Platforms\Android\*.cs"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0-xamarin.43665" />
     </ItemGroup>
 </Project>
