@@ -11,25 +11,20 @@ steps:
   - checkout: self
     clean: true
     persistCredentials: true
-  - task: NuGetToolInstaller@1
-    displayName: 'Use NuGet'
-    inputs:
-      checkLatest: true
 
   - task: DotNetCoreCLI@2
-    displayName: dotnet workload restore
+    displayName: dotnet workload install
     inputs:
       command: custom
       custom: 'workload'
-      arguments: 'restore Laerdal.Dfu/Laerdal.Dfu.csproj'
+      arguments: 'install maui ios android'
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
     inputs:
       projects: $(Build.SourcesDirectory)/Laerdal.Build.proj
       configuration: Release
+      arguments: '--verbosity detailed'
 
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: output
-  - publish: $(Build.SourcesDirectory)
-    artifact: source
