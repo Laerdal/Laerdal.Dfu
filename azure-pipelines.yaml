@@ -1,0 +1,35 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: macOS-12
+
+steps:
+  - checkout: self
+    clean: true
+    persistCredentials: true
+  - task: NuGetToolInstaller@1
+    displayName: 'Use NuGet'
+    inputs:
+      checkLatest: true
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet workload restore
+    inputs:
+      command: custom
+      custom: 'workload'
+      arguments: 'restore Laerdal.Dfu/Laerdal.Dfu.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      projects: $(Build.SourcesDirectory)/Laerdal.Build.proj
+      configuration: Release
+
+  - publish: $(Build.ArtifactStagingDirectory)
+    artifact: output
+  - publish: $(Build.SourcesDirectory)
+    artifact: source

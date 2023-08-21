@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- ==================== DEFAULT CONFIGURATION ==================== -->
+    <PropertyGroup>
+        <Optimize>false</Optimize>
+        <LangVersion>latest</LangVersion>
+        <NeutralLanguage>en</NeutralLanguage>
+        <DebugSymbols>true</DebugSymbols>
+        <OutputPath>bin\</OutputPath>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <OutputType>Library</OutputType>
+
+        <PackOnBuild>true</PackOnBuild>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <IncludeSource>True</IncludeSource>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <!-- see : https://cezarypiatek.github.io/post/managing-output-in-sdk-projects/ -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <!-- MSB9004 : ManifestResourceWithNoCulture item type is deprecated. -->
+        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB9004</MSBuildWarningsAsMessages>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+        <Deterministic>true</Deterministic>
+    </PropertyGroup>
+
+    <!-- ==================== DEFAULT CI CONFIGURATION ==================== -->
+    <PropertyGroup>
+        <!-- https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml&WT.mc_id=DT-MVP-5003978#system-variables -->
+        <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
+        <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables -->
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+        <!-- https://docs.gitlab.com/ee/ci/variables/predefined_variables.html -->
+        <ContinuousIntegrationBuild Condition="'$(GITLAB_CI)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <!-- ==================== PACKAGING ==================== -->
+    <PropertyGroup>
+        <!-- Laerdal_Package_Name -->
+        <RootNamespace>$(Laerdal_Package_Name)</RootNamespace>
+        <PackageId>$(Laerdal_Package_Name)</PackageId>
+        <AssemblyName>$(Laerdal_Package_Name)</AssemblyName>
+        <Title>$(Laerdal_Package_Name)</Title>
+
+        <!-- Laerdal_Package_Copyright -->
+        <Authors>$(Laerdal_Package_Copyright)</Authors>
+        <Owners>$(Laerdal_Package_Copyright)</Owners>
+        <Copyright>$(Laerdal_Package_Copyright)</Copyright>
+
+        <!-- Laerdal_Package_Description -->
+        <Summary>$(Laerdal_Package_Description)</Summary>
+        <Description>$(Laerdal_Package_Description)</Description>
+        <PackageDescription>$(Laerdal_Package_Description)</PackageDescription>
+
+        <!-- Extra files and properties -->
+        <PackageTags>Laerdal;Internal;$(Laerdal_Package_Tags)</PackageTags>
+        <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `../Output/`))</PackageOutputPath>
+        <PackageIconPath>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), `../icon.png`))</PackageIconPath>
+        <PackageLicencePath>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), `../LICENSE`))</PackageLicencePath>
+        <PackageReadMePath>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), `../README.md`))</PackageReadMePath>
+        <PackageIcon Condition="Exists('$(PackageIconPath)')">icon.png</PackageIcon>
+        <PackageLicenseFile Condition="Exists('$(PackageLicencePath)')">LICENSE</PackageLicenseFile>
+        <!-- https://github.com/NuGet/Home/issues/10791 -->
+        <PackageReadmeFile Condition="Exists('$(PackageReadMePath)') AND '$(MSBuildRuntimeType)' != 'Mono'">README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(PackageIconPath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageIconPath)')" />
+        <None Include="$(PackageLicencePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageLicencePath)')" />
+        <None Include="$(PackageReadMePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageReadMePath)')" />
+    </ItemGroup>
+
+    <!-- ==================== SOURCELINK ==================== -->
+    <PropertyGroup>
+        <!-- https://github.com/dotnet/sourcelink -->
+        <!-- sourcelink: Declare that the Repository URL can be published to NuSpec -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <!-- sourcelink: Embed source files that are not tracked by the source control manager to the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- sourcelink: Include PDB in the built .nupkg -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.md</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    </ItemGroup>
+
+    <!-- ==================== LOGGING ==================== -->
+    <Target Name="PrintBuildInfo" BeforeTargets="_IsProjectRestoreSupported">
+        <Message Importance="High" Text="*** Package Info ***" />
+        <Message Importance="High" Text="PackageId: $(PackageId)" />
+        <Message Importance="High" Text="Configuration: $(Configuration)" />
+        <Message Importance="High" Text="Platform: $(Platform)" />
+        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
+        <Message Importance="High" Text="AssemblyFileVersion: $(AssemblyFileVersion)"/>
+        <Message Importance="High" Text="Version: $(Version)" />
+        <Message Importance="High" Text="MSBuildRuntimeType: $(MSBuildRuntimeType)" />
+        <Message Importance="High" Text="##vso[build.updatebuildnumber]$(PackageVersion)" />
+    </Target>
+    <Target Name="PrintPlatformBuildInfo" BeforeTargets="Compile">
+        <Message Importance="High" Text="*** Platform Info ***" />
+        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
+        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
+    </Target>
+    
+    <!-- ==================== VERSION ==================== -->
+    <PropertyGroup>
+        <Laerdal_Version_Assembly Condition="'$(Laerdal_Version_Assembly)' == ''">1.0.0.0</Laerdal_Version_Assembly>
+        <Laerdal_Version_Full Condition="'$(Laerdal_Version_Full)' == ''">1.0.0</Laerdal_Version_Full>
+        <!-- Apply Version parts according to packaging standards -->
+        <AssemblyVersion>$(Laerdal_Version_Assembly)</AssemblyVersion>
+        <AssemblyFileVersion>$(Laerdal_Version_Assembly)</AssemblyFileVersion>
+        <AssemblyInformationalVersion>$(Laerdal_Version_Full)</AssemblyInformationalVersion>
+        <Version>$(Laerdal_Version_Full)</Version>
+        <PackageVersion>$(Laerdal_Version_Full)</PackageVersion>
+    </PropertyGroup>
+</Project>
