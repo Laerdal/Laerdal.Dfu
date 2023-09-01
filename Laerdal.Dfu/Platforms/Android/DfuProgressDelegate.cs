@@ -1,14 +1,13 @@
-using Android.App;
 using Laerdal.Dfu.Bindings.Android;
 using Laerdal.Dfu.Enums;
 
 namespace Laerdal.Dfu
 {
-    public class DfuProgressListener : DfuProgressListenerAdapter
+    public class DfuProgressDelegate : DfuProgressListenerAdapter
     {
         private DfuInstallation DfuInstallation { get; }
 
-        public DfuProgressListener(DfuInstallation dfuInstallation)
+        public DfuProgressDelegate(DfuInstallation dfuInstallation)
         {
             DfuInstallation = dfuInstallation;
             DfuServiceListenerHelper.RegisterProgressListener(Android.App.Application.Context, this);
@@ -27,7 +26,7 @@ namespace Laerdal.Dfu
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuError((DfuError) error, message);
+            DfuInstallation.OnDfuErrorReceived((DfuError) error, message);
             DfuInstallation.OnDfuStateChanged(DfuState.Error);
         }
 

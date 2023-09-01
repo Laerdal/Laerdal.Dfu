@@ -6,7 +6,7 @@ namespace Laerdal.Dfu
         {
         }
         
-        public override void Start()
+        public override void Start(DfuConfiguration configuration = null)
         {
         }
 

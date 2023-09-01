@@ -7,19 +7,19 @@ namespace Laerdal.Dfu
 {
     public static class DfuEvents
     {
-        public static event EventHandler<DfuErrorEventArgs> DfuErrorOccured; 
+        public static event EventHandler<DfuErrorReceivedEventArgs> DfuErrorReceived; 
         
-        internal static void OnDfuError(DfuError error, string message)
+        internal static void OnDfuErrorReceived(DfuError error, string message)
         {
-            DfuErrorOccured?.Invoke(null, new DfuErrorEventArgs(error, message));
+            DfuErrorReceived?.Invoke(null, new DfuErrorReceivedEventArgs(error, message));
         }
         
         
-        public static event EventHandler<DfuMessageReceivedEventArgs> DfuMessageReceived;
+        public static event EventHandler<DfuLogReceivedEventArgs> DfuLogReceived;
 
-        internal static void OnDfuMessageReceived(DfuLogLevel logLevel, string logMessage)
+        internal static void OnDfuLogReceived(DfuLogLevel logLevel, string logMessage)
         {
-            DfuMessageReceived?.Invoke(null, new DfuMessageReceivedEventArgs(logLevel, logMessage));
+            DfuLogReceived?.Invoke(null, new DfuLogReceivedEventArgs(logLevel, logMessage));
         }
 
     }
