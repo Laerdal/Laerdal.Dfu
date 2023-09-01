@@ -24,7 +24,7 @@ namespace Laerdal.Dfu
             double currentSpeedBytesPerSecond,
             double avgSpeedBytesPerSecond)
 #else
-        public override void OutOf(nint part,
+        public void OutOf(nint part,
             nint totalParts,
             nint progress,
             double currentSpeedBytesPerSecond,
