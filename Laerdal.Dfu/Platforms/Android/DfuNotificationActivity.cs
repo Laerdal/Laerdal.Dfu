@@ -10,7 +10,7 @@ namespace Laerdal.Dfu
             base.OnCreate(savedInstanceState);
 
             // Original Nordic-code below. We assume the app can take care of itself.
-            // Not very useful hooking up notification click to app... If you need it: make your own DfuService+DfuNotification
+            // Not very useful hooking up notification click to app... If you need it: make your own DfuServiceDelegate+DfuNotification
             /*
             // If this activity is the root activity of the task, the app is not running
             if (IsTaskRoot)

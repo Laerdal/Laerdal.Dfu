@@ -1,8 +1,13 @@
+using Foundation;
+
 using Laerdal.Dfu.Bindings.iOS;
+using Laerdal.Dfu.Enums;
+
+using System;
 
 namespace Laerdal.Dfu
 {
-    public class DfuProgressDelegate : DFUProgressDelegate
+    public class DfuProgressDelegate : NSObject, IDFUProgressDelegate, IDFUServiceDelegate
     {
         private DfuInstallation DfuInstallation { get; }
 
@@ -10,25 +15,35 @@ namespace Laerdal.Dfu
         {
             DfuInstallation = dfuInstallation;
         }
+        
 // https://github.com/xamarin/xamarin-macios/issues/13087
 #if XAMARINIOS
-        public override void OutOf(System.nint part,
+        public void OutOf(System.nint part,
             System.nint totalParts,
             System.nint progress,
             double currentSpeedBytesPerSecond,
             double avgSpeedBytesPerSecond)
-        {
-            DfuInstallation?.OnProgressChanged((int) progress / 100D, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond);
-        }
 #else
         public override void OutOf(nint part,
             nint totalParts,
             nint progress,
             double currentSpeedBytesPerSecond,
             double avgSpeedBytesPerSecond)
-        {
-            DfuInstallation?.OnProgressChanged((int) progress / 100D, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond);
-        }
 #endif
+        {
+            DfuInstallation.OnDfuStateChanged(DfuState.Uploading);
+            DfuInstallation.OnProgressChanged((int) progress / 100D, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond);
+        }
+        
+        public void DfuStateDidChangeTo(DFUState state)
+        {
+            DfuInstallation.OnDfuStateChanged((Laerdal.Dfu.Enums.DfuState) (long) state);
+        }
+        
+        public void DfuError(DFUError error, string message)
+        {
+            DfuInstallation.OnDfuErrorReceived((Laerdal.Dfu.Enums.DfuError) (long) error, message);
+            DfuInstallation.OnDfuStateChanged(DfuState.Error);
+        }
     }
 }

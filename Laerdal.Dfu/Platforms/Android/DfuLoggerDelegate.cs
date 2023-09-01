@@ -3,13 +3,13 @@ using Laerdal.Dfu.Enums;
 
 namespace Laerdal.Dfu
 {
-    public class DfuLogger : Java.Lang.Object, IDfuLogListener
+    public class DfuLoggerDelegate : Java.Lang.Object, IDfuLogListener
     {
-        public string DeviceAddress { get; }
+        private DfuInstallation DfuInstallation { get; }
 
-        public DfuLogger(string deviceAddress)
+        public DfuLoggerDelegate(DfuInstallation dfuInstallation)
         {
-            DeviceAddress = deviceAddress;
+            DfuInstallation = dfuInstallation;
             DfuServiceListenerHelper.RegisterLogListener(Android.App.Application.Context, this);
         }
 
@@ -18,13 +18,12 @@ namespace Laerdal.Dfu
             DfuServiceListenerHelper.UnregisterLogListener(Android.App.Application.Context, this);
             base.Dispose(disposing);
         }
-
+        
         public void OnLogEvent(string deviceAddress, int level, string message)
         {
-            if (deviceAddress != DeviceAddress)
-                return;
+            if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuEvents.OnDfuMessageReceived((DfuLogLevel) level, $"{deviceAddress} : {message}");
+            DfuInstallation.OnDfuLogReceived((DfuLogLevel) level, message);
         }
     }
 }

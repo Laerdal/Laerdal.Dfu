@@ -1,13 +1,15 @@
 using Laerdal.Dfu.Enums;
 using Laerdal.Dfu.EventArgs;
+
 using System;
 using System.Threading.Tasks;
 
 namespace Laerdal.Dfu
 {
+
     public abstract class SharedDfuInstallation : IDisposable
     {
-        public string DeviceId { get; protected set; }
+        public string DeviceId { get; private set; }
         public string FileUrl { get; protected set; }
 
         private Helpers.TaskCompletionSource ProgressTaskCompletionSource { get; }
@@ -19,9 +21,7 @@ namespace Laerdal.Dfu
             ProgressTaskCompletionSource = new Helpers.TaskCompletionSource();
         }
 
-
-
-        public abstract void Start();
+        public abstract void Start(DfuConfiguration configuration = null);
 
         public abstract void Pause();
 
@@ -34,135 +34,12 @@ namespace Laerdal.Dfu
             get => ProgressTaskCompletionSource.Task;
         }
 
-        #region DfuInitiator Shared Configuration
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetDeviceName(string name)
-        /// iOS :
-        ///     public string? AlternativeAdvertisingName {get; set;}
-        ///     public bool AlternativeAdvertisingNameEnabled {get; set;}
-        /// </summary>
-        public string AlternativeAdvertisingName {get; set;}
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetPrepareDataObjectDelay(long delay)
-        /// iOS :
-        ///     public double DataObjectPreparationDelay {get; set;}
-        /// </summary>
-        public double? DataObjectPreparationDelay {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator DisableResume()
-        /// iOS :
-        ///     public bool DisableResume {get; set;}
-        /// </summary>
-        public bool? DisableResume {get; set;}
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(bool enable)
-        /// iOS :
-        ///     public bool EnableUnsafeExperimentalButtonlessServiceInSecureDfu {get; set;}
-        /// </summary>
-        public bool? EnableUnsafeExperimentalButtonlessServiceInSecureDfu {get; set;}
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetForceDfu(bool force)
-        /// iOS :
-        ///     public bool ForceDfu {get; set;}
-        /// </summary>
-        public bool? ForceDfu {get; set;}
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetForceScanningForNewAddressInLegacyDfu(bool force)
-        /// iOS :
-        ///     public bool ForceScanningForNewAddressInLegacyDfu {get; set;}
-        /// </summary>
-        public bool? ForceScanningForNewAddressInLegacyDfu {get; set;}
-
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetPacketsReceiptNotificationsEnabled(bool enabled)
-        ///     public DfuServiceInitiator SetPacketsReceiptNotificationsValue(int number)
-        /// iOS :
-        ///     public ushort PacketReceiptNotificationParameter {get; set;}
-        /// </summary>
-        public ushort? PacketReceiptNotificationParameter {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator DisableMtuRequest()
-        /// </summary>
-        public bool? DisableMtuRequest {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetDisableNotification(bool disableNotification)
-        /// </summary>
-        public bool? DisableNotification {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public const int DefaultMbrSize = 4096;
-        ///     public DfuServiceInitiator SetMbrSize(int mbrSize)
-        /// </summary>
-        public int? MbrSize {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetScope(int scope)
-        ///     public const int ScopeApplication = 2;
-        ///     public const int ScopeSystemComponents = 1;
-        /// </summary>
-        public DfuServiceScope? Scope {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetForeground(bool foreground)
-        /// </summary>
-        public bool? Foreground {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetKeepBond(bool keepBond)
-        /// </summary>
-        public bool? KeepBond {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetRestoreBond(bool keepBond)
-        /// </summary>
-        public bool? RestoreBond {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetMtu(int mtu)
-        /// </summary>
-        public int? Mtu {get; set;}
-        
-        /// <summary>
-        /// Android :
-        ///     public DfuServiceInitiator SetNumberOfRetries(int max)
-        /// </summary>
-        public int? NumberOfRetries {get; set;}
-        
-        /// <summary>
-        /// iOS :
-        ///     public double ConnectionTimeout {get; set;}
-        /// </summary>
-        public long? ConnectionTimeout {get; set;}
-        
-        // TODO : CustomUuids
-        
-        #endregion
         
         #region Progress
 
+        public double Progress {get; private set;}
+        public double CurrentSpeedBytesPerSecond {get; private set;}
+        public double AvgSpeedBytesPerSecond {get; private set;}
         public DateTime? StartTime {get; private set;}
         public DateTime? EndTime {get; private set;}
 
@@ -191,6 +68,9 @@ namespace Laerdal.Dfu
                 estimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
             }
 
+            Progress = progress;
+            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
+            AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
             ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond, duration, estimatedTimeLeft));
         }
 
@@ -204,40 +84,50 @@ namespace Laerdal.Dfu
 
         internal void OnDfuStateChanged(DfuState state)
         {
+            var olsState = State;
             State = state;
-            if (state == DfuState.Completed)
-            {
-                ProgressTaskCompletionSource.TrySetCompleted();
-            }
-            else if (state == DfuState.Aborted)
-            {
-                ProgressTaskCompletionSource.TrySetCompleted();
-            }
-            else if (state == DfuState.Error)
-            {
-                ProgressTaskCompletionSource.TrySetCompleted();
-            }
 
-            StateChanged?.Invoke(this, state);
+            DfuStateChanged?.Invoke(this, new DfuStateChangedEventArgs(olsState, state));
+            
+            switch (state)
+            {
+                case DfuState.Completed:
+                case DfuState.Aborted:
+                case DfuState.Error:
+                    ProgressTaskCompletionSource.TrySetCompleted();
+                    break;
+            }
         }
         
-        public event EventHandler<DfuState> StateChanged;
+        public event EventHandler<DfuStateChangedEventArgs> DfuStateChanged;
 
         #endregion
 
         #region Error
 
-        internal void OnDfuError(DfuError error, string message)
+        internal void OnDfuErrorReceived(DfuError error, string message)
         {
-            DfuEvents.OnDfuError(error, message);
-            ErrorOccured?.Invoke(this, new DfuErrorEventArgs(error, message));
+            DfuEvents.OnDfuErrorReceived(error, message);
+            DfuErrorReceived?.Invoke(this, new DfuErrorReceivedEventArgs(error, message));
             ProgressTaskCompletionSource.TrySetException(new DfuException(error, message));
         }
 
-        public event EventHandler<DfuErrorEventArgs> ErrorOccured;
+        public event EventHandler<DfuErrorReceivedEventArgs> DfuErrorReceived;
+ 
+        #endregion
+        
+        #region Log
+
+        internal void OnDfuLogReceived(DfuLogLevel logLevel, string message)
+        {
+            DfuEvents.OnDfuLogReceived(logLevel, message);
+            DfuLogReceived?.Invoke(this, new DfuLogReceivedEventArgs(logLevel, message));
+        }
+
+        public event EventHandler<DfuLogReceivedEventArgs> DfuLogReceived;
 
         #endregion
-
+        
         public override string ToString()
         {
             return $"DFU Installation {State} on '{DeviceId}'";

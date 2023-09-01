@@ -1,177 +1,67 @@
-using Android.OS;
-
 using Java.Lang;
 
 using Laerdal.Dfu.Bindings.Android;
 
 using System.Globalization;
-using System;
 using System.Linq;
 
 namespace Laerdal.Dfu
 {
+
     public partial class DfuInstallation
     {
-        public Func<DfuServiceInitiator, DfuServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
-        
-        private void SetInitiator()
-        {
-            DfuProgressListener = new DfuProgressListener(this);
-            DfuLogger = new DfuLogger(DeviceId);
+        private DfuProgressDelegate DfuProgressDelegate { get; set; }
 
-            Initiator = new DfuServiceInitiator(DeviceId).SetZip(FileUrl);
-            
-            // PacketsReceiptNotifications
-            Initiator = Initiator.SetPacketsReceiptNotificationsEnabled(PacketReceiptNotificationParameter.HasValue);
-            Initiator = Initiator.SetPacketsReceiptNotificationsValue(PacketReceiptNotificationParameter ?? DfuServiceInitiator.DefaultPrnValue);
-            
-            // DataObjectPreparationDelay
-            Initiator = Initiator.SetPrepareDataObjectDelay((long) (DataObjectPreparationDelay ?? 0));
+        private DfuLoggerDelegate DfuLoggerDelegate { get; set; }
 
-            // DisableResume
-            if (DisableResume ?? false)
-            {
-                Initiator = Initiator.DisableResume();
-            }
+        private DfuServiceInitiatorDelegate DfuServiceInitiatorDelegate { get; set; }
 
-            // AlternativeAdvertisingName
-            if (!string.IsNullOrEmpty(AlternativeAdvertisingName))
-            {
-                Initiator = Initiator.SetDeviceName(AlternativeAdvertisingName);
-            }
-            
-            // ForceScanningForNewAddressInLegacyDfu
-            if (ForceScanningForNewAddressInLegacyDfu.HasValue)
-            {
-                Initiator = Initiator.SetForceScanningForNewAddressInLegacyDfu(ForceScanningForNewAddressInLegacyDfu.Value);
-            }
-            
-            // EnableUnsafeExperimentalButtonlessServiceInSecureDfu
-            if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
-            {
-                Initiator = Initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value);
-            }
-            
-            // ForceDfu
-            if (ForceDfu.HasValue)
-            {
-                Initiator = Initiator.SetForceDfu(ForceDfu.Value);
-            }
-            
-            // DisableMtuRequest
-            if (DisableMtuRequest ?? false)
-            {
-                Initiator = Initiator.DisableMtuRequest();
-            }
-
-            // DisableNotification
-            if (DisableNotification.HasValue)
-            {
-                Initiator = Initiator.SetDisableNotification(DisableNotification.Value);
-            }
-            
-            // MbrSize
-            Initiator = Initiator.SetMbrSize(MbrSize ?? DfuServiceInitiator.DefaultMbrSize);
-            
-            // Scope
-            if (Scope.HasValue)
-            {
-                Initiator = Initiator.SetScope((int) Scope.Value);
-            }
-            
-            // Foreground
-            if (Foreground.HasValue)
-            {
-                Initiator = Initiator.SetForeground(Foreground.Value);
-            }
-            
-            // KeepBond
-            if (KeepBond.HasValue)
-            {
-                Initiator = Initiator.SetKeepBond(KeepBond.Value);
-            }
-            
-            // RestoreBond
-            if (RestoreBond.HasValue)
-            {
-                Initiator = Initiator.SetRestoreBond(RestoreBond.Value);
-            }
-            
-            // Mtu
-            if (Mtu.HasValue)
-            {
-                Initiator = Initiator.SetMtu(Mtu.Value);
-            }
-            
-            // NumberOfRetries
-            if (NumberOfRetries.HasValue)
-            {
-                Initiator = Initiator.SetNumberOfRetries(NumberOfRetries.Value);
-            }
-            
-            // For Oreo progress
-            if ((int) Build.VERSION.SdkInt >= 26)
-            {
-                DfuServiceInitiator.CreateDfuNotificationChannel(Android.App.Application.Context);
-            }
-            
-            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
-            
-            // public DfuServiceInitiator SetCurrentMtu(int mtu)
-            // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
-            // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithoutBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
-            // public DfuServiceInitiator SetCustomUuidsForExperimentalButtonlessDfu(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
-            // public DfuServiceInitiator SetCustomUuidsForLegacyDfu(UUID dfuServiceUuid, UUID dfuControlPointUuid, UUID dfuPacketUuid, UUID dfuVersionUuid)
-            // public DfuServiceInitiator SetCustomUuidsForSecureDfu(UUID dfuServiceUuid, UUID dfuControlPointUuid, UUID dfuPacketUuid)
-        }
-
-        public DfuServiceInitiator Initiator { get; private set; }
-
-        public DfuServiceController Controller { get; private set; }
-
-        private DfuProgressListener DfuProgressListener { get; set;}
-
-        private DfuLogger DfuLogger { get; set;}
+        private DfuServiceController DfuServiceController { get; set; }
 
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
         }
-        
-        public override void Start()
+
+        public override void Start(DfuConfiguration configuration = null)
         {
-            if (Controller != null)
+            if (DfuServiceController != null)
             {
                 throw new System.Exception("Controller is already set.");
             }
 
-            SetInitiator();
-            Controller = Initiator.Start(Android.App.Application.Context, Class.FromType(typeof(DfuService)));
+            DfuProgressDelegate = new DfuProgressDelegate(this);
+            DfuLoggerDelegate = new DfuLoggerDelegate(this);
+            DfuServiceInitiatorDelegate = new DfuServiceInitiatorDelegate(this);
+            if (configuration != null)
+            {
+                DfuServiceInitiatorDelegate.Configure(configuration);
+                DfuServiceDelegate.DfuDeviceSelector = configuration.DfuDeviceSelectorDelegate;
+            }
+
+            DfuServiceController = DfuServiceInitiatorDelegate.Initiator.Start(Android.App.Application.Context, Class.FromType(typeof(DfuServiceDelegate)));
         }
 
         public override void Pause()
         {
-            Controller?.Pause();
+            DfuServiceController?.Pause();
         }
 
         public override void Resume()
         {
-            Controller?.Resume();
+            DfuServiceController?.Resume();
         }
 
         public override void Abort()
         {
-            Controller?.Abort();
+            DfuServiceController?.Abort();
         }
 
         protected override void Dispose(bool disposing)
         {
-            DfuProgressListener?.Dispose();
-            if (disposing)
-            {
-                Initiator?.Dispose();
-                Controller?.Dispose();
-                DfuLogger?.Dispose();
-            }
+            DfuProgressDelegate?.Dispose();
+            DfuLoggerDelegate?.Dispose();
+            DfuServiceInitiatorDelegate?.Dispose();
+            DfuServiceController?.Dispose();
         }
 
         public bool CheckDeviceAddress(string deviceAddress)
