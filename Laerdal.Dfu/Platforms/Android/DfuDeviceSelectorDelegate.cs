@@ -7,7 +7,7 @@ namespace Laerdal.Dfu
     /**
      * The device selector can be used to filter scan results when scanning for the device
      * advertising in bootloader mode.
-     * <p>
+     *
      * By default, the scanner will look for a device advertising an incremented address
      * (the original address + 1). By returning a custom selector from
      * {@link DfuBaseService#getDeviceSelector()} the app can override this behavior.
@@ -20,7 +20,7 @@ namespace Laerdal.Dfu
         /**
          * This method should return true if the given device matches the expected device in bootloader
          * mode.
-         * <p>
+         *
          * The advertising data are given as a byte array for backwards compatibility with pre-Lollipop
          * devices.
          *
