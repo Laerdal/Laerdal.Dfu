@@ -9,18 +9,35 @@ namespace Laerdal.Dfu
     {
         public static event EventHandler<DfuErrorReceivedEventArgs> DfuErrorReceived; 
         
-        internal static void OnDfuErrorReceived(DfuError error, string message)
+        internal static void OnDfuErrorReceived(SharedDfuInstallation sharedDfuInstallation, DfuError error, string message)
         {
-            DfuErrorReceived?.Invoke(null, new DfuErrorReceivedEventArgs(error, message));
+            DfuErrorReceived?.Invoke(sharedDfuInstallation, new DfuErrorReceivedEventArgs(error, message));
         }
-        
         
         public static event EventHandler<DfuLogReceivedEventArgs> DfuLogReceived;
 
-        internal static void OnDfuLogReceived(DfuLogLevel logLevel, string logMessage)
+        internal static void OnDfuLogReceived(SharedDfuInstallation sharedDfuInstallation, DfuLogLevel logLevel, string logMessage)
         {
-            DfuLogReceived?.Invoke(null, new DfuLogReceivedEventArgs(logLevel, logMessage));
+            DfuLogReceived?.Invoke(sharedDfuInstallation, new DfuLogReceivedEventArgs(logLevel, logMessage));
         }
 
+        public static event EventHandler<DfuProgressChangedEventArgs> DfuProgressChanged;
+
+        public static void OnDfuProgressChanged(SharedDfuInstallation sharedDfuInstallation,
+            double progress,
+            double currentSpeedBytesPerSecond,
+            double avgSpeedBytesPerSecond,
+            TimeSpan duration,
+            TimeSpan estimatedTimeLeft)
+        {
+            DfuProgressChanged?.Invoke(sharedDfuInstallation, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond, duration, estimatedTimeLeft));
+        }
+        
+        public static event EventHandler<DfuStateChangedEventArgs> DfuStateChanged;
+        
+        public static void OnDfuStateChanged(SharedDfuInstallation sharedDfuInstallation, DfuState olsState, DfuState state)
+        {
+            DfuStateChanged?.Invoke(sharedDfuInstallation, new DfuStateChangedEventArgs(olsState, state));
+        }
     }
 }
