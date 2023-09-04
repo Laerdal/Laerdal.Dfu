@@ -71,10 +71,11 @@ namespace Laerdal.Dfu
             Progress = progress;
             CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
             AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
-            ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond, duration, estimatedTimeLeft));
+            DfuProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond, duration, estimatedTimeLeft));
+            DfuEvents.OnDfuProgressChanged(this, progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond, duration, estimatedTimeLeft);
         }
 
-        public event EventHandler<DfuProgressChangedEventArgs> ProgressChanged;
+        public event EventHandler<DfuProgressChangedEventArgs> DfuProgressChanged;
 
         #endregion
 
@@ -89,6 +90,7 @@ namespace Laerdal.Dfu
 
             DfuStateChanged?.Invoke(this, new DfuStateChangedEventArgs(olsState, state));
             
+            DfuEvents.OnDfuStateChanged(this, olsState, state);
             switch (state)
             {
                 case DfuState.Completed:
@@ -107,8 +109,8 @@ namespace Laerdal.Dfu
 
         internal void OnDfuErrorReceived(DfuError error, string message)
         {
-            DfuEvents.OnDfuErrorReceived(error, message);
             DfuErrorReceived?.Invoke(this, new DfuErrorReceivedEventArgs(error, message));
+            DfuEvents.OnDfuErrorReceived(this, error, message);
             ProgressTaskCompletionSource.TrySetException(new DfuException(error, message));
         }
 
@@ -120,8 +122,8 @@ namespace Laerdal.Dfu
 
         internal void OnDfuLogReceived(DfuLogLevel logLevel, string message)
         {
-            DfuEvents.OnDfuLogReceived(logLevel, message);
             DfuLogReceived?.Invoke(this, new DfuLogReceivedEventArgs(logLevel, message));
+            DfuEvents.OnDfuLogReceived(this, logLevel, message);
         }
 
         public event EventHandler<DfuLogReceivedEventArgs> DfuLogReceived;
