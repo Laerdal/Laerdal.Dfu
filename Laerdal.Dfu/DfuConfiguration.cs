@@ -139,6 +139,12 @@ namespace Laerdal.Dfu
         /// </summary>
         public long? ScanTimeout {get; set;}
         
+        /// <summary>
+        /// Android :
+        ///     public DfuServiceInitiator SetRebootTime(long rebootTime)
+        /// </summary>
+        public long? RebootTime {get; set;}
+        
         // TODO : CustomUuids
     }
 }
