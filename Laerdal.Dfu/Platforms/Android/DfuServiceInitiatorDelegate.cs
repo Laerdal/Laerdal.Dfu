@@ -43,7 +43,8 @@ namespace Laerdal.Dfu
             SetMtu(configuration);
             SetNumberOfRetries(configuration);
             SetScanTimeout(configuration);
-
+            SetRebootTime(configuration);
+            
             // For Oreo progress
             if ((int) Build.VERSION.SdkInt >= 26)
             {
@@ -79,6 +80,11 @@ namespace Laerdal.Dfu
         private void SetScanTimeout(DfuConfiguration configuration)
         {
             Initiator = Initiator.SetScanTimeout(configuration.ScanTimeout ?? DfuServiceInitiator.DefaultScanTimeout);
+        }
+        
+        private void SetRebootTime(DfuConfiguration configuration)
+        {
+            Initiator = Initiator.SetRebootTime(configuration.RebootTime ?? DfuServiceInitiator.DefaultScanTimeout);
         }
 
         private void SetRestoreBond(DfuConfiguration configuration)
