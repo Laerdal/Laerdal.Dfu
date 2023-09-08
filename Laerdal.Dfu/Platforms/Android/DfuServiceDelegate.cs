@@ -6,7 +6,7 @@ using Laerdal.Dfu.Bindings.Android;
 
 namespace Laerdal.Dfu
 {
-    [Service]
+    [Service(Exported=false, Name="com.Laerdal.Dfu.DfuServiceDelegate")]
     public class DfuServiceDelegate : DfuBaseService
     {
         public DfuServiceDelegate()
