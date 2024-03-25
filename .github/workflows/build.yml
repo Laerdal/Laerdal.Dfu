@@ -1,0 +1,39 @@
+
+name: Build
+run-name: ${{ github.job }} #${{ github.run_number }} on ${{ github.ref }} by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Restore Workloads
+        run: dotnet workload restore
+        shell: bash
+
+      - name: Restore
+        run: dotnet restore
+        shell: bash
+
+      - name: Build
+        run: dotnet build --configuration Release
+        shell: bash
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: Output
+          if-no-files-found: error
