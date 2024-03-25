@@ -22,8 +22,8 @@
   <Laerdal_Version_Major>1</Laerdal_Version_Major>
   <Laerdal_Version_Minor>27</Laerdal_Version_Minor>
   <Laerdal_Version_Build Condition="'$(BUILD_BUILDID)' != ''">$(BUILD_BUILDID)</Laerdal_Version_Build> <!-- Azure DevOps, Last build was 43857 -->
-  <Laerdal_Version_Build Condition="'$(GITHUB_RUN_NUMBER)' != ''">$(GITHUB_RUN_NUMBER)</Laerdal_Version_Build> <!-- GitHub Actions, auto-increment from 0 -->
-  <Laerdal_Version_Build Condition="'$(CI_PIPELINE_IID)' != ''">$(CI_PIPELINE_IID)</Laerdal_Version_Build> <!-- GitLab, auto-increment from 0 -->
+  <Laerdal_Version_Build Condition="'$(GITHUB_RUN_NUMBER)' != ''">$([MSBuild]::Add(8, $(GITHUB_RUN_NUMBER)))</Laerdal_Version_Build> <!-- GitHub Actions, auto-increment from 0 -->
+  <Laerdal_Version_Build Condition="'$(CI_PIPELINE_IID)' != ''">$([MSBuild]::Add(8, $(CI_PIPELINE_IID)))</Laerdal_Version_Build> <!-- GitLab, auto-increment from 0 -->
   <Laerdal_Version_Build Condition="'$(Laerdal_Version_Build)' == ''">0</Laerdal_Version_Build> <!-- Fallback value -->
 
   <Laerdal_Version Condition="'$(Laerdal_Version)' == ''">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version>
