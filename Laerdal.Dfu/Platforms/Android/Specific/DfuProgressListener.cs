@@ -1,21 +1,21 @@
-using Laerdal.Dfu.Bindings.Android;
+using Android.App;
 using Laerdal.Dfu.Enums;
 
-namespace Laerdal.Dfu
+namespace Laerdal.Dfu.Specific
 {
-    public class DfuProgressDelegate : DfuProgressListenerAdapter
+    public class DfuProgressListener : Laerdal.Dfu.Bindings.Android.DfuProgressListenerAdapter
     {
         private DfuInstallation DfuInstallation { get; }
 
-        public DfuProgressDelegate(DfuInstallation dfuInstallation)
+        public DfuProgressListener(DfuInstallation dfuInstallation)
         {
             DfuInstallation = dfuInstallation;
-            DfuServiceListenerHelper.RegisterProgressListener(Android.App.Application.Context, this);
+            Laerdal.Dfu.Bindings.Android.DfuServiceListenerHelper.RegisterProgressListener(Android.App.Application.Context, this);
         }
 
         protected override void Dispose(bool disposing)
         {
-            DfuServiceListenerHelper.UnregisterProgressListener(Android.App.Application.Context, this);
+            Laerdal.Dfu.Bindings.Android.DfuServiceListenerHelper.UnregisterProgressListener(Android.App.Application.Context, this);
             base.Dispose(disposing);
         }
 
@@ -26,79 +26,77 @@ namespace Laerdal.Dfu
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuErrorReceived((DfuError) error, message);
-            DfuInstallation.OnDfuStateChanged(DfuState.Error);
+            DfuInstallation.OnDfuError((DfuError) error, message);
         }
 
         public override void OnDeviceConnected(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Connected);
+            DfuInstallation.State = DfuState.Connected;
         }
 
         public override void OnDeviceConnecting(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Connecting);
+            DfuInstallation.State = DfuState.Connecting;
         }
 
         public override void OnDeviceDisconnected(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Disconnected);
+            DfuInstallation.State = DfuState.Disconnected;
         }
 
         public override void OnDeviceDisconnecting(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Disconnecting);
+            DfuInstallation.State = DfuState.Disconnecting;
         }
 
         public override void OnDfuAborted(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Aborted);
-            
+            DfuInstallation.State = DfuState.Aborted;
         }
 
         public override void OnDfuCompleted(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Completed);
+            DfuInstallation.State = DfuState.Completed;
         }
 
         public override void OnFirmwareValidating(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Validating);
+            DfuInstallation.State = DfuState.Validating;
         }
 
         public override void OnDfuProcessStarted(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Started);
+            DfuInstallation.State = DfuState.Started;
         }
 
         public override void OnDfuProcessStarting(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Starting);
+            DfuInstallation.State = DfuState.Starting;
         }
 
         public override void OnEnablingDfuMode(string deviceAddress)
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.EnablingDfuMode);
+            DfuInstallation.State = DfuState.EnablingDfuMode;
         }
 
         public override void OnProgressChanged(string deviceAddress,
@@ -110,7 +108,7 @@ namespace Laerdal.Dfu
         {
             if (!DfuInstallation.CheckDeviceAddress(deviceAddress)) { return; }
 
-            DfuInstallation.OnDfuStateChanged(DfuState.Uploading);
+            DfuInstallation.State = DfuState.Uploading;
             DfuInstallation.OnProgressChanged(percent / 100D, speed, avgSpeed);
         }
     }
