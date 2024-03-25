@@ -1,0 +1,32 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: macOS-12
+
+steps:
+  - checkout: self
+    clean: true
+    #https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch
+    fetchDepth: 0
+    persistCredentials: true
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet workload install
+    inputs:
+      command: custom
+      custom: 'workload'
+      arguments: 'install maui ios android'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      projects: $(Build.SourcesDirectory)/Laerdal.Build.proj
+      configuration: Release
+      arguments: '--verbosity detailed'
+
+  - publish: $(Build.ArtifactStagingDirectory)
+    artifact: output

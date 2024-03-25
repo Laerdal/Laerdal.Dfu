@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Run with "msbuild Laerdal.Dfu.proj" -->
+<Project DefaultTargets="BuildProjects">
+    <PropertyGroup>
+        <PackageOutputPath Condition="'$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Output/`))</PackageOutputPath>
+        <PackageOutputPath Condition="'$(PackageOutputPath)' == '' AND '$(TF_BUILD)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
+        <Laerdal_Log_Level>High</Laerdal_Log_Level>
+        <Laerdal_Project Condition="'$(Laerdal_Project)' == ''">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.Dfu/Laerdal.Dfu.csproj`))</Laerdal_Project>
+        <Laerdal_Script_FolderPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.Scripts/`))</Laerdal_Script_FolderPath>
+    </PropertyGroup>
+
+    <!-- VERSION -->
+    <Target Name="GenerateVersionFile" BeforeTargets="BuildProjects">
+        <PropertyGroup>
+            <!-- FILE PATHS -->
+            <Laerdal_Version_Script_FilePath Condition="'$(Laerdal_Version_Script_FilePath)' == ''">$([System.IO.Path]::Combine($(Laerdal_Script_FolderPath), `Laerdal.Version.sh`))</Laerdal_Version_Script_FilePath>
+            <Laerdal_Version_Details_FilePath Condition="'$(Laerdal_Version_Details_FilePath)' == ''">$([System.IO.Path]::Combine($(PackageOutputPath), `version.txt`))</Laerdal_Version_Details_FilePath>
+            
+            <!-- PARAMETERS -->
+            <Laerdal_Version_Major Condition="'$(Laerdal_Version_Major)' == ''">1</Laerdal_Version_Major>
+            <Laerdal_Master_Branch_Name Condition="'$(Laerdal_Master_Branch_Name)' == ''">main</Laerdal_Master_Branch_Name>
+            <Laerdal_Develop_Branch_Name Condition="'$(Laerdal_Develop_Branch_Name)' == ''">develop</Laerdal_Develop_Branch_Name>
+
+            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) -o $(Laerdal_Version_Details_FilePath)</_Laerdal_Version_Script_Parameters>
+            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --major $(Laerdal_Version_Major)</_Laerdal_Version_Script_Parameters>
+            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --master-branch $(Laerdal_Master_Branch_Name)</_Laerdal_Version_Script_Parameters>
+            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --develop-branch $(Laerdal_Develop_Branch_Name)</_Laerdal_Version_Script_Parameters>
+        </PropertyGroup>
+
+        <!-- RUN -->
+        <Message Importance="$(Laerdal_Log_Level)" Text="sh $(Laerdal_Version_Script_FilePath)$(_Laerdal_Version_Script_Parameters)" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+            Command="sh $(Laerdal_Version_Script_FilePath)$(_Laerdal_Version_Script_Parameters)" 
+            ConsoleToMSBuild="true" EchoOff="false">
+            <Output TaskParameter="ConsoleOutput" PropertyName="Laerdal_Version_Full" />
+        </Exec>
+
+        <!-- OUTPUTS -->
+        <PropertyGroup>
+            <Laerdal_Version_Base>$([System.Text.RegularExpressions.Regex]::Replace("$(Laerdal_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$1.$2.$3"))</Laerdal_Version_Base>
+            <Laerdal_Version_BuildId>$([System.Text.RegularExpressions.Regex]::Replace("$(Laerdal_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$5"))</Laerdal_Version_BuildId>
+            <Laerdal_Version_BuildId Condition="'$(Laerdal_Version_BuildId)' == ''">0</Laerdal_Version_BuildId>
+        </PropertyGroup>
+
+        <CreateProperty Value="$(Laerdal_Version_Full)">
+            <Output PropertyName="Laerdal_Version_Full" TaskParameter="Value"/>
+        </CreateProperty>
+        <CreateProperty Value="$(Laerdal_Version_Base).$(Laerdal_Version_BuildId)">
+            <Output PropertyName="Laerdal_Version_Assembly" TaskParameter="Value"/>
+        </CreateProperty>
+
+        <Message Importance="High" Text="##vso[build.updatebuildnumber]$(Laerdal_Version_Full)" Condition=" '$(TF_BUILD)' != '' " />
+    </Target>
+
+    <!-- BUILD -->
+    <Target Name="BuildProjects">
+        <!-- REQUIRED PARAMETERS -->
+        <Error Text="'Laerdal_Version_Assembly' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Assembly=...'"
+            Condition=" '$(Laerdal_Version_Assembly)' == '' " />
+        <Error Text="'Laerdal_Version_Full' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Full=...'"
+            Condition=" '$(Laerdal_Version_Full)' == '' " />
+        <Error Text="'Laerdal_Project' has to be set. Please call this script again with the argument '/p:Laerdal_Project=...'"
+            Condition=" '$(Laerdal_Project)' == '' " />
+
+        <!-- PARAMETERS -->
+        <PropertyGroup>
+            <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);PackageOutputPath=$(PackageOutputPath)</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Configuration=$(Configuration)</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Assembly=$(Laerdal_Version_Assembly)</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Full=$(Laerdal_Version_Full)</_Laerdal_Build_Parameters>
+        </PropertyGroup>
+        
+        <!-- RUN -->
+        <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
+    </Target>
+</Project>

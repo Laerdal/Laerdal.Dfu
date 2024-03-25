@@ -348,12 +348,9 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
-
-Laerdal.Dfu.Output
-
-Laerdal.Dfu/iOS/Carthage
-Laerdal.Dfu/Droid/Jars
+Output/
 
 **/.idea/**
 
 .DS_Store
+
