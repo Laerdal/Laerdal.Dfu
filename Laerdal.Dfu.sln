@@ -1,22 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.002.0
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Laerdal.Dfu", "Laerdal.Dfu\Laerdal.Dfu.csproj", "{A837B5B9-0B0C-48F6-A342-4060EC71E2C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laerdal.Dfu", "Laerdal.Dfu\Laerdal.Dfu.csproj", "{0A938850-09F9-44A5-825F-84C932074A29}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{37EBD209-B465-4483-B6A9-46EAC9FE20EF}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		LICENSE = LICENSE
+		Laerdal.Scripts\Laerdal.Version.sh = Laerdal.Scripts\Laerdal.Version.sh
+		Laerdal.Scripts\Laerdal.Builder.targets = Laerdal.Scripts\Laerdal.Builder.targets
+		Laerdal.Scripts\Laerdal.Changelog.sh = Laerdal.Scripts\Laerdal.Changelog.sh
+		Laerdal.Scripts\Laerdal.CreateNewReleaseInGithub.sh = Laerdal.Scripts\Laerdal.CreateNewReleaseInGithub.sh
+		Laerdal.Scripts\Laerdal.SetupBuildEnvironment.sh = Laerdal.Scripts\Laerdal.SetupBuildEnvironment.sh
+		.github\workflows\github-actions.yml = .github\workflows\github-actions.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A837B5B9-0B0C-48F6-A342-4060EC71E2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A837B5B9-0B0C-48F6-A342-4060EC71E2C9}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5DFF87D5-25C1-4291-A72E-EAD4129E1981}
+		{0A938850-09F9-44A5-825F-84C932074A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A938850-09F9-44A5-825F-84C932074A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A938850-09F9-44A5-825F-84C932074A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A938850-09F9-44A5-825F-84C932074A29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
