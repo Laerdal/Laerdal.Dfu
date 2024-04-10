@@ -1,16 +1,19 @@
 trigger:
+
   batch: true
   branches:
     include:
     - '*'
 
+
 pool:
   vmImage: macOS-12
 
+
 steps:
+
   - checkout: self
-    clean: true
-    #https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch
+    clean: true # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines#shallow-fetch
     fetchDepth: 0
     persistCredentials: true
 
@@ -25,8 +28,8 @@ steps:
     displayName: dotnet build
     inputs:
       projects: $(Build.SourcesDirectory)/Laerdal.Build.proj
-      configuration: Release
       arguments: '--verbosity detailed'
+      configuration: Release
 
   - publish: $(Build.ArtifactStagingDirectory)
     artifact: output
