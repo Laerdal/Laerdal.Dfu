@@ -27,7 +27,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
     inputs:
-      projects: '$(Build.SourcesDirectory)/Laerdal.Scripts/Laerdal.Build.targets'
+      projects: '$(Build.SourcesDirectory)/Laerdal.Scripts/Laerdal.Builder.targets'
       arguments: '--verbosity detailed'
       configuration: 'Release'
 

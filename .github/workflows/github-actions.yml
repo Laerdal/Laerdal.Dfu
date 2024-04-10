@@ -1,0 +1,90 @@
+#
+# https://docs.github.com/en/actions/migrating-to-github-actions/automated-migrations/migrating-from-azure-devops-with-github-actions-importer#environment-variable-mapping
+#
+
+name: '🏗 📦 Build, Pack & Deploy Nugets'
+
+env:
+  BUILD_REPOSITORY_FOLDERPATH: ${{     github.workspace                      }}
+
+  LAERDAL_SOURCE_BRANCH: ${{           github.ref                            }}
+  LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
+
+  SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.GITHUB_TOKEN                   }}
+  SCL_AZURE_ARTIFACTS_API_KEY: ${{    secrets.SCL_AZURE_ARTIFACTS_API_KEY    }}
+  SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
+
+
+on:
+  workflow_call: #     so that other workflows can trigger this
+  workflow_dispatch: # allows to run this workflow manually from the actions tab
+
+  push:
+    branches:
+      - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
+
+ 
+jobs:
+  
+  build:
+
+    runs-on: 'windows-2022'
+    
+    #   variable substitution is not supported in github at all    so we cant do stuff like this
+    #
+    #   env:
+    #     Build_Artifacts_Folderpath: $build_repository_folderpath/Artifacts
+
+    steps:
+
+      - name: '🔽 Checkout'
+        uses: 'actions/checkout@v4'
+        with:
+          fetch-tags: true # https://github.com/actions/checkout/issues/1471#issuecomment-1771231294
+          fetch-depth: 0
+
+      - name: '🛠 Setup Build Environment'
+        shell: 'bash'
+        run: |
+          chmod  +x  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"  \
+                &&                                                                                            \
+                     "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"  \
+                             "https://nuget.pkg.github.com/Laerdal-Medical/index.json"                        \
+                             "__nuget_server_username_doesnt_matter__"                                        \
+                             "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                               \
+                             "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"
+
+      - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
+        shell: 'bash'
+        run: |
+          cd                  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts"                \
+                     &&                                                                             \
+          dotnet                                                                                    \
+             msbuild                                                                                \
+             "Laerdal.Builder.targets"                                                              \
+                                                                                                    \
+                           -p:PackageOutputPath="${{ env.BUILD_REPOSITORY_FOLDERPATH }}/Artifacts"  \
+                       -p:Laerdal_Source_Branch="${{ env.LAERDAL_SOURCE_BRANCH       }}"            \
+                     -p:Laerdal_Repository_Path="${{ env.LAERDAL_REPOSITORY_PATH     }}"            \
+                 -p:Laerdal_Github_Access_Token="${{ env.SCL_GITHUB_ACCESS_TOKEN     }}"
+
+      - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
+        uses: 'actions/upload-artifact@v4'
+        with:
+          name: 'Artifacts'
+          path: '${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/**/*'
+
+      - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+        shell: 'bash'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        run: |
+          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                          \
+                    &&                                                                  \
+          ls .                                                                          \
+                    &&                                                                  \
+          dotnet                                                                        \
+                  nuget                                                                 \
+                  push                                                                  \
+                  --source   "https://nuget.pkg.github.com/Laerdal-Medical/index.json"  \
+                  --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                         \
+                  *nupkg
