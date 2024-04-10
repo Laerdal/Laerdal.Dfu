@@ -21,12 +21,24 @@
         <Laerdal_Should_Tag_And_Release Condition="  '$(Laerdal_Should_Tag_And_Release)' == ''  AND  ( '$(Laerdal_Source_Branch)' == 'refs/heads/main'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ) ">True</Laerdal_Should_Tag_And_Release>
 
         <Laerdal_Project>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
+
+        <!-- version -->
+        <Laerdal_Version_Major Condition=" '$(Laerdal_Version_Major)' == '' ">1</Laerdal_Version_Major>
+        <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">27</Laerdal_Version_Minor>
+
+        <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' and '$(BUILD_BUILDID)'     != '' ">$(BUILD_BUILDID)</Laerdal_Version_Build> <!-- Azure DevOps, Last build was 43857 -->
+        <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' and '$(GITHUB_RUN_NUMBER)' != '' ">$([MSBuild]::Add(8, $(GITHUB_RUN_NUMBER)))</Laerdal_Version_Build> <!-- GitHub Actions, auto-increment from 0 -->
+        <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' and '$(CI_PIPELINE_IID)'   != '' ">$([MSBuild]::Add(8, $(CI_PIPELINE_IID)))</Laerdal_Version_Build> <!-- GitLab, auto-increment from 0 -->
+        <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == ''                                  ">0</Laerdal_Version_Build> <!-- Fallback value -->
+        
+        <Laerdal_Version_Base Condition=" '$(Laerdal_Version_Base)' == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version_Base>
     </PropertyGroup>
 
     <Target Name="PrintConfiguration">
         <Message Importance="High" Text="** Configuration           = '$(Configuration)'"/>
         <Message Importance="High" Text="** PackageOutputPath       = '$(PackageOutputPath)'"/>
 
+        <Message Importance="High" Text="** Laerdal_Version_Base    = '$(Laerdal_Version_Base)'"/>
         <Message Importance="High" Text="** Laerdal_Source_Branch   = '$(Laerdal_Source_Branch)'"/>
         <Message Importance="High" Text="** Laerdal_Repository_Path = '$(Laerdal_Repository_Path)'"/>
         <!-- <Message Importance="High" Text="** Laerdal_Github_Access_Token   ='$(Laerdal_Github_Access_Token)'"/> dont -->
@@ -42,6 +54,7 @@
             <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Configuration=$(Configuration)</_Laerdal_Build_Parameters>
+            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version=$(Laerdal_Version_Base)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);PackageOutputPath=$(PackageOutputPath)</_Laerdal_Build_Parameters>
         </PropertyGroup>
         
