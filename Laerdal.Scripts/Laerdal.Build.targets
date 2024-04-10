@@ -19,12 +19,12 @@
     <PropertyGroup>
         <Laerdal_Log_Level>High</Laerdal_Log_Level>
         
-        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Output/`))</PackageOutputPath>
+        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Output`))</PackageOutputPath>
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' AND '$(TF_BUILD)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
 
-        <Laerdal_Project Condition=" '$(Laerdal_Project)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.Dfu/Laerdal.Dfu.csproj`))</Laerdal_Project>
+        <Laerdal_Project Condition=" '$(Laerdal_Project)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
         
-        <Laerdal_Script_FolderPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.Scripts/`))</Laerdal_Script_FolderPath>
+        <Laerdal_Script_FolderPath>$(MSBuildThisFileDirectory)</Laerdal_Script_FolderPath>
     </PropertyGroup>
 
     <!-- VERSION -->

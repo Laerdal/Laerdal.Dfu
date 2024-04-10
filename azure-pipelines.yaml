@@ -17,19 +17,19 @@ steps:
     fetchDepth: 0
     persistCredentials: true
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet workload install'
+  - task: Bash@3
+    displayName: 'Setup Build Environment'
     inputs:
-      custom: 'workload'
-      command: 'custom'
-      arguments: 'install maui ios android'
+      filePath: 'Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh'
+      arguments: ' "https://pkgs.dev.azure.com/LaerdalMedical/_packaging/LaerdalNuGet/nuget/v3/index.json"   "$(Laerdal.NugetFeed.Username)"   "$(Laerdal.NugetFeed.AccessToken)"  "$(Build.ArtifactStagingDirectory)" '
+      targetType: 'filePath'
 
   - task: DotNetCoreCLI@2
-    displayName: dotnet build
+    displayName: 'dotnet build'
     inputs:
-      projects: '$(Build.SourcesDirectory)/Laerdal.Build.targets'
+      projects: '$(Build.SourcesDirectory)/Laerdal.Scripts/Laerdal.Build.targets'
       arguments: '--verbosity detailed'
       configuration: 'Release'
 
-  - publish: $(Build.ArtifactStagingDirectory)
-    artifact: output
+  - publish: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'output'
