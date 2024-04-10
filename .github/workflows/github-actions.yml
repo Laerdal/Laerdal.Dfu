@@ -58,6 +58,15 @@ jobs:
                              "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                                  \
                              "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"
 
+      # we need to manually install java11 because it is needed by the latest windows vm-images that run on
+      # msbuild version 17.8.3 that started rolling out around 20 Nov 2023 https://stackoverflow.com/a/77519085/863651
+      - name: '🛠 Set Up JDK 11'
+        uses: 'actions/setup-java@v2'
+        with:
+          java-version: '11'
+          architecture: 'x64'
+          distribution: 'adopt'
+
       - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
         shell: 'bash'
         run: |
