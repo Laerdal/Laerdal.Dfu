@@ -100,6 +100,7 @@
         <Message Importance="High" Text="MSBuildRuntimeType: $(MSBuildRuntimeType)" />
         <Message Importance="High" Text="##vso[build.updatebuildnumber]$(PackageVersion)" />
     </Target>
+
     <Target Name="PrintPlatformBuildInfo" BeforeTargets="Compile">
         <Message Importance="High" Text="*** Platform Info ***" />
         <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
@@ -117,4 +118,5 @@
         <Version>$(Laerdal_Version_Full)</Version>
         <PackageVersion>$(Laerdal_Version_Full)</PackageVersion>
     </PropertyGroup>
+
 </Project>
