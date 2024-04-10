@@ -1,5 +1,3 @@
-using System;
-
 namespace Laerdal.Dfu.Enums
 {
     public enum DfuLogLevel : long

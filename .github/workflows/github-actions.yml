@@ -23,6 +23,10 @@ on:
     branches:
       - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
 
+  pull_request:
+    branches:
+      - '**'
+
  
 jobs:
   
@@ -46,12 +50,12 @@ jobs:
       - name: '🛠 Setup Build Environment'
         shell: 'bash'
         run: |
-          chmod  +x  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"  \
-                &&                                                                                            \
-                     "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"  \
-                             "https://nuget.pkg.github.com/Laerdal-Medical/index.json"                        \
-                             "__nuget_server_username_doesnt_matter__"                                        \
-                             "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                               \
+          chmod  +x  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
+                &&                                                                                               \
+                     "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
+                             "https://nuget.pkg.github.com/Laerdal-Medical/index.json"                           \
+                             "__nuget_server_username_doesnt_matter__"                                           \
+                             "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                                  \
                              "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"
 
       - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
@@ -73,18 +77,19 @@ jobs:
         with:
           name: 'Artifacts'
           path: '${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/**/*'
+          if-no-files-found: error
 
       - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
         shell: 'bash'
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         run: |
-          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                          \
-                    &&                                                                  \
-          ls .                                                                          \
-                    &&                                                                  \
-          dotnet                                                                        \
-                  nuget                                                                 \
-                  push                                                                  \
-                  --source   "https://nuget.pkg.github.com/Laerdal-Medical/index.json"  \
-                  --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                         \
+          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
+                    &&                                                                            \
+          ls .                                                                                    \
+                    &&                                                                            \
+          dotnet                                                                                  \
+                  nuget                                                                           \
+                  push                                                                            \
+                  --source   "https://nuget.pkg.github.com/Laerdal-Medical/index.json"            \
+                  --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
                   *nupkg

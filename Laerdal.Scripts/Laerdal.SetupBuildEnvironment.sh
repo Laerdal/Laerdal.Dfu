@@ -57,10 +57,10 @@ fi
 # we do our best to explicitly version-pin our workloads so as to preemptively avoid problems that
 # would be bound to crop up sooner or later by blindly auto-upgrading to bleeding-edge workloads
 #
-cd "Laerdal.Ble"
+cd "Laerdal.Dfu"
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
-  echo "##vso[task.logissue type=error]Failed to cd to Laerdal.Ble."
+  echo "##vso[task.logissue type=error]Failed to cd to Laerdal.Dfu."
   exit 30
 fi
 
