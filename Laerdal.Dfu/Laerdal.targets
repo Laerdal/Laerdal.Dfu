@@ -25,10 +25,10 @@
     <!-- ==================== PACKAGING ==================== -->
     <PropertyGroup>
         <!-- Laerdal_Package_Name -->
-        <RootNamespace>$(Laerdal_Package_Name)</RootNamespace>
+        <Title>$(Laerdal_Package_Name)</Title>
         <PackageId>$(Laerdal_Package_Name)</PackageId>
         <AssemblyName>$(Laerdal_Package_Name)</AssemblyName>
-        <Title>$(Laerdal_Package_Name)</Title>
+        <RootNamespace>$(Laerdal_Package_Name)</RootNamespace>
 
         <!-- Laerdal_Package_Copyright -->
         <Authors>$(Laerdal_Package_Copyright)</Authors>

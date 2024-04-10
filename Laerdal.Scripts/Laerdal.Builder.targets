@@ -1,81 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- to test stuff out on your localdev try these                                     -->
-<!--                                                                                  -->
-<!--   - to simply calculate the proper version and build use:                        -->
 <!--                                                                                  -->
 <!--        # on macos                                                                -->
-<!--        dotnet    msbuild                                            \            -->
-<!--            "Laerdal.Scripts/Laerdal.Builder.targets"                \            -->
-<!--            '"/p:Laerdal_Version_Full=1.0.x.0"'                                   -->
+<!--        dotnet    msbuild    "Laerdal.Scripts/Laerdal.Builder.targets"            -->
 <!--                                                                                  -->
 <!--        # on windows powershell                                                   -->
-<!--        dotnet    msbuild                                            ^            -->
-<!--            "Laerdal.Scripts\Laerdal.Builder.targets"                ^            -->
-<!--            /p:Laerdal_Version_Full=1.0.x.0                                       -->
+<!--        dotnet    msbuild    "Laerdal.Scripts\Laerdal.Builder.targets"            -->
 <!--                                                                                  -->
 <Project DefaultTargets="BuildProjects">
 
     <PropertyGroup>
-        <Laerdal_Log_Level>High</Laerdal_Log_Level>
-        
-        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' AND '$(TF_BUILD)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Output`))</PackageOutputPath>
-        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' AND '$(TF_BUILD)' != '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
+        <Newline>%0A</Newline>
+        <Configuration Condition="      '$(Configuration)'      == '' ">Release</Configuration>
 
-        <Laerdal_Project Condition=" '$(Laerdal_Project)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
-        
-        <Laerdal_Script_FolderPath>$(MSBuildThisFileDirectory)</Laerdal_Script_FolderPath>
+        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
+        <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Artifacts/`))</PackageOutputPath>
+
+        <Laerdal_Source_Branch Condition="           '$(Laerdal_Source_Branch)'          == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
+        <Laerdal_Repository_Path Condition="         '$(Laerdal_Repository_Path)'        == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
+        <Laerdal_Should_Tag_And_Release Condition="  '$(Laerdal_Should_Tag_And_Release)' == ''  AND  ( '$(Laerdal_Source_Branch)' == 'refs/heads/main'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ) ">True</Laerdal_Should_Tag_And_Release>
+
+        <Laerdal_Project>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
     </PropertyGroup>
 
-    <!-- VERSION -->
-    <Target Name="GenerateVersionFile" BeforeTargets="BuildProjects">
-        <PropertyGroup>
-            <!-- FILE PATHS -->
-            <Laerdal_Version_Script_FilePath Condition="'$(Laerdal_Version_Script_FilePath)' == ''">$([System.IO.Path]::Combine($(Laerdal_Script_FolderPath), `Laerdal.Version.sh`))</Laerdal_Version_Script_FilePath>
-            <Laerdal_Version_Details_FilePath Condition="'$(Laerdal_Version_Details_FilePath)' == ''">$([System.IO.Path]::Combine($(PackageOutputPath), `version.txt`))</Laerdal_Version_Details_FilePath>
-            
-            <!-- PARAMETERS -->
-            <Laerdal_Version_Major Condition="       '$(Laerdal_Version_Major)'       == '' ">1</Laerdal_Version_Major>
-            <Laerdal_Master_Branch_Name Condition="  '$(Laerdal_Master_Branch_Name)'  == '' ">main</Laerdal_Master_Branch_Name>
-            <Laerdal_Develop_Branch_Name Condition=" '$(Laerdal_Develop_Branch_Name)' == '' ">develop</Laerdal_Develop_Branch_Name>
+    <Target Name="PrintConfiguration">
+        <Message Importance="High" Text="** Configuration           = '$(Configuration)'"/>
+        <Message Importance="High" Text="** PackageOutputPath       = '$(PackageOutputPath)'"/>
 
-            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) -o $(Laerdal_Version_Details_FilePath)</_Laerdal_Version_Script_Parameters>
-            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --major $(Laerdal_Version_Major)</_Laerdal_Version_Script_Parameters>
-            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --master-branch $(Laerdal_Master_Branch_Name)</_Laerdal_Version_Script_Parameters>
-            <_Laerdal_Version_Script_Parameters>$(_Laerdal_Version_Script_Parameters) --develop-branch $(Laerdal_Develop_Branch_Name)</_Laerdal_Version_Script_Parameters>
-        </PropertyGroup>
-
-        <!-- RUN -->
-        <Message Importance="$(Laerdal_Log_Level)" Text="sh $(Laerdal_Version_Script_FilePath)$(_Laerdal_Version_Script_Parameters)" />
-        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
-            Command="sh $(Laerdal_Version_Script_FilePath)$(_Laerdal_Version_Script_Parameters)" 
-            ConsoleToMSBuild="true" EchoOff="false">
-            <Output TaskParameter="ConsoleOutput" PropertyName="Laerdal_Version_Full" />
-        </Exec>
-
-        <!-- OUTPUTS -->
-        <PropertyGroup>
-            <Laerdal_Version_Base>$([System.Text.RegularExpressions.Regex]::Replace("$(Laerdal_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$1.$2.$3"))</Laerdal_Version_Base>
-            <Laerdal_Version_BuildId>$([System.Text.RegularExpressions.Regex]::Replace("$(Laerdal_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$5"))</Laerdal_Version_BuildId>
-            <Laerdal_Version_BuildId Condition="'$(Laerdal_Version_BuildId)' == ''">0</Laerdal_Version_BuildId>
-        </PropertyGroup>
-
-        <CreateProperty Value="$(Laerdal_Version_Full)">
-            <Output PropertyName="Laerdal_Version_Full" TaskParameter="Value"/>
-        </CreateProperty>
-        <CreateProperty Value="$(Laerdal_Version_Base).$(Laerdal_Version_BuildId)">
-            <Output PropertyName="Laerdal_Version_Assembly" TaskParameter="Value"/>
-        </CreateProperty>
-
-        <Message Importance="High" Text="##vso[build.updatebuildnumber]$(Laerdal_Version_Full)" Condition=" '$(TF_BUILD)' != '' " />
+        <Message Importance="High" Text="** Laerdal_Source_Branch   = '$(Laerdal_Source_Branch)'"/>
+        <Message Importance="High" Text="** Laerdal_Repository_Path = '$(Laerdal_Repository_Path)'"/>
+        <!-- <Message Importance="High" Text="** Laerdal_Github_Access_Token   ='$(Laerdal_Github_Access_Token)'"/> dont -->
     </Target>
 
     <!-- BUILD -->
     <Target Name="BuildProjects">
         <!-- REQUIRED PARAMETERS -->
-        <Error Condition=" '$(Laerdal_Project)'          == '' " Text="'Laerdal_Project' has to be set. Please call this script again with the argument '/p:Laerdal_Project=...'" />
-        <Error Condition=" '$(Laerdal_Version_Full)'     == '' " Text="'Laerdal_Version_Full' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Full=...'" />
-        <Error Condition=" '$(Laerdal_Version_Assembly)' == '' " Text="'Laerdal_Version_Assembly' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Assembly=...'" />
+        <Error Condition=" '$(Laerdal_Project)' == '' " Text="'Laerdal_Project' has to be set. Please call this script again with the argument '/p:Laerdal_Project=...'" />
         
         <!-- PARAMETERS -->
         <PropertyGroup>
@@ -83,12 +43,37 @@
 
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Configuration=$(Configuration)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);PackageOutputPath=$(PackageOutputPath)</_Laerdal_Build_Parameters>
-            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Full=$(Laerdal_Version_Full)</_Laerdal_Build_Parameters>
-            <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version_Assembly=$(Laerdal_Version_Assembly)</_Laerdal_Build_Parameters>
         </PropertyGroup>
         
         <!-- RUN -->
         <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
+    </Target>
+
+    <!-- GITHUB RELEASE -->
+    <Target Name="CreateGithubReleaseWithTag"
+            Condition=" '$(Laerdal_Should_Tag_And_Release)' == 'True' "
+            AfterTargets="BuildProjects">
+
+        <Error Condition=" '$(Laerdal_Version_Base)'        == '' " Text="'Laerdal_Version_Base' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Base=...'" />
+        <Error Condition=" '$(Laerdal_Source_Branch)'       == '' " Text="'Laerdal_Source_Branch' has to be set. Please call this script again with the argument '/p:Laerdal_Source_Branch=...'" />
+        <Error Condition=" '$(Laerdal_Repository_Path)'     == '' " Text="'Laerdal_Repository_Path' has to be set. Please call this script again with the argument '/p:Laerdal_Repository_Path=...'" />
+        <Error Condition=" '$(Laerdal_Github_Access_Token)' == '' " Text="'Laerdal_Github_Access_Token' has to be set. Please call this script again with the argument '/p:Laerdal_Github_Access_Token=...'" />
+
+        <PropertyGroup>
+            <Laerdal_Create_Github_Release_Script_Filepath Condition=" '$(Laerdal_Create_Github_Release_Script_Filepath)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `Laerdal.CreateNewReleaseInGithub.sh`))</Laerdal_Create_Github_Release_Script_Filepath>
+
+            <_Laerdal_Create_Github_Release_Script_Parameters>$(_Laerdal_Create_Github_Release_Script_Parameters) --git-branch       '$(Laerdal_Source_Branch)'</_Laerdal_Create_Github_Release_Script_Parameters>
+            <_Laerdal_Create_Github_Release_Script_Parameters>$(_Laerdal_Create_Github_Release_Script_Parameters) --tag-version      '$(Laerdal_Version_Base)'</_Laerdal_Create_Github_Release_Script_Parameters>
+            <_Laerdal_Create_Github_Release_Script_Parameters>$(_Laerdal_Create_Github_Release_Script_Parameters) --access-token     '$(Laerdal_Github_Access_Token)'</_Laerdal_Create_Github_Release_Script_Parameters>
+            <_Laerdal_Create_Github_Release_Script_Parameters>$(_Laerdal_Create_Github_Release_Script_Parameters) --repository-path  '$(Laerdal_Repository_Path)'</_Laerdal_Create_Github_Release_Script_Parameters>
+        </PropertyGroup>
+
+        <Message Importance="High" Text="   bash    '$(Laerdal_Create_Github_Release_Script_Filepath)'    $(_Laerdal_Create_Github_Release_Script_Parameters) "/>
+
+        <Exec Command="   bash    '$(Laerdal_Create_Github_Release_Script_Filepath)'   $(_Laerdal_Create_Github_Release_Script_Parameters) "
+              EchoOff="true"
+              ConsoleToMSBuild="true"
+              WorkingDirectory="$(MSBuildThisFileDirectory)/.."/>
     </Target>
 
 </Project>
