@@ -53,7 +53,7 @@ jobs:
           chmod  +x  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
                 &&                                                                                               \
                      "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
-                             "https://nuget.pkg.github.com/Laerdal-Medical/index.json"                           \
+                             "https://nuget.pkg.github.com/Laerdal/index.json"                                   \
                              "__nuget_server_username_doesnt_matter__"                                           \
                              "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                                  \
                              "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"
@@ -99,6 +99,6 @@ jobs:
           dotnet                                                                                  \
                   nuget                                                                           \
                   push                                                                            \
-                  --source   "https://nuget.pkg.github.com/Laerdal-Medical/index.json"            \
+                  --source   "https://nuget.pkg.github.com/Laerdal/index.json"                    \
                   --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
                   *nupkg
