@@ -18,8 +18,9 @@ env:
   # note that its vital that we use our own token here instead of GITHUB_TOKEN    that is because access the
   # nuget repos of Laerdal.Dfu.Bindings.iOS and Laerdal.Dfu.Bindings.Android which are inaccessible to the GITHUB_TOKEN 
   SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.SCL_GITHUB_ACCESS_TOKEN        }}
-  SCL_AZURE_ARTIFACTS_API_KEY: ${{    secrets.SCL_AZURE_ARTIFACTS_API_KEY    }}
+  SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
+
 
 on:
   workflow_call: #     so that other workflows can trigger this
