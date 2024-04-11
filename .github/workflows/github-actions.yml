@@ -16,9 +16,9 @@ env:
   LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
 
   SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.GITHUB_TOKEN                   }}
+  SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
   SCL_AZURE_ARTIFACTS_API_KEY: ${{    secrets.SCL_AZURE_ARTIFACTS_API_KEY    }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
-
 
 on:
   workflow_call: #     so that other workflows can trigger this
@@ -102,4 +102,19 @@ jobs:
                   push                                                                            \
                   --source   "https://nuget.pkg.github.com/Laerdal/index.json"                    \
                   --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
+                  *nupkg
+
+      - name: '🚀 Publish to the Nuget.org' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+        shell: 'bash'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        run: |
+          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
+                    &&                                                                            \
+          ls .                                                                                    \
+                    &&                                                                            \
+          dotnet                                                                                  \
+                  nuget                                                                           \
+                  push                                                                            \
+                  --source   "https://api.nuget.org/v3/index.json"                                \
+                  --api-key  "${{env.SCL_NUGET_ORG_FEED_API_KEY}}"                                \
                   *nupkg
