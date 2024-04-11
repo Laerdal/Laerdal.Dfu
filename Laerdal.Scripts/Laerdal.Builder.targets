@@ -47,8 +47,10 @@
     <!-- BUILD -->
     <Target Name="BuildProjects">
         <!-- REQUIRED PARAMETERS -->
-        <Error Condition=" '$(Laerdal_Project)' == '' " Text="'Laerdal_Project' has to be set. Please call this script again with the argument '/p:Laerdal_Project=...'" />
-        
+        <Error Condition=" '$(Configuration)'        == '' " Text="'Configuration' has to be set. Please call this script again with the argument '/p:Configuration=...'" />
+        <Error Condition=" '$(PackageOutputPath)'    == '' " Text="'PackageOutputPath' has to be set. Please call this script again with the argument '/p:PackageOutputPath=...'" />
+        <Error Condition=" '$(Laerdal_Version_Base)' == '' " Text="'Laerdal_Version_Base' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Base=...'" />
+
         <!-- PARAMETERS -->
         <PropertyGroup>
             <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
