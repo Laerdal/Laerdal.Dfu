@@ -38,11 +38,7 @@ jobs:
   build:
 
     runs-on: 'windows-2022'
-    
-    #   variable substitution is not supported in github at all    so we cant do stuff like this
-    #
-    #   env:
-    #     Build_Artifacts_Folderpath: $build_repository_folderpath/Artifacts
+    timeout-minutes: 5
 
     steps:
 
