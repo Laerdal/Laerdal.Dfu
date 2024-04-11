@@ -53,8 +53,6 @@
 
         <!-- PARAMETERS -->
         <PropertyGroup>
-            <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Configuration=$(Configuration)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);Laerdal_Version=$(Laerdal_Version_Base)</_Laerdal_Build_Parameters>
             <_Laerdal_Build_Parameters>$(_Laerdal_Build_Parameters);PackageOutputPath=$(PackageOutputPath)</_Laerdal_Build_Parameters>
