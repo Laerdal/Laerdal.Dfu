@@ -104,7 +104,7 @@ jobs:
                   --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
                   *nupkg
 
-      - name: '🚀 Publish to the Nuget.org' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+      - name: '🚀 Publish to the Nuget.org'
         shell: 'bash'
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         run: |
