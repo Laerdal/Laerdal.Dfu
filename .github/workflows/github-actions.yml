@@ -119,4 +119,4 @@ jobs:
                   push                                                                            \
                   --source   "https://api.nuget.org/v3/index.json"                                \
                   --api-key  "${{env.SCL_NUGET_ORG_FEED_API_KEY}}"                                \
-                  *nupkg
+                  *.nupkg
