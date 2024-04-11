@@ -1,6 +1,11 @@
 #
 # https://docs.github.com/en/actions/migrating-to-github-actions/automated-migrations/migrating-from-azure-devops-with-github-actions-importer#environment-variable-mapping
 #
+# bare in mind that variable substitution is not supported in github at all    so we cant do stuff like this
+#
+#   env:
+#     Build_Artifacts_Folderpath: $build_repository_folderpath/Artifacts
+#
 
 name: '🏗 📦 Build, Pack & Deploy Nugets'
 
@@ -11,9 +16,9 @@ env:
   LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
 
   SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.GITHUB_TOKEN                   }}
+  SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
   SCL_AZURE_ARTIFACTS_API_KEY: ${{    secrets.SCL_AZURE_ARTIFACTS_API_KEY    }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
-
 
 on:
   workflow_call: #     so that other workflows can trigger this
@@ -33,11 +38,7 @@ jobs:
   build:
 
     runs-on: 'windows-2022'
-    
-    #   variable substitution is not supported in github at all    so we cant do stuff like this
-    #
-    #   env:
-    #     Build_Artifacts_Folderpath: $build_repository_folderpath/Artifacts
+    timeout-minutes: 5
 
     steps:
 
@@ -101,4 +102,19 @@ jobs:
                   push                                                                            \
                   --source   "https://nuget.pkg.github.com/Laerdal/index.json"                    \
                   --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
+                  *nupkg
+
+      - name: '🚀 Publish to the Nuget.org' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
+        shell: 'bash'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        run: |
+          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
+                    &&                                                                            \
+          ls .                                                                                    \
+                    &&                                                                            \
+          dotnet                                                                                  \
+                  nuget                                                                           \
+                  push                                                                            \
+                  --source   "https://api.nuget.org/v3/index.json"                                \
+                  --api-key  "${{env.SCL_NUGET_ORG_FEED_API_KEY}}"                                \
                   *nupkg

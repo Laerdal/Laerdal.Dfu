@@ -102,7 +102,8 @@ dotnet   nuget   add                                \
     source      "${NUGET_FEED_URL}"                 \
     --name      "LaerdalMedical"                    \
     --username  "${NUGET_FEED_USERNAME}"            \
-    --password  "${NUGET_FEED_ACCESSTOKEN}"
+    --password  "${NUGET_FEED_ACCESSTOKEN}"         \
+    --store-password-in-clear-text
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to add 'Laerdal Nuget Feed' as a nuget source."
