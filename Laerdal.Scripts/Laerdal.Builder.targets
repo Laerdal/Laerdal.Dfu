@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--                                                                                  -->
-<!--        # on macos                                                                -->
 <!--        dotnet    msbuild    "Laerdal.Scripts/Laerdal.Builder.targets"            -->
-<!--                                                                                  -->
-<!--        # on windows powershell                                                   -->
-<!--        dotnet    msbuild    "Laerdal.Scripts\Laerdal.Builder.targets"            -->
 <!--                                                                                  -->
 <Project DefaultTargets="BuildProjects">
 
