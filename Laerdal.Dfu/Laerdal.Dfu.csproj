@@ -33,6 +33,6 @@
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43870"/>
+      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43890" />
     </ItemGroup>
 </Project>
