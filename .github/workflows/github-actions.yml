@@ -40,7 +40,7 @@ jobs:
   build:
 
     runs-on: 'windows-2022'
-    timeout-minutes: 5
+    timeout-minutes: 20
 
     steps:
 
