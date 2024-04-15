@@ -2,12 +2,13 @@
 
     <PropertyGroup>
         <TargetFrameworks>net7.0-ios;net7.0-android</TargetFrameworks>
+
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
 
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'     ">14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition=" $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' ">21.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -33,6 +34,7 @@
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43890" />
+      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43894" />
     </ItemGroup>
+
 </Project>
