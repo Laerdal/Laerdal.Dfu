@@ -354,3 +354,6 @@ Output/
 
 .DS_Store
 
+**/Jars/*.[JjAa]ar
+
+**/Carthage/Cartfile
