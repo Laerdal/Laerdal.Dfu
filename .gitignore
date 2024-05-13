@@ -357,3 +357,7 @@ Output/
 **/Jars/*.[JjAa]ar
 
 **/Carthage/Cartfile
+
+# we dont want to allow any local nuget.configs to be checked in as they can cause issues with the build and/or contain hardcoded API keys with write access to the
+# nuget feed and this is something we definitely want to avoid at all costs for obvious reasons    such nuget.config files should be remain local to each dev machine
+[Nn][Uu][Gg][Ee][Tt].[Cc][Oo][Nn][Ff][Ii][Gg]
