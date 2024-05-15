@@ -23,7 +23,7 @@
         <Laerdal_Package_Description>Wrapper around Nordic.Dfu</Laerdal_Package_Description>
     </PropertyGroup>
 
-    <!-- ==================== VERSION ==================== -->
+    <!-- ============================ VERSION ============================ -->
     <PropertyGroup>
         <Laerdal_Version_Major Condition=" '$(Laerdal_Version_Major)' == '' ">1</Laerdal_Version_Major>
         <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">27</Laerdal_Version_Minor>
@@ -31,7 +31,10 @@
 
         <Laerdal_Version Condition="       '$(Laerdal_Version)'       == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version>
     </PropertyGroup>
+    <!-- ============================ VERSION ============================ -->
 
+    
+    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
     <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' == 'true' ">
         <Compile Remove="Platforms\**\**">
         </Compile>
@@ -41,15 +44,18 @@
         <Compile Remove="Platforms.NetStandard\**">
         </Compile>
     </ItemGroup>
+    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
 
     <Import Project="Laerdal.targets"/>
 
+    <!-- =========================== PACKAGES ============================ -->    
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
         <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43876"/>
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43915"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43922"/>
     </ItemGroup>
+    <!-- =========================== PACKAGES ============================ -->
 
 </Project>
