@@ -17,11 +17,7 @@ namespace Laerdal.Dfu.Specific
                                     NSNumber rssi,
                                     string name)
         {
-            if (DfuInstallation.DeviceId != peripheral.Identifier.ToString())
-            {
-                return false;
-            }
-            return true;
+            return DfuInstallation.DeviceId == peripheral.Identifier.ToString();
         }
     }
 }

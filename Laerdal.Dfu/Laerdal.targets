@@ -53,6 +53,7 @@
         <PackageLicenseFile Condition="Exists('$(PackageLicencePath)')">LICENSE</PackageLicenseFile>
         <PackageReadmeFile Condition="Exists('$(PackageReadMePath)')">README.md</PackageReadmeFile>
     </PropertyGroup>
+
     <ItemGroup>
         <None Include="$(PackageIconPath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageIconPath)')" />
         <None Include="$(PackageLicencePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageLicencePath)')" />

@@ -93,7 +93,7 @@ jobs:
 
       - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
         shell: 'bash'
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/ksidirop/MAN-335-ios-runtime-error-fix-about-you-should-not-call-this-method'
         run: |
           cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
                     &&                                                                            \
