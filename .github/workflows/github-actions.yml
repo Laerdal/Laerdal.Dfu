@@ -15,10 +15,12 @@ env:
   LAERDAL_SOURCE_BRANCH: ${{           github.ref                            }}
   LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
 
+  # note that its vital that we use our own token here instead of GITHUB_TOKEN    that is because access the
+  # nuget repos of Laerdal.Dfu.Bindings.iOS and Laerdal.Dfu.Bindings.Android which are inaccessible to the GITHUB_TOKEN 
   SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.SCL_GITHUB_ACCESS_TOKEN        }}
   SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
-  SCL_AZURE_ARTIFACTS_API_KEY: ${{    secrets.SCL_AZURE_ARTIFACTS_API_KEY    }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
+
 
 on:
   workflow_call: #     so that other workflows can trigger this
@@ -38,7 +40,7 @@ jobs:
   build:
 
     runs-on: 'windows-2022'
-    timeout-minutes: 5
+    timeout-minutes: 20
 
     steps:
 
@@ -91,7 +93,7 @@ jobs:
 
       - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
         shell: 'bash'
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/ksidirop/MAN-335-ios-runtime-error-fix-about-you-should-not-call-this-method'
         run: |
           cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
                     &&                                                                            \
@@ -117,4 +119,4 @@ jobs:
                   push                                                                            \
                   --source   "https://api.nuget.org/v3/index.json"                                \
                   --api-key  "${{env.SCL_NUGET_ORG_FEED_API_KEY}}"                                \
-                  *nupkg
+                  *.nupkg

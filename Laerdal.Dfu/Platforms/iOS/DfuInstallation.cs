@@ -87,6 +87,7 @@ namespace Laerdal.Dfu
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
         }
+
         public DfuInstallation() : base()
         {
         }

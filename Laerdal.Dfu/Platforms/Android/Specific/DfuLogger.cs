@@ -10,12 +10,14 @@ namespace Laerdal.Dfu.Specific
         public DfuLogger(string deviceAddress)
         {
             DeviceAddress = deviceAddress;
+
             Laerdal.Dfu.Bindings.Android.DfuServiceListenerHelper.RegisterLogListener(Android.App.Application.Context, this);
         }
 
         protected override void Dispose(bool disposing)
         {
             Laerdal.Dfu.Bindings.Android.DfuServiceListenerHelper.UnregisterLogListener(Android.App.Application.Context, this);
+
             base.Dispose(disposing);
         }
 
