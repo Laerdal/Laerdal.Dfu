@@ -54,7 +54,7 @@
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43922"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43926"/>
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 
