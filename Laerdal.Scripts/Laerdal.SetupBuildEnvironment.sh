@@ -70,7 +70,9 @@ dotnet                                \
              install                  \
                  maui                 \
                  ios                  \
-                 android
+                 android              \
+                 maui-ios             \
+                 maui-android
 #                    --from-rollback-file=https://maui.blob.core.windows.net/metadata/rollbacks/${dotnet_8_workload_version}.json   # we need to install additional packages manually
 declare exitCode=$?
 if [ $exitCode != 0 ]; then

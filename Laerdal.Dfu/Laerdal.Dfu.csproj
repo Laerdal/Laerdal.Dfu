@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!-- todo   add support for maccatalyst -->
-        <TargetFrameworks>net7.0-ios;net7.0-android;netstandard2.1;</TargetFrameworks>
+        <TargetFrameworks>net8.0-ios;net8.0-android;netstandard2.1;</TargetFrameworks>
 
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
@@ -50,11 +50,11 @@
 
     <!-- =========================== PACKAGES ============================ -->    
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43876"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43888"/>
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43928"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43933"/>
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 
