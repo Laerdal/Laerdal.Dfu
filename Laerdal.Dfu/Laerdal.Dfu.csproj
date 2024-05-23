@@ -50,11 +50,11 @@
 
     <!-- =========================== PACKAGES ============================ -->    
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43876"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43888"/>
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43928"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43933"/>
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 
