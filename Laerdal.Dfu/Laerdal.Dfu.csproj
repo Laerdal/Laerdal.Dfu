@@ -7,9 +7,9 @@
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
-        
+
         <LangVersion>11.0</LangVersion>
-        
+
         <TargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</TargetPlatformIdentifier>
 
         <SupportedOSPlatformVersion Condition=" '$(TargetPlatformIdentifier)' == 'ios'     ">14.2</SupportedOSPlatformVersion>
@@ -33,7 +33,7 @@
     </PropertyGroup>
     <!-- ============================ VERSION ============================ -->
 
-    
+
     <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
     <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' == 'true' ">
         <Compile Remove="Platforms\**\**">
@@ -48,13 +48,14 @@
 
     <Import Project="Laerdal.targets"/>
 
-    <!-- =========================== PACKAGES ============================ -->    
-    <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43876"/>
-    </ItemGroup>
-    
+    <!-- =========================== PACKAGES ============================ -->
+
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
         <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43928"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+      <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="9.0.35" />
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 

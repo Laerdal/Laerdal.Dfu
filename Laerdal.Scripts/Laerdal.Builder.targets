@@ -24,9 +24,16 @@
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Artifacts/`))</PackageOutputPath>
 
+        <!-- https://docs.gitlab.com/ee/ci/variables/predefined_variables.html                                                                             -->
+        <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables                                             -->
+        <!-- https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml&WT.mc_id=DT-MVP-5003978#system-variables -->
+        <Is_CI_Build Condition="     '$(TF_BUILD)' == 'true'  or  '$(GITHUB_ACTIONS)' == 'true'  or  '$(GITLAB_CI)' == 'true' ">true</Is_CI_Build>
+        <Is_Core_Branch Condition="  '$(Laerdal_Source_Branch)' == 'refs/heads/main'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ">true</Is_Core_Branch>
+        <Is_Pull_Request Condition=" '$(Laerdal_Source_Branch.StartsWith(refs/pull))' == 'true'  and  '$(Laerdal_Source_Branch.EndsWith(/merge))' == 'true' ">true</Is_Pull_Request>
+
         <Laerdal_Source_Branch Condition="           '$(Laerdal_Source_Branch)'          == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
         <Laerdal_Repository_Path Condition="         '$(Laerdal_Repository_Path)'        == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
-        <Laerdal_Should_Tag_And_Release Condition="  '$(Laerdal_Should_Tag_And_Release)' == ''  AND  ( '$(Laerdal_Source_Branch)' == 'refs/heads/main'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  OR  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ) ">True</Laerdal_Should_Tag_And_Release>
+        <Laerdal_Should_Tag_And_Release Condition="  '$(Laerdal_Should_Tag_And_Release)' == ''  and  ( '$(Is_Core_Branch)' == 'true' ) ">True</Laerdal_Should_Tag_And_Release>
 
         <Laerdal_Project>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
 
@@ -75,7 +82,7 @@
             Condition=" '$(Laerdal_Should_Tag_And_Release)' == 'True' "
             AfterTargets="BuildProjects">
 
-        <Error Condition=" '$(Laerdal_Version)'        == '' " Text="'Laerdal_Version' has to be set. Please call this script again with the argument '/p:Laerdal_Version=...'" />
+        <Error Condition=" '$(Laerdal_Version)'             == '' " Text="'Laerdal_Version' has to be set. Please call this script again with the argument '/p:Laerdal_Version=...'" />
         <Error Condition=" '$(Laerdal_Source_Branch)'       == '' " Text="'Laerdal_Source_Branch' has to be set. Please call this script again with the argument '/p:Laerdal_Source_Branch=...'" />
         <Error Condition=" '$(Laerdal_Repository_Path)'     == '' " Text="'Laerdal_Repository_Path' has to be set. Please call this script again with the argument '/p:Laerdal_Repository_Path=...'" />
         <Error Condition=" '$(Laerdal_Github_Access_Token)' == '' " Text="'Laerdal_Github_Access_Token' has to be set. Please call this script again with the argument '/p:Laerdal_Github_Access_Token=...'" />
