@@ -29,7 +29,7 @@
         <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">27</Laerdal_Version_Minor>
         <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' ">0</Laerdal_Version_Build>
 
-        <Laerdal_Version Condition="       '$(Laerdal_Version)'       == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version>
+        <Laerdal_Version_Full Condition="  '$(Laerdal_Version_Full)'  == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version_Full>
     </PropertyGroup>
     <!-- ============================ VERSION ============================ -->
 

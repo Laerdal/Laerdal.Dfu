@@ -90,12 +90,15 @@
 
     <!-- ==================== VERSION ==================== -->
     <PropertyGroup>
-        <Laerdal_Version Condition="'$(Laerdal_Version)' == ''">1.0.0-local.0</Laerdal_Version>
+        <Laerdal_Version_Full Condition="     '$(Laerdal_Version_Full)'     == '' ">1.0.0</Laerdal_Version_Full>
+        <Laerdal_Version_Assembly Condition=" '$(Laerdal_Version_Assembly)' == '' ">$(Laerdal_Version_Full).0</Laerdal_Version_Assembly>
+
         <!-- Apply Version parts according to packaging standards -->
-        <AssemblyVersion>$(Laerdal_Version)</AssemblyVersion>
-        <AssemblyFileVersion>$(Laerdal_Version)</AssemblyFileVersion>
-        <AssemblyInformationalVersion>$(Laerdal_Version)</AssemblyInformationalVersion>
-        <Version>$(Laerdal_Version)</Version>
-        <PackageVersion>$(Laerdal_Version)</PackageVersion>
+        <Version>$(Laerdal_Version_Full)</Version>
+        <PackageVersion>$(Laerdal_Version_Full)</PackageVersion>
+
+        <AssemblyVersion>$(Laerdal_Version_Full)</AssemblyVersion>
+        <AssemblyFileVersion>$(Laerdal_Version_Full)</AssemblyFileVersion>
+        <AssemblyInformationalVersion>$(Laerdal_Version_Full)</AssemblyInformationalVersion>
     </PropertyGroup>
 </Project>
