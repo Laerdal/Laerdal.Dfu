@@ -21,6 +21,10 @@ env:
   SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
 
+  SCL_DEPENDENCY_TRACKER_API_KEY: ${{             secrets.SCL_DEPENDENCY_TRACKER_API_KEY             }}
+  SCL_DEPENDENCY_TRACKER_SERVER_URL: ${{          secrets.SCL_DEPENDENCY_TRACKER_SERVER_URL          }}
+  SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY: ${{ secrets.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY }}
+
 
 on:
   workflow_call: #     so that other workflows can trigger this
@@ -30,7 +34,7 @@ on:
     branches:
       - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
 
-  pull_request:
+  pull_request: # we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
     branches:
       - '**'
 
@@ -73,16 +77,26 @@ jobs:
       - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
         shell: 'bash'
         run: |
-          cd                  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts"                \
-                     &&                                                                             \
-          dotnet                                                                                    \
-             msbuild                                                                                \
-             "Laerdal.Builder.targets"                                                              \
-                                                                                                    \
-                           -p:PackageOutputPath="${{ env.BUILD_REPOSITORY_FOLDERPATH }}/Artifacts"  \
-                       -p:Laerdal_Source_Branch="${{ env.LAERDAL_SOURCE_BRANCH       }}"            \
-                     -p:Laerdal_Repository_Path="${{ env.LAERDAL_REPOSITORY_PATH     }}"            \
-                 -p:Laerdal_Github_Access_Token="${{ env.SCL_GITHUB_ACCESS_TOKEN     }}"
+          cd                  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts"                                                                                                    \
+                     &&                                                                                                                                                                 \
+          echo  "${{env.SCL_DEPENDENCY_TRACKER_API_KEY}}"              >  "./dependency_tracker_api_key.ppk"                                                                            \
+                     &&                                                                                                                                                                 \
+          echo  "${{env.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY}}"  >  "./dependency_tracker_private_signing_key.ppk"                                                                \
+                     &&                                                                                                                                                                 \
+          dotnet                                                                                                                                                                        \
+             msbuild                                                                                                                                                                    \
+             "Laerdal.Builder.targets"                                                                                                                                                  \
+                                                                                                                                                                                        \
+                                                        -p:PackageOutputPath="${{ env.BUILD_REPOSITORY_FOLDERPATH }}/Artifacts"                                                         \
+                                                    -p:Laerdal_Source_Branch="${{ env.LAERDAL_SOURCE_BRANCH       }}"                                                                   \
+                                                  -p:Laerdal_Repository_Path="${{ env.LAERDAL_REPOSITORY_PATH     }}"                                                                   \
+                                              -p:Laerdal_Github_Access_Token="${{ env.SCL_GITHUB_ACCESS_TOKEN     }}"                                                                   \
+                                                                                                                                                                                        \
+                                    -p:Laerdal_Dependency_Tracker_Server_Url="${{ env.SCL_DEPENDENCY_TRACKER_SERVER_URL  }}"                                                            \
+                             -p:Laerdal_Dependency_Tracker_Api_Key_File_Path="${{ env.BUILD_REPOSITORY_FOLDERPATH        }}/Laerdal.Scripts/dependency_tracker_api_key.ppk"             \
+                 -p:Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path="${{ env.BUILD_REPOSITORY_FOLDERPATH        }}/Laerdal.Scripts/dependency_tracker_private_signing_key.ppk" \
+                     &&                                                                                                                                                                 \
+          rm   "./dependency_tracker_private_signing_key.ppk"    "./dependency_tracker_api_key.ppk"
 
       - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
         uses: 'actions/upload-artifact@v4'
@@ -93,7 +107,7 @@ jobs:
 
       - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
         shell: 'bash'
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/ksidirop/MAN-335-ios-runtime-error-fix-about-you-should-not-call-this-method'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         run: |
           cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
                     &&                                                                            \

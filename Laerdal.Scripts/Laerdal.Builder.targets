@@ -31,9 +31,12 @@
         <Is_Core_Branch Condition="  '$(Laerdal_Source_Branch)' == 'refs/heads/main'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ">true</Is_Core_Branch>
         <Is_Pull_Request Condition=" '$(Laerdal_Source_Branch.StartsWith(refs/pull))' == 'true'  and  '$(Laerdal_Source_Branch.EndsWith(/merge))' == 'true' ">true</Is_Pull_Request>
 
-        <Laerdal_Source_Branch Condition="           '$(Laerdal_Source_Branch)'          == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
-        <Laerdal_Repository_Path Condition="         '$(Laerdal_Repository_Path)'        == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
-        <Laerdal_Should_Tag_And_Release Condition="  '$(Laerdal_Should_Tag_And_Release)' == ''  and  ( '$(Is_Core_Branch)' == 'true' ) ">True</Laerdal_Should_Tag_And_Release>
+        <Laerdal_Dependency_Tracker_Server_Url Condition=" '$(Laerdal_Dependency_Tracker_Server_Url)' == '' ">https://dep-tracker.laerdal.com/api/api/v1/bom</Laerdal_Dependency_Tracker_Server_Url>
+
+        <Laerdal_Source_Branch Condition="                    '$(Laerdal_Source_Branch)'                    == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
+        <Laerdal_Repository_Path Condition="                  '$(Laerdal_Repository_Path)'                  == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
+        <Laerdal_Should_Tag_And_Release Condition="           '$(Laerdal_Should_Tag_And_Release)'           == ''  and    '$(Is_Core_Branch)' == 'true' ">True</Laerdal_Should_Tag_And_Release>
+        <Laerdal_Should_Generate_and_Upload_Sbom Condition="  '$(Laerdal_Should_Generate_and_Upload_Sbom)'  == ''  and  ( '$(Is_Core_Branch)' == 'true'  or  '$(Is_Pull_Request)' == 'true' ) ">True</Laerdal_Should_Generate_and_Upload_Sbom>
 
         <Laerdal_Project>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Laerdal.Dfu`, `Laerdal.Dfu.csproj`))</Laerdal_Project>
 
@@ -50,12 +53,16 @@
     </PropertyGroup>
 
     <Target Name="PrintConfiguration">
-        <Message Importance="High" Text="** Configuration           = '$(Configuration)'"/>
-        <Message Importance="High" Text="** PackageOutputPath       = '$(PackageOutputPath)'"/>
+        <Message Importance="High" Text="** Is_CI_Build             = '$(Is_CI_Build)'              "/>
+        <Message Importance="High" Text="** Is_Core_Branch          = '$(Is_Core_Branch)'           "/>
+        <Message Importance="High" Text="** Is_Pull_Request         = '$(Is_Pull_Request)'          "/>
 
-        <Message Importance="High" Text="** Laerdal_Version         = '$(Laerdal_Version)'"/>
-        <Message Importance="High" Text="** Laerdal_Source_Branch   = '$(Laerdal_Source_Branch)'"/>
-        <Message Importance="High" Text="** Laerdal_Repository_Path = '$(Laerdal_Repository_Path)'"/>
+        <Message Importance="High" Text="** Configuration           = '$(Configuration)'            "/>
+        <Message Importance="High" Text="** PackageOutputPath       = '$(PackageOutputPath)'        "/>
+
+        <Message Importance="High" Text="** Laerdal_Version         = '$(Laerdal_Version)'          "/>
+        <Message Importance="High" Text="** Laerdal_Source_Branch   = '$(Laerdal_Source_Branch)'    "/>
+        <Message Importance="High" Text="** Laerdal_Repository_Path = '$(Laerdal_Repository_Path)'  "/>
         <!-- <Message Importance="High" Text="** Laerdal_Github_Access_Token   ='$(Laerdal_Github_Access_Token)'"/> dont -->
     </Target>
 
@@ -104,4 +111,45 @@
               WorkingDirectory="$(MSBuildThisFileDirectory)/.."/>
     </Target>
 
+
+    <!-- GENERATE + UPLOAD SBOM -->
+    <Target Name="GenerateSBOM"
+            Condition=" '$(Laerdal_Should_Generate_and_Upload_Sbom)' == 'True' "
+            AfterTargets="CreateGithubReleaseWithTag">
+
+        <Error Condition=" '$(PackageOutputPath)'                                        == '' " Text="'PackageOutputPath' has to be set. Please call this script again with the argument '/p:PackageOutputPath=...'"/>
+        <Error Condition=" '$(Laerdal_Project)'                                          == '' " Text="'Laerdal_Project' has to be set. Please call this script again with the argument '/p:Laerdal_Project=...'"/>
+        <Error Condition=" '$(Laerdal_Version_Full)'                                     == '' " Text="'Laerdal_Version_Full' has to be set. Please call this script again with the argument '/p:Laerdal_Version_Full=...'"/>
+        <Error Condition=" '$(Laerdal_Dependency_Tracker_Api_Key_File_Path)'             == '' " Text="'Laerdal_Dependency_Tracker_Api_Key_File_Path' has to be set. Please call this script again with the argument '/p:Laerdal_Dependency_Tracker_Api_Key_File_Path=...'"/>
+        <Error Condition=" '$(Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path)' == '' " Text="'Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path' has to be set. Please call this script again with the argument '/p:Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path=...'"/>
+
+        <PropertyGroup>
+            <!-- notice that we intentionally use $(Laerdal_Version_Assembly) instead of $(Laerdal_Version_Full) -->
+            <!-- because cyclonedx inherently ear-tags sboms with the former rather than the later               -->
+
+            <_Laerdal_Project_Name>$([System.IO.Path]::GetFileName('$(Laerdal_Project)').Replace('.csproj', ''))</_Laerdal_Project_Name>
+
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --project-version &quot;$(Laerdal_Version_Assembly)&quot;</_Laerdal_Sbom_Script_Parameters>
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --output-directory-path &quot;$(PackageOutputPath)&quot;</_Laerdal_Sbom_Script_Parameters>
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --sbom-signing-key-file-path &quot;$(Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path)&quot;</_Laerdal_Sbom_Script_Parameters>
+
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --dependency-tracker-url &quot;$(Laerdal_Dependency_Tracker_Server_Url)&quot;</_Laerdal_Sbom_Script_Parameters>
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --dependency-tracker-api-key-file-path &quot;$(Laerdal_Dependency_Tracker_Api_Key_File_Path)&quot;</_Laerdal_Sbom_Script_Parameters>
+
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --csproj-classifier &quot;Library&quot;</_Laerdal_Sbom_Script_Parameters>
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --csproj-file-path &quot;$(Laerdal_Project)&quot;</_Laerdal_Sbom_Script_Parameters>
+
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --project-name &quot;$(_Laerdal_Project_Name)&quot;</_Laerdal_Sbom_Script_Parameters>
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --output-sbom-file-name &quot;sbom.laerdal.dfu.xml&quot;</_Laerdal_Sbom_Script_Parameters>
+
+            <_Laerdal_Sbom_Script_Parameters>$(_Laerdal_Sbom_Script_Parameters)  --parent-project-name &quot;[Group(Legacy)::Laerdal.Dfu]&quot;</_Laerdal_Sbom_Script_Parameters>
+        </PropertyGroup>
+
+        <!-- https://docs.dependencytrack.org/usage/cicd/#large-payloads   also notice that we are forced to target           -->
+        <!-- /api/api/v1/bom instead of /api/v1/bom due to an inherent misconfiguration of laerdal's dependency-track server  -->
+        <Message Importance="High" Text="** Generating, Singing and Uploading SBOMs:"/>
+
+        <Exec Command="   bash    Laerdal.GenerateSignAndUploadSbom.sh     $(_Laerdal_Sbom_Script_Parameters)  " ConsoleToMSBuild="true" WorkingDirectory="$(Laerdal_Script_FolderPath)"/>
+    </Target>
+    
 </Project>
