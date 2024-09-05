@@ -8,12 +8,12 @@ declare GITHUB_ACCESS_TOKEN=""
 declare GITHUB_REPOSITORY_PATH=""
 
 function parse_arguments() {
+
   while [[ $# -gt 0 ]]; do
     case $1 in
-
     -v | --log)
       VERBOSE=1
-      shift
+      # shift   dont shift   no need for this one
       ;;
 
     -r | --repository-path)
@@ -41,8 +41,8 @@ function parse_arguments() {
       usage
       exit 1
       ;;
-
     esac
+
     shift
   done
 
@@ -100,57 +100,25 @@ function create_release_on_github() {
     eventual_singleline_summary="Alpha $eventual_tag_name"
   fi
 
-  local -r payload=$(
-    cat <<EOF
-{
-  "tag_name": "$eventual_tag_name",
-  "target_commitish": "$GIT_BRANCH",
-
-  "name": "$eventual_singleline_summary",
-  "generate_release_notes": true,
-
-  "draft": false,
-  "prerelease": false
-}
-EOF
-  )
-
-  local -r api_url="https://api.github.com/repos/$GITHUB_REPOSITORY_PATH/releases"
-
-  echo "** Creating release on GitHub ..."
-
-  local -r response=$(
-    curl \
-      -i \
-      -sS \
-      -X "POST" \
-      -o /dev/null \
-      -d "$payload" \
-      -w "%{http_code}" \
-      -H "Content-Type:application/json" \
-      -H "Accept:application/vnd.github+json" \
-      -H "Authorization: Bearer $GITHUB_ACCESS_TOKEN" \
-      "$api_url"
-  )
-  local -r curl_exit_code=$?
-
-  log "** api_url=$api_url"
-  log "** payload=$payload"
-  log "** response=$response"
-  log "** curl_exit_code=$curl_exit_code"
-  if [[ $curl_exit_code -ne 0 ]]; then
-    exit_with_error "curl failed with exit code $?"
+  gh    auth      login   --with-token   <<<"$GITHUB_ACCESS_TOKEN"
+  local -r gh_auth_login_exit_code=$?
+  if [[ $gh_auth_login_exit_code -ne 0 ]]; then
+    exit_with_error "GitHub CLI exited with code '$gh_auth_login_exit_code' upon attempting to login using a github access token!"
   fi
 
-  local -r http_status_code="${response}"
-  if [[ $http_status_code -ge 300 ]]; then
-    exit_with_error "API returned HTTP status $http_status_code"
+  gh    release   create         "$eventual_tag_name"              \
+        --title                  "$eventual_singleline_summary"    \
+        --target                 "$GIT_BRANCH"                     \
+        --generate-notes
+  local -r gh_create_release_exit_code=$?
+  if [[ $gh_create_release_exit_code -ne 0 ]]; then
+    exit_with_error "GitHub CLI exited with code '$gh_create_release_exit_code' upon attempting to create a new release!"
   fi
 }
 
 function log() {
   if [[ $VERBOSE -ne 0 ]]; then
-    echo "$@"
+    echo -e "$*"
   fi
 }
 
