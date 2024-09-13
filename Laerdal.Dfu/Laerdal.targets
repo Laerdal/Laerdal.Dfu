@@ -88,6 +88,24 @@
         <Message Importance="High" Text="Version: $(Version)" />
     </Target>
 
+    <!-- ==================== MAUI for .NET8 changes ==================== -->
+    <ItemGroup>
+        <!-- Warning MA002 : Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  
+        Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />.  
+        You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. -->
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
+        <!-- Warning MA002 : Starting with .NET 8, setting  <UseMauiEssentials>true</UseMauiEssentials>  does not automatically include NuGet package references in your project.  
+        Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.21" />.  
+        You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. 
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.21" />-->
+    </ItemGroup>
+
+    <PropertyGroup>
+        <UseMaui>true</UseMaui>
+        <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
+    </PropertyGroup>
+
     <!-- ==================== VERSION ==================== -->
     <PropertyGroup>
         <Laerdal_Version_Full Condition="     '$(Laerdal_Version_Full)'     == '' ">1.0.0</Laerdal_Version_Full>

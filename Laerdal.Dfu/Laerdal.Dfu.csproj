@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!-- todo   add support for maccatalyst -->
-        <TargetFrameworks>net8.0-ios;net8.0-android;netstandard2.1;</TargetFrameworks>
+        <TargetFrameworks>net8.0-ios;net8.0-android</TargetFrameworks>
 
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
@@ -32,19 +32,6 @@
         <Laerdal_Version_Full Condition="  '$(Laerdal_Version_Full)'  == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version_Full>
     </PropertyGroup>
     <!-- ============================ VERSION ============================ -->
-
-
-    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
-    <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' == 'true' ">
-        <Compile Remove="Platforms\**\**">
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' != 'true' ">
-        <Compile Remove="Platforms.NetStandard\**">
-        </Compile>
-    </ItemGroup>
-    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
 
     <Import Project="Laerdal.targets"/>
 
