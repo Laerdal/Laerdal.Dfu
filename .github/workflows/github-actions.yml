@@ -61,8 +61,8 @@ jobs:
                 &&                                                                                               \
                      "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
                              "https://nuget.pkg.github.com/Laerdal/index.json"                                   \
-                             "${{ env.SCL_GITHUB_NUGET_FEED_USERNAME }}"                                         \
-                             "${{ env.SCL_GITHUB_ACCESS_TOKEN        }}"                                         \
+                             "${{ github.actor                       }}"                                         \
+                             "${{ github.token                       }}"                                         \
                              "${{ env.BUILD_REPOSITORY_FOLDERPATH    }}/Artifacts"
 
       # we need to manually install java11 because it is needed by the latest windows vm-images that run on
