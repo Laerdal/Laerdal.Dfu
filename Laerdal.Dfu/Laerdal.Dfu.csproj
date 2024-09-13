@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!-- todo   add support for maccatalyst -->
-        <TargetFrameworks>net8.0-ios;net8.0-android;</TargetFrameworks>
+        <TargetFrameworks>net8.0-ios;net8.0-android;netstandard2.1;</TargetFrameworks>
 
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
