@@ -1,11 +1,12 @@
 using Android.App;
+using Android.Content.PM;
 
 using Java.Lang;
 
 namespace Laerdal.Dfu.Specific
 {
-    
-    [Service]
+
+    [Service(ForegroundServiceType = ForegroundService.TypeConnectedDevice)]
     public class DfuService : Laerdal.Dfu.Bindings.Android.DfuBaseService
     {
         public DfuService()

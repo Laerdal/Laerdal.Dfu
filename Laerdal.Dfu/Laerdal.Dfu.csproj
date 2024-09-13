@@ -37,7 +37,7 @@
 
     <!-- =========================== PACKAGES ============================ -->    
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43888"/>
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.5.0.43891"/>
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
