@@ -43,7 +43,7 @@ jobs:
   
   build:
 
-    runs-on: 'windows-2022'
+    runs-on: 'macos-14'
     timeout-minutes: 20
 
     steps:
