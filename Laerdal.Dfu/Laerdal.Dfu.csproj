@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <!-- todo   add support for maccatalyst -->
-        <TargetFrameworks>net8.0-ios;net8.0-android;netstandard2.1;</TargetFrameworks>
+        <TargetFrameworks>net8.0-ios;net8.0-android</TargetFrameworks>
 
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
-        
+
         <LangVersion>11.0</LangVersion>
-        
+
         <TargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</TargetPlatformIdentifier>
 
         <SupportedOSPlatformVersion Condition=" '$(TargetPlatformIdentifier)' == 'ios'     ">14.2</SupportedOSPlatformVersion>
@@ -29,22 +29,9 @@
         <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">27</Laerdal_Version_Minor>
         <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' ">0</Laerdal_Version_Build>
 
-        <Laerdal_Version Condition="       '$(Laerdal_Version)'       == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version>
+        <Laerdal_Version_Full Condition="  '$(Laerdal_Version_Full)'  == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version_Full>
     </PropertyGroup>
     <!-- ============================ VERSION ============================ -->
-
-    
-    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
-    <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' == 'true' ">
-        <Compile Remove="Platforms\**\**">
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework.StartsWith(netstandard))' != 'true' ">
-        <Compile Remove="Platforms.NetStandard\**">
-        </Compile>
-    </ItemGroup>
-    <!-- ==================== NETSTANDARD PlACEHOLDER ==================== -->
 
     <Import Project="Laerdal.targets"/>
 
