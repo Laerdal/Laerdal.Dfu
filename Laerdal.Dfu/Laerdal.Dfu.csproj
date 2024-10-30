@@ -12,8 +12,7 @@
 
     <!-- ==================== TARGET FRAMEWORKS GROUP ===================== -->
     <PropertyGroup>
-        <EnableWindowsTargeting Condition=" '$(IsHostMachineOSX)' == 'true' ">true</EnableWindowsTargeting>
-
+        <TargetFrameworks>$(TargetFrameworks)net8.0;</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks)net8.0-android</TargetFrameworks>
     </PropertyGroup>
@@ -26,6 +25,7 @@
         <IsForAndroid Condition="     '$(TargetPlatformBeingBuiltNow)' == 'android'     ">true</IsForAndroid>
         <IsForWindows Condition="     '$(TargetPlatformBeingBuiltNow)' == 'windows'     ">true</IsForWindows>
         <IsForMacCatalyst Condition=" '$(TargetPlatformBeingBuiltNow)' == 'maccatalyst' ">true</IsForMacCatalyst>
+        <IsForPlainNetX Condition="   '$(TargetFramework)'             == 'net8.0'      ">true</IsForPlainNetX>
 
         <IsForAppleStuff Condition="  '$(IsForIOS)'  == 'true' or '$(IsForMacCatalyst)' == 'true' ">true</IsForAppleStuff>
     </PropertyGroup>
@@ -38,11 +38,22 @@
         <SupportedOSPlatformVersion Condition=" '$(IsForAndroid)'     == 'true' ">21.0</SupportedOSPlatformVersion>
 
         <!-- ios   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
-        <TargetPlatformVersion Condition="      '$(IsForIOS)'         == 'true' ">17.2</TargetPlatformVersion>
+        <TargetPlatformVersion Condition="      '$(IsForIOS)'         == 'true' ">17.5</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="   '$(IsForIOS)'         == 'true' ">14.2</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition=" '$(IsForIOS)'         == 'true' ">14.2</SupportedOSPlatformVersion>
     </PropertyGroup>
 
+    <!-- ==================== NON-NETSTANDARD ==================== -->
+    <ItemGroup Condition=" '$(IsForPlainNetX)' != 'true' ">
+        <Compile Remove="Platforms.NetX\**" />
+    </ItemGroup>
+
+    <!-- ===================== NETSTANDARD ======================= -->
+    <ItemGroup Condition=" '$(IsForPlainNetX)' == 'true' ">
+        <Compile Remove="Platforms\**\**" />
+        <!-- <Compile Include="Platforms.NetX\**" />  no need to include this explicitly -->
+    </ItemGroup>
+    
     <PropertyGroup>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
