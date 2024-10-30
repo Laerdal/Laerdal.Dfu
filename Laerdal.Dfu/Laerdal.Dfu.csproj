@@ -1,24 +1,70 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <!-- ================== HOST MACHINE DETECTION ==================== -->
     <PropertyGroup>
-        <!-- todo   add support for maccatalyst -->
-        <TargetFrameworks>net8.0-ios;net8.0-android</TargetFrameworks>
+        <IsHostMachineOSX Condition="      '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'     == 'true' ">true</IsHostMachineOSX>
+        <IsHostMachineLinux Condition="    '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'   == 'true' ">true</IsHostMachineLinux>
+        <IsHostMachineWindows Condition="  '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true' ">true</IsHostMachineWindows>
 
+        <!-- keep dead last -->
+        <IsHostMachineUnix Condition="     '$(IsHostMachineOSX)' == 'true' or '$(IsHostMachineLinux)' == 'true' ">true</IsHostMachineUnix>
+    </PropertyGroup>
+
+    <!-- ==================== TARGET FRAMEWORKS GROUP ===================== -->
+    <PropertyGroup>
+        <TargetFrameworks>$(TargetFrameworks)net8.0;</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks)net8.0-android</TargetFrameworks>
+    </PropertyGroup>
+
+    <!-- =================== TARGET FRAMEWORK DETECTION ===================== -->
+    <PropertyGroup>
+        <TargetPlatformBeingBuiltNow>$([MSBuild]::GetTargetPlatformIdentifier($(TargetFramework)))</TargetPlatformBeingBuiltNow>
+
+        <IsForIOS Condition="         '$(TargetPlatformBeingBuiltNow)' == 'ios'         ">true</IsForIOS>
+        <IsForAndroid Condition="     '$(TargetPlatformBeingBuiltNow)' == 'android'     ">true</IsForAndroid>
+        <IsForWindows Condition="     '$(TargetPlatformBeingBuiltNow)' == 'windows'     ">true</IsForWindows>
+        <IsForMacCatalyst Condition=" '$(TargetPlatformBeingBuiltNow)' == 'maccatalyst' ">true</IsForMacCatalyst>
+        <IsForPlainNetX Condition="   '$(TargetFramework)'             == 'net8.0'      ">true</IsForPlainNetX>
+
+        <IsForAppleStuff Condition="  '$(IsForIOS)'  == 'true' or '$(IsForMacCatalyst)' == 'true' ">true</IsForAppleStuff>
+    </PropertyGroup>
+
+    <!-- ==================== TARGET PLATFORM VERSION ======================= -->
+    <PropertyGroup>
+        <!-- android    the TargetPlatformVersion must be aligned with the maxsdkversion used in androidmanifest.xml -->
+        <TargetPlatformVersion Condition="      '$(IsForAndroid)'     == 'true' ">34</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition="   '$(IsForAndroid)'     == 'true' ">21.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition=" '$(IsForAndroid)'     == 'true' ">21.0</SupportedOSPlatformVersion>
+
+        <!-- ios   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
+        <TargetPlatformVersion Condition="      '$(IsForIOS)'         == 'true' ">17.5</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition="   '$(IsForIOS)'         == 'true' ">14.2</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition=" '$(IsForIOS)'         == 'true' ">14.2</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <!-- ==================== NON-NETSTANDARD ==================== -->
+    <ItemGroup Condition=" '$(IsForPlainNetX)' != 'true' ">
+        <Compile Remove="Platforms.NetX\**" />
+    </ItemGroup>
+
+    <!-- ===================== NETSTANDARD ======================= -->
+    <ItemGroup Condition=" '$(IsForPlainNetX)' == 'true' ">
+        <Compile Remove="Platforms\**\**" />
+        <!-- <Compile Include="Platforms.NetX\**" />  no need to include this explicitly -->
+    </ItemGroup>
+    
+    <PropertyGroup>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
 
         <LangVersion>11.0</LangVersion>
-
-        <TargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</TargetPlatformIdentifier>
-
-        <SupportedOSPlatformVersion Condition=" '$(TargetPlatformIdentifier)' == 'ios'     ">14.2</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition=" '$(TargetPlatformIdentifier)' == 'android' ">21.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup>
         <Laerdal_Package_Name>Laerdal.Dfu</Laerdal_Package_Name>
-        <Laerdal_Package_Tags>Ble;Tools;Dfu;Bluetooth;Nordic;Semiconductor</Laerdal_Package_Tags>
+        <Laerdal_Package_Tags>Ble;Tools;Dfu;Bluetooth;Nordic;Semiconductor;iOS;Android</Laerdal_Package_Tags>
         <Laerdal_Package_Copyright>Laerdal Medical, Francois Raminosona</Laerdal_Package_Copyright>
         <Laerdal_Package_Description>Wrapper around Nordic.Dfu</Laerdal_Package_Description>
     </PropertyGroup>
@@ -26,7 +72,7 @@
     <!-- ============================ VERSION ============================ -->
     <PropertyGroup>
         <Laerdal_Version_Major Condition=" '$(Laerdal_Version_Major)' == '' ">1</Laerdal_Version_Major>
-        <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">27</Laerdal_Version_Minor>
+        <Laerdal_Version_Minor Condition=" '$(Laerdal_Version_Minor)' == '' ">28</Laerdal_Version_Minor>
         <Laerdal_Version_Build Condition=" '$(Laerdal_Version_Build)' == '' ">0</Laerdal_Version_Build>
 
         <Laerdal_Version_Full Condition="  '$(Laerdal_Version_Full)'  == '' ">$(Laerdal_Version_Major).$(Laerdal_Version_Minor).$(Laerdal_Version_Build)</Laerdal_Version_Full>
@@ -36,11 +82,11 @@
     <Import Project="Laerdal.targets"/>
 
     <!-- =========================== PACKAGES ============================ -->    
-    <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'android' ">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.3.0.43888"/>
+    <ItemGroup Condition=" '$(IsForAndroid)' == 'true' ">
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.5.0.43891"/>
     </ItemGroup>
     
-    <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'ios' ">
+    <ItemGroup Condition=" '$(IsForIOS)' == 'true' ">
         <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.13.0.43933"/>
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
