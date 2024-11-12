@@ -24,6 +24,10 @@
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Artifacts/`))</PackageOutputPath>
 
+        <Laerdal_Source_Branch Condition="                    '$(Laerdal_Source_Branch)'                    == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
+        <Laerdal_Repository_Path Condition="                  '$(Laerdal_Repository_Path)'                  == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
+        <Laerdal_Dependency_Tracker_Server_Url Condition="    '$(Laerdal_Dependency_Tracker_Server_Url)'    == '' ">https://dep-tracker.laerdal.com/api/api/v1/bom</Laerdal_Dependency_Tracker_Server_Url>
+
         <!-- https://docs.gitlab.com/ee/ci/variables/predefined_variables.html                                                                             -->
         <!-- https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables                                             -->
         <!-- https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml&WT.mc_id=DT-MVP-5003978#system-variables -->
@@ -31,10 +35,6 @@
         <Is_Core_Branch Condition="  '$(Laerdal_Source_Branch)' == 'refs/heads/main'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/master'  or  '$(Laerdal_Source_Branch)' == 'refs/heads/develop' ">true</Is_Core_Branch>
         <Is_Pull_Request Condition=" '$(Laerdal_Source_Branch.StartsWith(refs/pull))' == 'true'  and  '$(Laerdal_Source_Branch.EndsWith(/merge))' == 'true' ">true</Is_Pull_Request>
 
-        <Laerdal_Dependency_Tracker_Server_Url Condition=" '$(Laerdal_Dependency_Tracker_Server_Url)' == '' ">https://dep-tracker.laerdal.com/api/api/v1/bom</Laerdal_Dependency_Tracker_Server_Url>
-
-        <Laerdal_Source_Branch Condition="                    '$(Laerdal_Source_Branch)'                    == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
-        <Laerdal_Repository_Path Condition="                  '$(Laerdal_Repository_Path)'                  == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
         <Laerdal_Should_Tag_And_Release Condition="           '$(Laerdal_Should_Tag_And_Release)'           == ''  and    '$(Is_Core_Branch)' == 'true' ">True</Laerdal_Should_Tag_And_Release>
         <Laerdal_Should_Generate_and_Upload_Sbom Condition="  '$(Laerdal_Should_Generate_and_Upload_Sbom)'  == ''  and  ( '$(Is_Core_Branch)' == 'true'  or  '$(Is_Pull_Request)' == 'true' ) ">True</Laerdal_Should_Generate_and_Upload_Sbom>
 
