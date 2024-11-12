@@ -7,31 +7,37 @@
 
 # windows-2022 vmimages in azure have dotnet 8.0.100 preinstalled so we should be fine 
 
+declare -r DOTNET_TARGET_WORKLOAD_VERSION="$1"
 
-declare -r NUGET_FEED_URL="$1"
-declare -r NUGET_FEED_USERNAME="$2"
-declare -r NUGET_FEED_ACCESSTOKEN="$3"
+declare -r NUGET_FEED_URL="$2"
+declare -r NUGET_FEED_USERNAME="$3"
+declare -r NUGET_FEED_ACCESSTOKEN="$4"
 
-declare -r ARTIFACTS_FOLDER_PATH="$4"
+declare -r ARTIFACTS_FOLDER_PATH="$5"
+
+if [ -z "${DOTNET_TARGET_WORKLOAD_VERSION}" ]; then
+  echo "##vso[task.logissue type=error]Missing 'DOTNET_TARGET_WORKLOAD_VERSION' which was expected to be parameter #1."
+  exit 1
+fi
 
 if [ -z "${NUGET_FEED_URL}" ]; then
-  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_URL' which was expected to be parameter #1."
-  exit 3
+  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_URL' which was expected to be parameter #2."
+  exit 2
 fi
 
 if [ -z "${NUGET_FEED_USERNAME}" ]; then
-  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_USERNAME' which was expected to be parameter #2."
-  exit 5
+  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_USERNAME' which was expected to be parameter #3."
+  exit 3
 fi
 
 if [ -z "${NUGET_FEED_ACCESSTOKEN}" ]; then
-  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_ACCESSTOKEN' which was expected to be parameter #3."
-  exit 6
+  echo "##vso[task.logissue type=error]Missing 'NUGET_FEED_ACCESSTOKEN' which was expected to be parameter #4."
+  exit 4
 fi
 
 if [ -z "${ARTIFACTS_FOLDER_PATH}" ]; then
-  echo "##vso[task.logissue type=error]Missing 'ARTIFACTS_FOLDER_PATH' which was expected to be parameter #4."
-  exit 7
+  echo "##vso[task.logissue type=error]Missing 'ARTIFACTS_FOLDER_PATH' which was expected to be parameter #5."
+  exit 5
 fi
 
 
@@ -64,7 +70,6 @@ if [ $exitCode != 0 ]; then
   exit 30
 fi
 
-# declare dotnet_8_workload_version="8.0.3"
 dotnet                                \
              workload                 \
              install                  \
@@ -72,8 +77,7 @@ dotnet                                \
                  ios                  \
                  android              \
                  maui-ios             \
-                 maui-android
-#                    --from-rollback-file=https://maui.blob.core.windows.net/metadata/rollbacks/${dotnet_8_workload_version}.json   # we need to install additional packages manually
+                 maui-android    --version "${DOTNET_TARGET_WORKLOAD_VERSION}"
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to restore dotnet workloads."
