@@ -14,7 +14,8 @@
     <PropertyGroup>
         <TargetFrameworks>$(TargetFrameworks)net8.0;</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-android</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks)net8.0-android;</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks)net8.0-maccatalyst</TargetFrameworks>
     </PropertyGroup>
 
     <!-- =================== TARGET FRAMEWORK DETECTION ===================== -->
@@ -33,27 +34,39 @@
     <!-- ==================== TARGET PLATFORM VERSION ======================= -->
     <PropertyGroup>
         <!-- android    the TargetPlatformVersion must be aligned with the maxsdkversion used in androidmanifest.xml -->
-        <TargetPlatformVersion Condition="      '$(IsForAndroid)'     == 'true' ">34</TargetPlatformVersion>
-        <TargetPlatformMinVersion Condition="   '$(IsForAndroid)'     == 'true' ">21.0</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion Condition=" '$(IsForAndroid)'     == 'true' ">21.0</SupportedOSPlatformVersion>
+        <TargetPlatformVersion Condition="       '$(IsForAndroid)'      == 'true' ">34</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition="    '$(IsForAndroid)'      == 'true' ">21.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
         <!-- ios   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
-        <TargetPlatformVersion Condition="      '$(IsForIOS)'         == 'true' ">17.0</TargetPlatformVersion>
-        <TargetPlatformMinVersion Condition="   '$(IsForIOS)'         == 'true' ">14.2</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion Condition=" '$(IsForIOS)'         == 'true' ">14.2</SupportedOSPlatformVersion>
+        <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">17.0</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition="    '$(IsForIOS)'          == 'true' ">14.2</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition="  '$(IsForIOS)'          == 'true' ">14.2</SupportedOSPlatformVersion>
+
+        <!-- maccatalyst   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
+        <TargetPlatformVersion Condition="       '$(IsNet8MacCatalyst)' == 'true' ">17.0</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition="    '$(IsNet8MacCatalyst)' == 'true' ">13.1</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition=" '$(IsNet8MacCatalyst)' == 'true' ">13.1</SupportedOSPlatformVersion>
     </PropertyGroup>
 
-    <!-- ==================== NON-NETSTANDARD ==================== -->
-    <ItemGroup Condition=" '$(IsForPlainNetX)' != 'true' ">
-        <Compile Remove="Platforms.NetX\**" />
+    <!-- ANDROID -->
+    <ItemGroup Condition=" '$(IsForAndroid)' == 'true' ">
+        <Compile Remove="Platforms.*\**"/>
+        <Compile Include="Platforms.Droid\**\*.cs"/>
     </ItemGroup>
 
-    <!-- ===================== NETSTANDARD ======================= -->
-    <ItemGroup Condition=" '$(IsForPlainNetX)' == 'true' ">
-        <Compile Remove="Platforms\**\**" />
-        <!-- <Compile Include="Platforms.NetX\**" />  no need to include this explicitly -->
+    <!-- iOS/MacCatalyst -->
+    <ItemGroup Condition=" '$(IsForAppleStuff)' == 'true' ">
+        <Compile Remove="Platforms.*\**"/>
+        <Compile Include="Platforms.iOSandMacCatalyst\**\*.cs"/>
     </ItemGroup>
-    
+
+    <!-- NetStandard -->
+    <ItemGroup Condition=" '$(IsForPlainNetX)' == 'true' ">
+        <Compile Remove="Platforms.*\**"/>
+        <Compile Include="Platforms.NetX\**"/>
+    </ItemGroup>
+
     <PropertyGroup>
         <UseMaui>true</UseMaui>
         <SingleProject>true</SingleProject>
@@ -81,12 +94,18 @@
 
     <Import Project="Laerdal.targets"/>
 
-    <!-- =========================== PACKAGES ============================ -->    
+    <!-- =========================== PACKAGES ============================ -->
+    <!-- Android -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.7.0.43895" />
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.7.0.43895"/>
     </ItemGroup>
+    <!-- iOS -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43950" />
+      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43972" />
+    </ItemGroup>
+    <!-- MacCatalyst -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">
+      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43972" />
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 

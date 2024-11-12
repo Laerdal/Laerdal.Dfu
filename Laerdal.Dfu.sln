@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{37EBD209
 		.github\workflows\github-actions.yml = .github\workflows\github-actions.yml
 		.gitignore = .gitignore
 		global.json = global.json
+		Laerdal.Scripts\Laerdal.GenerateSignAndUploadSbom.sh = Laerdal.Scripts\Laerdal.GenerateSignAndUploadSbom.sh
 	EndProjectSection
 EndProject
 Global
