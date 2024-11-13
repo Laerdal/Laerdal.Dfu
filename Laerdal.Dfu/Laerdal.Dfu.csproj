@@ -46,7 +46,7 @@
         <!-- maccatalyst   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
         <TargetPlatformVersion Condition="       '$(IsNet8MacCatalyst)' == 'true' ">17.0</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsNet8MacCatalyst)' == 'true' ">13.1</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion Condition=" '$(IsNet8MacCatalyst)' == 'true' ">13.1</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="  '$(IsNet8MacCatalyst)' == 'true' ">13.1</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <!-- ANDROID -->
