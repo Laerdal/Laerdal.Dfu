@@ -49,22 +49,22 @@
         <SupportedOSPlatformVersion Condition="  '$(IsNet8MacCatalyst)' == 'true' ">13.1</SupportedOSPlatformVersion>
     </PropertyGroup>
 
-    <!-- ANDROID -->
+    <!-- Android -->
     <ItemGroup Condition=" '$(IsForAndroid)' == 'true' ">
-        <Compile Remove="Platforms.*\**"/>
-        <Compile Include="Platforms.Droid\**\*.cs"/>
+        <Compile Remove="Platforms.NetX\**"/>
+        <Compile Remove="Platforms.iOSandMacCatalyst\**"/>
     </ItemGroup>
 
     <!-- iOS/MacCatalyst -->
     <ItemGroup Condition=" '$(IsForAppleStuff)' == 'true' ">
-        <Compile Remove="Platforms.*\**"/>
-        <Compile Include="Platforms.iOSandMacCatalyst\**\*.cs"/>
+        <Compile Remove="Platforms.NetX\**"/>
+        <Compile Remove="Platforms.Droid\**"/>
     </ItemGroup>
 
     <!-- NetStandard -->
     <ItemGroup Condition=" '$(IsForPlainNetX)' == 'true' ">
-        <Compile Remove="Platforms.*\**"/>
-        <Compile Include="Platforms.NetX\**"/>
+        <Compile Remove="Platforms.Droid\**"/>
+        <Compile Remove="Platforms.iOSandMacCatalyst\**"/>
     </ItemGroup>
 
     <PropertyGroup>
