@@ -76,16 +76,23 @@
 
     <!-- ==================== LOGGING ==================== -->
     <Target Name="PrintBuildInfo" BeforeTargets="BeforeBuild">
-        <Message Importance="High" Text="*** Package Info ***" />
-        <Message Importance="High" Text="PackageId: $(PackageId)" />
-        <Message Importance="High" Text="Configuration: $(Configuration)" />
-        <Message Importance="High" Text="TargetFramework: $(TargetFramework)" />
-        <Message Importance="High" Text="DefineConstants: $(DefineConstants)" />
-        <Message Importance="High" Text="Platform: $(Platform)" />
-        <Message Importance="High" Text="PackageVersion: $(PackageVersion)" />
-        <Message Importance="High" Text="AssemblyVersion: $(AssemblyVersion)" />
-        <Message Importance="High" Text="AssemblyFileVersion: $(AssemblyFileVersion)"/>
-        <Message Importance="High" Text="Version: $(Version)" />
+        <Message Importance="High" Text="*** Package Info ***"/>
+        <Message Importance="High" Text="Version :                $(Version)               "/>
+        <Message Importance="High" Text="Platform :               $(Platform)              "/>
+        <Message Importance="High" Text="PackageId :              $(PackageId)             "/>
+        <Message Importance="High" Text="Configuration :          $(Configuration)         "/>
+        <Message Importance="High" Text="PackageVersion :         $(PackageVersion)        "/>
+        <Message Importance="High" Text="TargetFramework :        $(TargetFramework)       "/>
+        <Message Importance="High" Text="DefineConstants :        $(DefineConstants)       "/>
+        <Message Importance="High" Text="AssemblyVersion :        $(AssemblyVersion)       "/>
+        <Message Importance="High" Text="AssemblyFileVersion :    $(AssemblyFileVersion)   "/>
+        <Message Importance="High" Text="                                                  "/>
+        <Message Importance="high" Text="IsForIOS :               $(IsForIOS)              "/>
+        <Message Importance="high" Text="IsForAndroid :           $(IsForAndroid)          "/>
+        <Message Importance="high" Text="IsForWindows :           $(IsForWindows)          "/>
+        <Message Importance="high" Text="IsForPlainNetX :         $(IsForPlainNetX)        "/>
+        <Message Importance="high" Text="IsForAppleStuff :        $(IsForAppleStuff)       "/>
+        <Message Importance="high" Text="IsForMacCatalyst :       $(IsForMacCatalyst)      "/>
     </Target>
 
     <!-- ==================== MAUI for .NET8 changes ==================== -->
