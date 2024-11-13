@@ -17,7 +17,6 @@ declare sbom_signing_key_file_path=""
 declare dependency_tracker_url=""
 declare dependency_tracker_api_key_file_path=""
 
-
 function parse_arguments() {
 
   while [[ $# -gt 0 ]]; do
@@ -197,9 +196,10 @@ function install_tools() {
 function generate_sign_and_upload_sbom() {
   # set -x
 
-  # GENERATE SBOM
+  # GENERATE SBOM   we intentionally disable package restore because the packages are already restored at this point
   dotnet-CycloneDX      "${csproj_file_path}"             \
         --exclude-dev                                     \
+        --disable-package-restore                         \
         --include-project-references                      \
                                                           \
         --output      "${output_directory_path}"          \

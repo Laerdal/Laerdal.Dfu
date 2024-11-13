@@ -76,8 +76,10 @@ dotnet                                \
                  maui                 \
                  ios                  \
                  android              \
+                 maccatalyst          \
                  maui-ios             \
-                 maui-android    --version "${DOTNET_TARGET_WORKLOAD_VERSION}"
+                 maui-android         \
+                 maui-maccatalyst    --version "${DOTNET_TARGET_WORKLOAD_VERSION}"
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to restore dotnet workloads."
