@@ -1,7 +1,5 @@
 using CoreFoundation;
-
 using Foundation;
-
 using Laerdal.Dfu.Specific;
 
 namespace Laerdal.Dfu
@@ -14,7 +12,7 @@ namespace Laerdal.Dfu
         public static Func<DispatchQueue> LoggerQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
 
         public Func<Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator, Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
-        
+
         private void SetInitiator()
         {
             DfuProgressDelegate = new DfuProgressDelegate(this);
@@ -22,12 +20,14 @@ namespace Laerdal.Dfu
             DfuPeripheralSelectorDelegate = new DfuPeripheralSelectorDelegate(this);
 
             Firmware = new Laerdal.Dfu.Bindings.iOS.DFUFirmware(new NSUrl(FileUrl, false), out NSError error);
-            
-            Initiator = new Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator(Queue.Invoke(), 
-                                                                         DelegateQueue.Invoke(), 
-                                                                         ProgressQueue.Invoke(), 
-                                                                         LoggerQueue.Invoke(),
-                                                                         null)
+
+            Initiator = new Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator(
+                queue: Queue.Invoke(),
+                loggerQueue: LoggerQueue.Invoke(),
+                delegateQueue: DelegateQueue.Invoke(),
+                progressQueue: ProgressQueue.Invoke(),
+                centralManagerOptions: null
+            )
             {
                 Logger = new DfuLogger(),
                 WeakProgressDelegate = DfuProgressDelegate,
@@ -38,7 +38,7 @@ namespace Laerdal.Dfu
             // PacketsReceiptNotifications
             if (PacketReceiptNotificationParameter.HasValue)
                 Initiator.PacketReceiptNotificationParameter = PacketReceiptNotificationParameter.Value;
-            
+
             // DataObjectPreparationDelay
             if (DataObjectPreparationDelay.HasValue)
                 Initiator.DataObjectPreparationDelay = DataObjectPreparationDelay.Value;
@@ -50,15 +50,15 @@ namespace Laerdal.Dfu
             // AlternativeAdvertisingName
             Initiator.AlternativeAdvertisingNameEnabled = !string.IsNullOrEmpty(AlternativeAdvertisingName);
             Initiator.AlternativeAdvertisingName = AlternativeAdvertisingName;
-            
+
             // ForceScanningForNewAddressInLegacyDfu
             if (ForceScanningForNewAddressInLegacyDfu.HasValue)
                 Initiator.ForceScanningForNewAddressInLegacyDfu = ForceScanningForNewAddressInLegacyDfu.Value;
-            
+
             // EnableUnsafeExperimentalButtonlessServiceInSecureDfu
             if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
                 Initiator.ForceScanningForNewAddressInLegacyDfu = EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value;
-            
+
             // ForceDfu
             if (ForceDfu.HasValue)
                 Initiator.ForceDfu = ForceDfu.Value;
@@ -72,18 +72,18 @@ namespace Laerdal.Dfu
             // public DFUUuidHelper UuidHelper {get; set;}
         }
 
-        public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set;  } 
+        public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set; }
 
         public Laerdal.Dfu.Bindings.iOS.DFUServiceController Controller { get; private set; }
 
-        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set;}
-        
-        private DfuProgressDelegate DfuProgressDelegate { get; set;}
+        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set; }
 
-        private DfuServiceDelegate DfuServiceDelegate { get; set;}
+        private DfuProgressDelegate DfuProgressDelegate { get; set; }
 
-        private DfuPeripheralSelectorDelegate DfuPeripheralSelectorDelegate { get; set;}
-        
+        private DfuServiceDelegate DfuServiceDelegate { get; set; }
+
+        private DfuPeripheralSelectorDelegate DfuPeripheralSelectorDelegate { get; set; }
+
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
         }
@@ -98,6 +98,7 @@ namespace Laerdal.Dfu
             {
                 throw new System.Exception("Controller is already set.");
             }
+
             SetInitiator();
             Controller = Initiator.StartWithTargetWithIdentifier(new NSUuid(DeviceId));
         }
