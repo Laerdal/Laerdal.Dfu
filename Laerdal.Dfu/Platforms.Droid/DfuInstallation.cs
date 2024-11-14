@@ -13,101 +13,83 @@ namespace Laerdal.Dfu
 {
     public partial class DfuInstallation
     {
-        public Func<Laerdal.Dfu.Bindings.Android.DfuServiceInitiator, Laerdal.Dfu.Bindings.Android.DfuServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
+        public Func<Laerdal.Dfu.Bindings.Android.DfuServiceInitiator, Laerdal.Dfu.Bindings.Android.DfuServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = dfuInitiator => dfuInitiator;
         
         private void SetInitiator()
         {
-            DfuProgressListener = new DfuProgressListener(this);
             DfuLogger = new DfuLogger(DeviceId);
+            DfuProgressListener = new DfuProgressListener(this);
 
-            Initiator = new Laerdal.Dfu.Bindings.Android.DfuServiceInitiator(DeviceId).SetZip(FileUrl);
-            
-            // PacketsReceiptNotifications
-            Initiator = Initiator.SetPacketsReceiptNotificationsEnabled(PacketReceiptNotificationParameter.HasValue);
-            Initiator = Initiator.SetPacketsReceiptNotificationsValue(PacketReceiptNotificationParameter ?? Laerdal.Dfu.Bindings.Android.DfuServiceInitiator.DefaultPrnValue);
-            
-            // DataObjectPreparationDelay
-            Initiator = Initiator.SetPrepareDataObjectDelay((long) (DataObjectPreparationDelay ?? 0));
+            Initiator = new Laerdal.Dfu.Bindings.Android.DfuServiceInitiator(DeviceId).SetZip(FileUrl)!;
+            Initiator = Initiator.SetPacketsReceiptNotificationsEnabled(PacketReceiptNotificationParameter.HasValue)!; // PacketsReceiptNotifications
+            Initiator = Initiator.SetPacketsReceiptNotificationsValue(PacketReceiptNotificationParameter ?? Laerdal.Dfu.Bindings.Android.DfuServiceInitiator.DefaultPrnValue)!;
+            Initiator = Initiator.SetPrepareDataObjectDelay((long) (DataObjectPreparationDelay ?? 0))!; // DataObjectPreparationDelay
 
-            // DisableResume
             if (DisableResume ?? false)
             {
-                Initiator = Initiator.DisableResume();
+                Initiator = Initiator.DisableResume()!;
             }
 
-            // AlternativeAdvertisingName
             if (!string.IsNullOrEmpty(AlternativeAdvertisingName))
             {
-                Initiator = Initiator.SetDeviceName(AlternativeAdvertisingName);
+                Initiator = Initiator.SetDeviceName(AlternativeAdvertisingName)!;
             }
             
-            // ForceScanningForNewAddressInLegacyDfu
             if (ForceScanningForNewAddressInLegacyDfu.HasValue)
             {
-                Initiator = Initiator.SetForceScanningForNewAddressInLegacyDfu(ForceScanningForNewAddressInLegacyDfu.Value);
+                Initiator = Initiator.SetForceScanningForNewAddressInLegacyDfu(ForceScanningForNewAddressInLegacyDfu.Value)!;
             }
             
-            // EnableUnsafeExperimentalButtonlessServiceInSecureDfu
             if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
             {
-                Initiator = Initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value);
-            }
-            
-            // ForceDfu
-            if (ForceDfu.HasValue)
-            {
-                Initiator = Initiator.SetForceDfu(ForceDfu.Value);
-            }
-            
-            // DisableMtuRequest
-            if (DisableMtuRequest ?? false)
-            {
-                Initiator = Initiator.DisableMtuRequest();
+                Initiator = Initiator.SetUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value)!;
             }
 
-            // DisableNotification
+            if (ForceDfu.HasValue)
+            {
+                Initiator = Initiator.SetForceDfu(ForceDfu.Value)!;
+            }
+            
+            if (DisableMtuRequest ?? false)
+            {
+                Initiator = Initiator.DisableMtuRequest()!;
+            }
+
             if (DisableNotification.HasValue)
             {
-                Initiator = Initiator.SetDisableNotification(DisableNotification.Value);
+                Initiator = Initiator.SetDisableNotification(DisableNotification.Value)!;
             }
             
-            // MbrSize
-            Initiator = Initiator.SetMbrSize(MbrSize ?? Laerdal.Dfu.Bindings.Android.DfuServiceInitiator.DefaultMbrSize);
+            Initiator = Initiator.SetMbrSize(MbrSize ?? Laerdal.Dfu.Bindings.Android.DfuServiceInitiator.DefaultMbrSize)!;
             
-            // Scope
             if (Scope.HasValue)
             {
-                Initiator = Initiator.SetScope((int) Scope.Value);
+                Initiator = Initiator.SetScope((int) Scope.Value)!;
             }
             
-            // Foreground
             if (Foreground.HasValue)
             {
-                Initiator = Initiator.SetForeground(Foreground.Value);
+                Initiator = Initiator.SetForeground(Foreground.Value)!;
             }
-            
-            // KeepBond
+
             if (KeepBond.HasValue)
             {
-                Initiator = Initiator.SetKeepBond(KeepBond.Value);
+                Initiator = Initiator.SetKeepBond(KeepBond.Value)!;
             }
             
-            // RestoreBond
             if (RestoreBond.HasValue)
             {
-                Initiator = Initiator.SetRestoreBond(RestoreBond.Value);
+                Initiator = Initiator.SetRestoreBond(RestoreBond.Value)!;
             }
             
-            // Mtu
             if (Mtu.HasValue)
             {
-                Initiator = Initiator.SetMtu(Mtu.Value);
+                Initiator = Initiator.SetMtu(Mtu.Value)!;
             }
-            
-            // NumberOfRetries
+
             if (NumberOfRetries.HasValue)
             {
-                Initiator = Initiator.SetNumberOfRetries(NumberOfRetries.Value);
+                Initiator = Initiator.SetNumberOfRetries(NumberOfRetries.Value)!;
             }
             
             // For Oreo progress
@@ -116,7 +98,7 @@ namespace Laerdal.Dfu
                 Laerdal.Dfu.Bindings.Android.DfuServiceInitiator.CreateDfuNotificationChannel(Android.App.Application.Context);
             }
             
-            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
+            Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator)!;
             
             // public DfuServiceInitiator SetCurrentMtu(int mtu)
             // public DfuServiceInitiator SetCustomUuidsForButtonlessDfuWithBondSharing(UUID buttonlessDfuServiceUuid, UUID buttonlessDfuControlPointUuid)
@@ -126,28 +108,24 @@ namespace Laerdal.Dfu
             // public DfuServiceInitiator SetCustomUuidsForSecureDfu(UUID dfuServiceUuid, UUID dfuControlPointUuid, UUID dfuPacketUuid)
         }
 
-        public Laerdal.Dfu.Bindings.Android.DfuServiceInitiator Initiator { get; private set; }
-
-        public Laerdal.Dfu.Bindings.Android.DfuServiceController Controller { get; private set; }
-
-        private DfuProgressListener DfuProgressListener { get; set;}
-
         private DfuLogger DfuLogger { get; set;}
+        private DfuProgressListener DfuProgressListener { get; set;}
+        
+        public Laerdal.Dfu.Bindings.Android.DfuServiceInitiator Initiator { get; private set; }
+        public Laerdal.Dfu.Bindings.Android.DfuServiceController Controller { get; private set; }
 
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
         }
 
-        public DfuInstallation() : base()
+        public DfuInstallation()
         {
         }
         
         public override void Start()
         {
             if (Controller != null)
-            {
                 throw new System.Exception("Controller is already set.");
-            }
 
             SetInitiator();
             Controller = Initiator.Start(Android.App.Application.Context, Class.FromType(typeof(DfuService)));
@@ -170,26 +148,31 @@ namespace Laerdal.Dfu
 
         protected override void Dispose(bool disposing)
         {
+            if (!disposing)
+                return;
+
             DfuProgressListener?.Dispose();
-            if (disposing)
-            {
-                Initiator?.Dispose();
-                Controller?.Dispose();
-                DfuLogger?.Dispose();
-            }
+            DfuProgressListener = null;
+            
+            Initiator?.Dispose();
+            Initiator = null;
+            
+            Controller?.Dispose();
+            Controller = null;
+            
+            DfuLogger?.Dispose();
+            DfuLogger = null;
         }
 
         public bool CheckDeviceAddress(string deviceAddress)
         {
             if (deviceAddress == DeviceId)
-            {
                 return true;
-            }
 
             var parsed = DeviceId.Split(':').Select(p => int.Parse(p, NumberStyles.HexNumber)).ToList();
             parsed[^1] += 1;
+            
             var deviceAddressPlusOne = string.Join(":", parsed.Select(p => p.ToString("X2")));
-
             if (deviceAddress == deviceAddressPlusOne)
             {
                 return true;

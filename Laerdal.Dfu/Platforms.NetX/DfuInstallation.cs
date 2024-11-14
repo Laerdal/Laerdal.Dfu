@@ -11,7 +11,7 @@ namespace Laerdal.Dfu
             throw new NotImplementedException();
         }
 
-        public DfuInstallation() : base()
+        public DfuInstallation()
         {
             throw new NotImplementedException();
         }
