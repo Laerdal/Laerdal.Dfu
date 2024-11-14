@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{37EBD209
 		LICENSE = LICENSE
 		Laerdal.Scripts\Laerdal.Version.sh = Laerdal.Scripts\Laerdal.Version.sh
 		Laerdal.Scripts\Laerdal.Builder.targets = Laerdal.Scripts\Laerdal.Builder.targets
-		Laerdal.Scripts\Laerdal.Changelog.sh = Laerdal.Scripts\Laerdal.Changelog.sh
 		Laerdal.Scripts\Laerdal.CreateNewReleaseInGithub.sh = Laerdal.Scripts\Laerdal.CreateNewReleaseInGithub.sh
 		Laerdal.Scripts\Laerdal.SetupBuildEnvironment.sh = Laerdal.Scripts\Laerdal.SetupBuildEnvironment.sh
 		.github\workflows\github-actions.yml = .github\workflows\github-actions.yml
