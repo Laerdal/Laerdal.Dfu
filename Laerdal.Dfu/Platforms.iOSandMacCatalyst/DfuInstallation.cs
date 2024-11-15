@@ -7,19 +7,18 @@ namespace Laerdal.Dfu
     public partial class DfuInstallation
     {
         public static Func<DispatchQueue> Queue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
+        public static Func<DispatchQueue> LoggerQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
         public static Func<DispatchQueue> DelegateQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
         public static Func<DispatchQueue> ProgressQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
-        public static Func<DispatchQueue> LoggerQueue { get; set; } = () => DispatchQueue.GetGlobalQueue(DispatchQueuePriority.Default);
 
-        public Func<Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator, Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = (dfuInitiator) => dfuInitiator;
-
+        public Func<Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator, Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator> CustomDfuServiceInitiatorConfiguration { get; set; } = dfuInitiator => dfuInitiator;
         private void SetInitiator()
         {
-            DfuProgressDelegate = new DfuProgressDelegate(this);
             DfuServiceDelegate = new DfuServiceDelegate(this);
+            DfuProgressDelegate = new DfuProgressDelegate(this);
             DfuPeripheralSelectorDelegate = new DfuPeripheralSelectorDelegate(this);
 
-            Firmware = new Laerdal.Dfu.Bindings.iOS.DFUFirmware(new NSUrl(FileUrl, false), out NSError error);
+            Firmware = new Laerdal.Dfu.Bindings.iOS.DFUFirmware(new NSUrl(FileUrl, isDir: false), out _);
 
             Initiator = new Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator(
                 queue: Queue.Invoke(),
@@ -30,74 +29,75 @@ namespace Laerdal.Dfu
             )
             {
                 Logger = new DfuLogger(),
-                WeakProgressDelegate = DfuProgressDelegate,
                 WeakDelegate = DfuServiceDelegate,
+                WeakProgressDelegate = DfuProgressDelegate,
             };
+
             Initiator = Initiator.WithFirmware(Firmware);
 
-            // PacketsReceiptNotifications
             if (PacketReceiptNotificationParameter.HasValue)
+            {
                 Initiator.PacketReceiptNotificationParameter = PacketReceiptNotificationParameter.Value;
 
-            // DataObjectPreparationDelay
+            }
             if (DataObjectPreparationDelay.HasValue)
+            {
                 Initiator.DataObjectPreparationDelay = DataObjectPreparationDelay.Value;
+            }
 
-            // DisableResume
             if (DisableResume.HasValue)
+            {
                 Initiator.DisableResume = DisableResume.Value;
+            }
 
-            // AlternativeAdvertisingName
-            Initiator.AlternativeAdvertisingNameEnabled = !string.IsNullOrEmpty(AlternativeAdvertisingName);
             Initiator.AlternativeAdvertisingName = AlternativeAdvertisingName;
 
-            // ForceScanningForNewAddressInLegacyDfu
+            Initiator.AlternativeAdvertisingNameEnabled = !string.IsNullOrEmpty(AlternativeAdvertisingName);
             if (ForceScanningForNewAddressInLegacyDfu.HasValue)
+            {
                 Initiator.ForceScanningForNewAddressInLegacyDfu = ForceScanningForNewAddressInLegacyDfu.Value;
 
-            // EnableUnsafeExperimentalButtonlessServiceInSecureDfu
+            }
             if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
+            {
                 Initiator.ForceScanningForNewAddressInLegacyDfu = EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value;
 
-            // ForceDfu
+            }
             if (ForceDfu.HasValue)
+            {
                 Initiator.ForceDfu = ForceDfu.Value;
+            }
 
-            // ConnectionTimeout
             if (ConnectionTimeout.HasValue)
+            {
                 Initiator.ConnectionTimeout = ConnectionTimeout.Value;
+            }
 
             Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
-
-            // public DFUUuidHelper UuidHelper {get; set;}
         }
 
-        public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set; }
-
+        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set; }public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set; }
         public Laerdal.Dfu.Bindings.iOS.DFUServiceController Controller { get; private set; }
 
-        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set; }
+        private DfuServiceDelegate DfuServiceDelegate { get;set; }
 
         private DfuProgressDelegate DfuProgressDelegate { get; set; }
 
-        private DfuServiceDelegate DfuServiceDelegate { get; set; }
+        
 
         private DfuPeripheralSelectorDelegate DfuPeripheralSelectorDelegate { get; set; }
-
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
         {
         }
 
-        public DfuInstallation() : base()
+        public DfuInstallation()
         {
         }
 
         public override void Start()
         {
             if (Controller != null)
-            {
                 throw new System.Exception("Controller is already set.");
-            }
 
             SetInitiator();
             Controller = Initiator.StartWithTargetWithIdentifier(new NSUuid(DeviceId));
@@ -120,12 +120,26 @@ namespace Laerdal.Dfu
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Initiator?.Dispose();
-                Controller?.Dispose();
-                Firmware?.Dispose();
-            }
+            if (!disposing)
+                return;
+
+            DfuServiceDelegate?.Dispose();
+            DfuServiceDelegate = null;
+            
+            DfuProgressDelegate?.Dispose();
+            DfuProgressDelegate = null;
+            
+            DfuPeripheralSelectorDelegate?.Dispose();
+            DfuPeripheralSelectorDelegate = null;
+            
+            Firmware?.Dispose();
+            Firmware = null;
+            
+            Initiator?.Dispose();
+            Initiator = null;
+            
+            Controller?.Dispose();
+            Controller = null;
         }
     }
 }
