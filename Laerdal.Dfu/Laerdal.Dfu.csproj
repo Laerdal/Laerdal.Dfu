@@ -11,11 +11,12 @@
     </PropertyGroup>
 
     <!-- ==================== TARGET FRAMEWORKS GROUP ===================== -->
-    <PropertyGroup>
-        <TargetFrameworks>$(TargetFrameworks)net8.0;</TargetFrameworks>
+    <PropertyGroup>       
         <TargetFrameworks>$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-android;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-maccatalyst</TargetFrameworks>
+
+        <TargetFrameworks Condition=" '$(iOSMode)' == 'vanilla' or '$(iOSMode)' == '' ">$(TargetFrameworks)net8.0;</TargetFrameworks>
+        <TargetFrameworks Condition=" '$(iOSMode)' == 'vanilla' or '$(iOSMode)' == '' ">$(TargetFrameworks)net8.0-android;</TargetFrameworks>
+        <TargetFrameworks Condition=" '$(iOSMode)' == 'vanilla' or '$(iOSMode)' == '' ">$(TargetFrameworks)net8.0-maccatalyst</TargetFrameworks>
     </PropertyGroup>
 
     <!-- =================== TARGET FRAMEWORK DETECTION ===================== -->
@@ -77,6 +78,9 @@
 
     <PropertyGroup>
         <Laerdal_Package_Name>Laerdal.Dfu</Laerdal_Package_Name>
+        <Laerdal_Package_Name Condition=" '$(iOSMode)' == 'simulator-x64'   ">Laerdal.Dfu.iOSSimulator.x64</Laerdal_Package_Name>
+        <Laerdal_Package_Name Condition=" '$(iOSMode)' == 'simulator-arm64' ">Laerdal.Dfu.iOSSimulator.Arm64</Laerdal_Package_Name>
+
         <Laerdal_Package_Tags>Ble;Tools;Dfu;Bluetooth;Nordic;Semiconductor;iOS;Android</Laerdal_Package_Tags>
         <Laerdal_Package_Copyright>Laerdal Medical, Francois Raminosona</Laerdal_Package_Copyright>
         <Laerdal_Package_Description>Wrapper around Nordic.Dfu</Laerdal_Package_Description>
@@ -99,13 +103,17 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
         <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.7.0.43895"/>
     </ItemGroup>
+
     <!-- iOS -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43980" />
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43990" Condition=" '$(iOSMode)' == '' or '$(iOSMode)' == 'vanilla' " />
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOSSimulator.x64" Version="4.15.3.43990" Condition=" '$(iOSMode)' == 'simulator-x64' " />
+        <PackageReference Include="Laerdal.Dfu.Bindings.iOSSimulator.Arm64" Version="4.15.3.43990" Condition=" '$(iOSMode)' == 'simulator-arm64' " />
     </ItemGroup>
+
     <!-- MacCatalyst -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.15.3.43980" />
+        <PackageReference Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.15.3.43990" />
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
 

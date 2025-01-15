@@ -4,11 +4,11 @@
     <PropertyGroup>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
+        <Deterministic>true</Deterministic>
         <IncludeSource>true</IncludeSource>
+        <ImplicitUsings>true</ImplicitUsings>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <Deterministic>true</Deterministic>
-        <ImplicitUsings>true</ImplicitUsings>
     </PropertyGroup>
 
     <!-- ==================== DEFAULT CI CONFIGURATION ==================== -->
@@ -25,14 +25,15 @@
     <!-- ==================== PACKAGING ==================== -->
     <PropertyGroup>
         <!-- Laerdal_Package_Name -->
-        <Title>$(Laerdal_Package_Name)</Title>
         <PackageId>$(Laerdal_Package_Name)</PackageId>
+
+        <Title>$(Laerdal_Package_Name)</Title>
         <AssemblyName>$(Laerdal_Package_Name)</AssemblyName>
         <RootNamespace>$(Laerdal_Package_Name)</RootNamespace>
 
         <!-- Laerdal_Package_Copyright -->
-        <Authors>$(Laerdal_Package_Copyright)</Authors>
         <Owners>$(Laerdal_Package_Copyright)</Owners>
+        <Authors>$(Laerdal_Package_Copyright)</Authors>
         <Copyright>$(Laerdal_Package_Copyright)</Copyright>
 
         <!-- Laerdal_Package_Description -->
@@ -56,8 +57,8 @@
 
     <ItemGroup>
         <None Include="$(PackageIconPath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageIconPath)')" />
-        <None Include="$(PackageLicencePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageLicencePath)')" />
         <None Include="$(PackageReadMePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageReadMePath)')" />
+        <None Include="$(PackageLicencePath)" Pack="true" PackagePath="\" Condition="Exists('$(PackageLicencePath)')" />
     </ItemGroup>
 
     <!-- ==================== SOURCELINK ==================== -->
@@ -93,6 +94,8 @@
         <Message Importance="high" Text="IsForPlainNetX :         $(IsForPlainNetX)        "/>
         <Message Importance="high" Text="IsForAppleStuff :        $(IsForAppleStuff)       "/>
         <Message Importance="high" Text="IsForMacCatalyst :       $(IsForMacCatalyst)      "/>
+        <Message Importance="High" Text="                                                  "/>
+        <Message Importance="high" Text="iOSMode :                $(iOSMode)               "/>
     </Target>
 
     <!-- ==================== MAUI for .NET8 changes ==================== -->
