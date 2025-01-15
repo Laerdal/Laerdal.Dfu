@@ -94,8 +94,6 @@
         <Message Importance="high" Text="IsForPlainNetX :         $(IsForPlainNetX)        "/>
         <Message Importance="high" Text="IsForAppleStuff :        $(IsForAppleStuff)       "/>
         <Message Importance="high" Text="IsForMacCatalyst :       $(IsForMacCatalyst)      "/>
-        <Message Importance="High" Text="                                                  "/>
-        <Message Importance="high" Text="iOSMode :                $(iOSMode)               "/>
     </Target>
 
     <!-- ==================== MAUI for .NET8 changes ==================== -->

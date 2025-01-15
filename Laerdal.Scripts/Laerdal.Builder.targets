@@ -86,10 +86,6 @@
         
         <!-- RUN -->
         <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
-        
-        <!-- special builds for the ios-simulators -->
-        <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters);iOSMode=simulator-x64" Targets="Restore;Build"/>
-        <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters);iOSMode=simulator-arm64" Targets="Restore;Build"/>
     </Target>
 
     <!-- GITHUB RELEASE -->
