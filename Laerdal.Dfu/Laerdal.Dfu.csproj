@@ -38,13 +38,13 @@
         <TargetPlatformMinVersion Condition="    '$(IsForAndroid)'      == 'true' ">21.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
-        <!-- ios   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
-        <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">17.0</TargetPlatformVersion>
+        <!-- ios   you will need specific workloads though    dotnet workload install maui -/-version 8.0.405   -->
+        <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">18.0</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsForIOS)'          == 'true' ">14.2</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForIOS)'          == 'true' ">14.2</SupportedOSPlatformVersion>
 
-        <!-- maccatalyst   you will need specific workloads though    dotnet workload install maui -/-version 8.0.402   -->
-        <TargetPlatformVersion Condition="       '$(IsForMacCatalyst)'  == 'true' ">17.0</TargetPlatformVersion>
+        <!-- maccatalyst   you will need specific workloads though    dotnet workload install maui -/-version 8.0.405   -->
+        <TargetPlatformVersion Condition="       '$(IsForMacCatalyst)'  == 'true' ">18.0</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsForMacCatalyst)'  == 'true' ">13.1</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForMacCatalyst)'  == 'true' ">13.1</SupportedOSPlatformVersion>
     </PropertyGroup>

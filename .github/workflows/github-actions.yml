@@ -26,7 +26,7 @@ env:
   SCL_DEPENDENCY_TRACKER_SERVER_URL: ${{          secrets.SCL_DEPENDENCY_TRACKER_SERVER_URL          }}
   SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY: ${{ secrets.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY }}
 
-  DOTNET_TARGET_WORKLOAD_VERSION: "8.0.402" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
+  DOTNET_TARGET_WORKLOAD_VERSION: "8.0.405" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
 
 
 on:
