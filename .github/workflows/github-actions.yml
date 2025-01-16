@@ -16,16 +16,17 @@ env:
   LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
 
   # note that its vital that we use our own token here instead of GITHUB_TOKEN    that is because access the
-  # nuget repos of Laerdal.Dfu.Bindings.iOS and Laerdal.Dfu.Bindings.Android which are inaccessible to the GITHUB_TOKEN 
-  SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.SCL_GITHUB_ACCESS_TOKEN        }}
+  # nuget repos of Laerdal.Dfu.Bindings.iOS and Laerdal.Dfu.Bindings.Android which are inaccessible to the GITHUB_TOKEN
   SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
+
+  SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.SCL_GITHUB_ACCESS_TOKEN        }}
   SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
 
   SCL_DEPENDENCY_TRACKER_API_KEY: ${{             secrets.SCL_DEPENDENCY_TRACKER_API_KEY             }}
   SCL_DEPENDENCY_TRACKER_SERVER_URL: ${{          secrets.SCL_DEPENDENCY_TRACKER_SERVER_URL          }}
   SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY: ${{ secrets.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY }}
 
-  DOTNET_TARGET_WORKLOAD_VERSION: "8.0.402" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
+  DOTNET_TARGET_WORKLOAD_VERSION: "8.0.405" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
 
 
 on:
@@ -55,7 +56,9 @@ jobs:
         with:
           fetch-tags: true # https://github.com/actions/checkout/issues/1471#issuecomment-1771231294
           fetch-depth: 0
-
+  
+      #  "${{ github.actor }}"
+      #  "${{ github.token }}"
       - name: '🛠 Setup Build Environment'
         shell: 'bash'
         run: |
@@ -64,8 +67,8 @@ jobs:
                      "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
                              "${{env.DOTNET_TARGET_WORKLOAD_VERSION}}"                                           \
                              "https://nuget.pkg.github.com/Laerdal/index.json"                                   \
-                             "${{ github.actor                       }}"                                         \
-                             "${{ github.token                       }}"                                         \
+                             "${{ env.SCL_GITHUB_NUGET_FEED_USERNAME }}"                                         \
+                             "${{ env.SCL_GITHUB_ACCESS_TOKEN        }}"                                         \
                              "${{ env.BUILD_REPOSITORY_FOLDERPATH    }}/Artifacts"
 
       # we need to manually install java11 because it is needed by the latest windows vm-images that run on
