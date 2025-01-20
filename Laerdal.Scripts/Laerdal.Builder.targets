@@ -24,6 +24,11 @@
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PackageOutputPath>
         <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), `..`, `Artifacts/`))</PackageOutputPath>
 
+        <Laerdal_Script_FolderPath>$(MSBuildThisFileDirectory)</Laerdal_Script_FolderPath>
+        
+        <Laerdal_RootDirectory_Folderpath>$([System.IO.Path]::Combine( '$(Laerdal_Script_FolderPath)', '..' ))</Laerdal_RootDirectory_Folderpath>
+        <Laerdal_RootDirectory_Folderpath>$([System.IO.Path]::GetFullPath( '$(Laerdal_RootDirectory_Folderpath)' ))</Laerdal_RootDirectory_Folderpath>
+
         <Laerdal_Source_Branch Condition="                    '$(Laerdal_Source_Branch)'                    == '' ">$(BUILD_SOURCEBRANCH)</Laerdal_Source_Branch>
         <Laerdal_Repository_Path Condition="                  '$(Laerdal_Repository_Path)'                  == '' ">$(BUILD_REPOSITORY_NAME)</Laerdal_Repository_Path>
         <Laerdal_Dependency_Tracker_Server_Url Condition="    '$(Laerdal_Dependency_Tracker_Server_Url)'    == '' ">https://dep-tracker.laerdal.com/api/api/v1/bom</Laerdal_Dependency_Tracker_Server_Url>
@@ -85,7 +90,10 @@
         </PropertyGroup>
         
         <!-- RUN -->
-        <MSBuild Projects="$(Laerdal_Project)" Properties="$(_Laerdal_Build_Parameters)" Targets="Restore;Build"/>
+        <MSBuild Projects="$(Laerdal_Project)" Targets="Restore;Build" Properties="$(_Laerdal_Build_Parameters)" />
+
+        <!-- -force-dud build aiming just pure net8 without bindings   this is meant for desktop simulators of android and ios for ui testing purposes of apps -->
+        <MSBuild Projects="$(Laerdal_Project)" Targets="Restore;Rebuild" Properties="$(_Laerdal_Build_Parameters);BuildOnlyDudNet8=true;SourceRoot=$(Laerdal_RootDirectory_Folderpath)/Laerdal.Dfu/;" />
     </Target>
 
     <!-- GITHUB RELEASE -->

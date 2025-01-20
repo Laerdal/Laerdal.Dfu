@@ -12,10 +12,17 @@
 
     <!-- ==================== TARGET FRAMEWORKS GROUP ===================== -->
     <PropertyGroup>
+
+        <!-- - note that we build against net8.0 merely as a dud-placeholder for windows in which we are bound to get not-implemented exceptions all over the place    -->
+        <!-- - the dud build for net8 also comes in handy when we want to launch an application inside an ios-simulator in the macos desktop (for UI testing purposes) -->
+
+        <PackageVersionPostfix Condition=" '$(BuildOnlyDudNet8)' == 'true' ">-force-dud</PackageVersionPostfix>
+
         <TargetFrameworks>$(TargetFrameworks)net8.0;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-android;</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks)net8.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition=" '$(BuildOnlyDudNet8)' != 'true' ">$(TargetFrameworks)net8.0-ios;</TargetFrameworks>
+        <TargetFrameworks Condition=" '$(BuildOnlyDudNet8)' != 'true' ">$(TargetFrameworks)net8.0-android;</TargetFrameworks>
+        <TargetFrameworks Condition=" '$(BuildOnlyDudNet8)' != 'true' ">$(TargetFrameworks)net8.0-maccatalyst</TargetFrameworks>
+
     </PropertyGroup>
 
     <!-- =================== TARGET FRAMEWORK DETECTION ===================== -->
