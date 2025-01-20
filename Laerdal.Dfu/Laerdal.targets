@@ -121,7 +121,8 @@
 
         <!-- Apply Version parts according to packaging standards -->
         <Version>$(Laerdal_Version_Full)</Version>
-        <PackageVersion>$(Laerdal_Version_Full)</PackageVersion>
+        <!-- keep this because it is needed to generate the *-force-dud nuget packages! -->
+        <PackageVersion>$(Laerdal_Version_Full)$(PackageVersionPostfix)</PackageVersion>
 
         <AssemblyVersion>$(Laerdal_Version_Full)</AssemblyVersion>
         <AssemblyFileVersion>$(Laerdal_Version_Full)</AssemblyFileVersion>
