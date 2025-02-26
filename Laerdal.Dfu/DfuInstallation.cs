@@ -207,7 +207,7 @@ namespace Laerdal.Dfu
             {
                 try
                 {
-                    Console.WriteLine($"[DI.OPC.010] [DfuInstallation.OnProgressChanged()] [BUG] Suppressed internal bug while trying to calculate progress - report this incident!\n\n{ex}");
+                    Console.Error.WriteLine($"[DI.OPC.010] [DfuInstallation.OnProgressChanged()] [BUG] Suppressed internal bug while trying to calculate progress - report this incident!\n\n{ex}");
                 }
                 catch
                 {
@@ -224,7 +224,7 @@ namespace Laerdal.Dfu
             {
                 try
                 {
-                    Console.WriteLine($"[DI.OPC.020] [DfuInstallation.OnProgressChanged()::ProgressChangedEvent] [USERLAND BUG - SUPPRESSED] Error while raising event ProgressChanged - report this incident!\n\n{ex}");
+                    Console.Error.WriteLine($"[DI.OPC.020] [DfuInstallation.OnProgressChanged()::ProgressChangedEvent] [USERLAND BUG - SUPPRESSED] Error while raising event ProgressChanged - report this incident!\n\n{ex}");
                 }
                 catch
                 {
