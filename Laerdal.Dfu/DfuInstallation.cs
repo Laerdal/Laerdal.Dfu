@@ -178,14 +178,15 @@ namespace Laerdal.Dfu
         internal void OnProgressChanged(double progress, double currentSpeedBytesPerSecond, double avgSpeedBytesPerSecond)
         {
             Progress = progress;
-            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
             AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
-
+            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
+            
+            var roundedProgress = (long)Math.Round(Progress * 100); //can in fact turn out to be zero if progress is 0.0001
             if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
             {
                 EstimatedTimeLeft = TimeSpan.Zero;
             }
-            else if (Progress <= 0) // Not started
+            else if (roundedProgress <= 0) // Not started
             {
                 EstimatedTimeLeft = TimeSpan.Zero;
             }
@@ -194,7 +195,7 @@ namespace Laerdal.Dfu
                 StartTime = StartTime == default ? DateTime.UtcNow : StartTime;
                 var startTime = StartTime; // Force initialization of field by calling Get
                 Duration = DateTime.UtcNow - startTime;
-                var ticksPerProgressPercent = Duration.Ticks / (long) Math.Round(Progress * 100);
+                var ticksPerProgressPercent = Duration.Ticks / roundedProgress;
                 var ticksTotal = ticksPerProgressPercent * 100;
                 var ticksLeft = ticksTotal - Duration.Ticks;
                 EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
