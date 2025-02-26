@@ -177,31 +177,60 @@ namespace Laerdal.Dfu
 
         internal void OnProgressChanged(double progress, double currentSpeedBytesPerSecond, double avgSpeedBytesPerSecond)
         {
-            Progress = progress;
-            AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
-            CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
-            
-            var roundedProgress = (long)Math.Round(Progress * 100); //can in fact turn out to be zero if progress is 0.0001
-            if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
+            try
             {
-                EstimatedTimeLeft = TimeSpan.Zero;
+                Progress = progress;
+                AvgSpeedBytesPerSecond = avgSpeedBytesPerSecond;
+                CurrentSpeedBytesPerSecond = currentSpeedBytesPerSecond;
+
+                var roundedProgress = (long)Math.Round(Progress * 100); //can in fact turn out to be zero if progress is 0.0001
+                if (Progress >= 1 || State == DfuState.Aborted || Error != DfuError.NoError) // Done or Error
+                {
+                    EstimatedTimeLeft = TimeSpan.Zero;
+                }
+                else if (roundedProgress <= 0) // Not started
+                {
+                    EstimatedTimeLeft = TimeSpan.Zero;
+                }
+                else // Running
+                {
+                    StartTime = StartTime == default ? DateTime.UtcNow : StartTime;
+                    var startTime = StartTime; // Force initialization of field by calling Get
+                    Duration = DateTime.UtcNow - startTime;
+                    var ticksPerProgressPercent = Duration.Ticks / roundedProgress;
+                    var ticksTotal = ticksPerProgressPercent * 100;
+                    var ticksLeft = ticksTotal - Duration.Ticks;
+                    EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
+                }
             }
-            else if (roundedProgress <= 0) // Not started
+            catch (Exception ex)
             {
-                EstimatedTimeLeft = TimeSpan.Zero;
-            }
-            else // Running
-            {
-                StartTime = StartTime == default ? DateTime.UtcNow : StartTime;
-                var startTime = StartTime; // Force initialization of field by calling Get
-                Duration = DateTime.UtcNow - startTime;
-                var ticksPerProgressPercent = Duration.Ticks / roundedProgress;
-                var ticksTotal = ticksPerProgressPercent * 100;
-                var ticksLeft = ticksTotal - Duration.Ticks;
-                EstimatedTimeLeft = TimeSpan.FromTicks(ticksLeft);
+                try
+                {
+                    Console.WriteLine($"[DI.OPC.010] [DfuInstallation.OnProgressChanged()] [BUG] Suppressed internal bug while trying to calculate progress - report this incident!\n\n{ex}");
+                }
+                catch
+                {
+                    //ignored
+                }
+                return;
             }
 
-            ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond));
+            try
+            {
+                ProgressChanged?.Invoke(this, new DfuProgressChangedEventArgs(progress, currentSpeedBytesPerSecond, avgSpeedBytesPerSecond));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Console.WriteLine($"[DI.OPC.020] [DfuInstallation.OnProgressChanged()::ProgressChangedEvent] [USERLAND BUG - SUPPRESSED] Error while raising event ProgressChanged - report this incident!\n\n{ex}");
+                }
+                catch
+                {
+                    //ignored
+                }
+            }
         }
 
         public event EventHandler<DfuProgressChangedEventArgs> ProgressChanged;
