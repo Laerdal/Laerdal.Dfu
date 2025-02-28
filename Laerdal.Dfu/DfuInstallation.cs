@@ -5,6 +5,10 @@ using Laerdal.Dfu.Helpers;
 
 namespace Laerdal.Dfu
 {
+    public partial class DfuInstallation : SharedDfuInstallation
+    {
+    }
+
     public abstract class SharedDfuInstallation : IDisposable
     {
         public string DeviceId { get; set; }
@@ -302,6 +306,4 @@ namespace Laerdal.Dfu
             GC.SuppressFinalize(this);
         }
     }
-
-    public partial class DfuInstallation : SharedDfuInstallation { }
 }
