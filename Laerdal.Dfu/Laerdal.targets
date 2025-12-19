@@ -72,41 +72,35 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.md</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 
     <!-- ==================== LOGGING ==================== -->
     <Target Name="PrintBuildInfo" BeforeTargets="BeforeBuild">
         <Message Importance="High" Text="*** Package Info ***"/>
-        <Message Importance="High" Text="Version :                $(Version)               "/>
-        <Message Importance="High" Text="Platform :               $(Platform)              "/>
-        <Message Importance="High" Text="PackageId :              $(PackageId)             "/>
-        <Message Importance="High" Text="Configuration :          $(Configuration)         "/>
-        <Message Importance="High" Text="PackageVersion :         $(PackageVersion)        "/>
-        <Message Importance="High" Text="TargetFramework :        $(TargetFramework)       "/>
-        <Message Importance="High" Text="DefineConstants :        $(DefineConstants)       "/>
-        <Message Importance="High" Text="AssemblyVersion :        $(AssemblyVersion)       "/>
-        <Message Importance="High" Text="AssemblyFileVersion :    $(AssemblyFileVersion)   "/>
-        <Message Importance="High" Text="                                                  "/>
-        <Message Importance="high" Text="IsForIOS :               $(IsForIOS)              "/>
-        <Message Importance="high" Text="IsForAndroid :           $(IsForAndroid)          "/>
-        <Message Importance="high" Text="IsForWindows :           $(IsForWindows)          "/>
-        <Message Importance="high" Text="IsForPlainNetX :         $(IsForPlainNetX)        "/>
-        <Message Importance="high" Text="IsForAppleStuff :        $(IsForAppleStuff)       "/>
-        <Message Importance="high" Text="IsForMacCatalyst :       $(IsForMacCatalyst)      "/>
+        <Message Importance="High" Text="Version :                '$(Version)'               "/>
+        <Message Importance="High" Text="Platform :               '$(Platform)'              "/>
+        <Message Importance="High" Text="PackageId :              '$(PackageId)'             "/>
+        <Message Importance="High" Text="Configuration :          '$(Configuration)'         "/>
+        <Message Importance="High" Text="PackageVersion :         '$(PackageVersion)'        "/>
+        <Message Importance="High" Text="TargetFramework :        '$(TargetFramework)'       "/>
+        <Message Importance="High" Text="DefineConstants :        '$(DefineConstants)'       "/>
+        <Message Importance="High" Text="AssemblyVersion :        '$(AssemblyVersion)'       "/>
+        <Message Importance="High" Text="AssemblyFileVersion :    '$(AssemblyFileVersion)'   "/>
+        <Message Importance="High" Text="                                                    "/>
+        <Message Importance="high" Text="IsForIOS :               '$(IsForIOS)'              "/>
+        <Message Importance="high" Text="IsForAndroid :           '$(IsForAndroid)'          "/>
+        <Message Importance="high" Text="IsForWindows :           '$(IsForWindows)'          "/>
+        <Message Importance="high" Text="IsForPlainNetX :         '$(IsForPlainNetX)'        "/>
+        <Message Importance="high" Text="IsForAppleStuff :        '$(IsForAppleStuff)'       "/>
+        <Message Importance="high" Text="IsForMacCatalyst :       '$(IsForMacCatalyst)'      "/>
     </Target>
 
     <!-- ==================== MAUI for .NET8 changes ==================== -->
     <ItemGroup>
-        <!-- Warning MA002 : Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  
-        Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />.  
-        You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. -->
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
-        <!-- Warning MA002 : Starting with .NET 8, setting  <UseMauiEssentials>true</UseMauiEssentials>  does not automatically include NuGet package references in your project.  
-        Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.21" />.  
-        You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. 
-        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.21" />-->
+        <!-- Warning MA002 : Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in the project -->
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100"/>
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100"/>
     </ItemGroup>
 
     <PropertyGroup>
