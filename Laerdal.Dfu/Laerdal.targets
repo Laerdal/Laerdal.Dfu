@@ -96,11 +96,11 @@
         <Message Importance="high" Text="IsForMacCatalyst :       '$(IsForMacCatalyst)'      "/>
     </Target>
 
-    <!-- ==================== MAUI for .NET8 changes ==================== -->
+    <!-- ==================== MAUI for .NET10 changes ==================== -->
     <ItemGroup>
         <!-- Warning MA002 : Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in the project -->
-        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100"/>
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100"/>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20"/>
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.20"/>
     </ItemGroup>
 
     <PropertyGroup>

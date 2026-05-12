@@ -92,7 +92,7 @@
         <!-- RUN -->
         <MSBuild Projects="$(Laerdal_Project)" Targets="Restore;Build" Properties="$(_Laerdal_Build_Parameters)" />
 
-        <!-- -force-dud build aiming just pure net8 without bindings   this is meant for desktop simulators of android and ios for ui testing purposes of apps -->
+        <!-- -force-dud build aiming just pure net10 without bindings   this is meant for desktop simulators of android and ios for ui testing purposes of apps -->
         <MSBuild Projects="$(Laerdal_Project)" Targets="Restore;Rebuild" Properties="$(_Laerdal_Build_Parameters);BuildOnlyDudNet8=true;SourceRoot=$(Laerdal_RootDirectory_Folderpath)/Laerdal.Dfu/;" />
     </Target>
 
