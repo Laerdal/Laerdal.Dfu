@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<base:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:base="clr-namespace:Laerdal.Dfu.Sample.Infrastructure"
+                      xmlns:vm="clr-namespace:Laerdal.Dfu.Sample.ViewModels"
+                      xmlns:scan="clr-namespace:Bluetooth.Abstractions.Scanning;assembly=Bluetooth.Abstractions.Scanning"
+                      x:Class="Laerdal.Dfu.Sample.Pages.ScanPage"
+                      x:TypeArguments="vm:ScanViewModel"
+                      x:DataType="vm:ScanViewModel"
+                      Title="Find DFU Device">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Status bar -->
+        <Grid Grid.Row="0" Padding="16,12,16,8"
+              ColumnDefinitions="*,Auto">
+
+            <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                <Label FontSize="14" FontAttributes="Bold">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsScanning}" Value="True">
+                            <Setter Property="Text" Value="Scanning..." />
+                            <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsScanning}" Value="False">
+                            <Setter Property="Text" Value="Stopped" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#8E8E93, Dark=#8E8E93}" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Label Text="{Binding DeviceCount, StringFormat='{0} devices found'}"
+                       FontSize="12"
+                       TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8E8E93}" />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                <Button Text="Scan"
+                        Command="{Binding StartScanCommand}"
+                        IsVisible="{Binding IsScanning, Converter={StaticResource InvertedBoolConverter}}"
+                        WidthRequest="80" Padding="0,10" FontSize="14" />
+                <Button Text="Stop"
+                        Command="{Binding StopScanCommand}"
+                        IsVisible="{Binding IsScanning}"
+                        WidthRequest="80" Padding="0,10" FontSize="14" />
+            </HorizontalStackLayout>
+
+        </Grid>
+
+        <!-- Device list -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Devices}"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectDeviceCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                    <Label Text="No devices found"
+                           FontSize="16" HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8E8E93}" />
+                    <Label Text="Scanning for BLE devices nearby..."
+                           FontSize="13" HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#C7C7CC, Dark=#636366}" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="scan:IBluetoothRemoteDevice">
+                    <Border Padding="12,10" Margin="12,3" StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#F2F2F7, Dark=#2C2C2E}">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Name, TargetNullValue='Unknown Device'}"
+                                   FontAttributes="Bold" FontSize="15"
+                                   TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
+
+                            <!-- DFU badge -->
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    Padding="6,2" StrokeShape="RoundRectangle 4"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    IsVisible="{Binding LastAdvertisement.ServicesGuids, Converter={StaticResource DfuServiceConverter}}">
+                                <Label Text="DFU" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                            </Border>
+
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding Id}" FontSize="11"
+                                   TextColor="{AppThemeBinding Light=#8E8E93, Dark=#636366}" />
+
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                  ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+                                <Label Grid.Column="0" Text="RSSI" FontSize="11"
+                                       TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8E8E93}" />
+                                <ProgressBar Grid.Column="1" Progress="{Binding SignalStrengthPercent}"
+                                             VerticalOptions="Center" HeightRequest="4" />
+                                <Label Grid.Column="2"
+                                       Text="{Binding SignalStrengthDbm, StringFormat='{0} dBm'}"
+                                       FontSize="11"
+                                       TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8E8E93}" />
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</base:BaseContentPage>
