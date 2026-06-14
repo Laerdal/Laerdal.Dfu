@@ -50,7 +50,7 @@ jobs:
       - name: '🔧 Setup .NET'
         uses: actions/setup-dotnet@v4
         with:
-          config-file: '${{ github.workspace }}/global.json'
+          dotnet-version: '10.x'    # global.json "10.0.0" + rollForward:latestMinor — setup-dotnet doesn't honour rollForward, so specify the channel directly
 
       - name: '☕ Setup JDK 17'
         uses: actions/setup-java@v4
