@@ -14,7 +14,11 @@ namespace Laerdal.Dfu.Specific
 
         }
 
+#if DEBUG
         protected override bool IsDebug => true;
+#else
+        protected override bool IsDebug => false;
+#endif
 
         protected override Class NotificationTarget => Class.FromType(typeof(DfuNotificationActivity));
 

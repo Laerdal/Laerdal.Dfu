@@ -60,7 +60,7 @@ namespace Laerdal.Dfu
             }
             if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
             {
-                Initiator.ForceScanningForNewAddressInLegacyDfu = EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value;
+                Initiator.EnableUnsafeExperimentalButtonlessServiceInSecureDfu = EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value;
 
             }
             if (ForceDfu.HasValue)
@@ -76,7 +76,9 @@ namespace Laerdal.Dfu
             Initiator = CustomDfuServiceInitiatorConfiguration?.Invoke(Initiator);
         }
 
-        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set; }public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set; }
+        public Laerdal.Dfu.Bindings.iOS.DFUFirmware Firmware { get; private set; }
+
+        public Laerdal.Dfu.Bindings.iOS.DFUServiceInitiator Initiator { get; private set; }
         public Laerdal.Dfu.Bindings.iOS.DFUServiceController Controller { get; private set; }
 
         private DfuServiceDelegate DfuServiceDelegate { get;set; }

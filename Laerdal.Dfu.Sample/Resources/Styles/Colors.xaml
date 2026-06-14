@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xaml-comp compile="true" ?>
+
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Base Colors -->
+    <Color x:Key="Primary">#512BD4</Color>
+    <Color x:Key="PrimaryLight">#7C4DFF</Color>
+    <Color x:Key="PrimaryDark">#311B92</Color>
+    <Color x:Key="Secondary">#DFD8F7</Color>
+    <Color x:Key="SecondaryLight">#F3F0FF</Color>
+    <Color x:Key="SecondaryDark">#B39DDB</Color>
+    <Color x:Key="Tertiary">#2B0B98</Color>
+
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Gray100">#F5F5F5</Color>
+    <Color x:Key="Gray200">#EEEEEE</Color>
+    <Color x:Key="Gray300">#E0E0E0</Color>
+    <Color x:Key="Gray400">#BDBDBD</Color>
+    <Color x:Key="Gray500">#9E9E9E</Color>
+    <Color x:Key="Gray600">#757575</Color>
+    <Color x:Key="Gray700">#616161</Color>
+    <Color x:Key="Gray800">#424242</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#141414</Color>
+
+    <!-- Dark Theme Specific Colors -->
+    <Color x:Key="DarkBackground">#121212</Color>
+    <Color x:Key="DarkSurface">#1E1E1E</Color>
+    <Color x:Key="DarkSurfaceVariant">#2C2C2C</Color>
+    <Color x:Key="DarkBorder">#3A3A3A</Color>
+
+    <!-- Semantic Colors -->
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="SuccessDark">#66BB6A</Color>
+    <Color x:Key="Warning">#FF9800</Color>
+    <Color x:Key="WarningDark">#FFA726</Color>
+    <Color x:Key="Error">#F44336</Color>
+    <Color x:Key="ErrorDark">#EF5350</Color>
+    <Color x:Key="Info">#2196F3</Color>
+    <Color x:Key="InfoDark">#42A5F5</Color>
+
+    <!-- Bluetooth-specific Colors -->
+    <Color x:Key="BluetoothBlue">#0082FC</Color>
+    <Color x:Key="BluetoothBlueDark">#4DA6FF</Color>
+    <Color x:Key="ConnectedGreen">#4CAF50</Color>
+    <Color x:Key="ConnectedGreenDark">#66BB6A</Color>
+    <Color x:Key="DisconnectedRed">#F44336</Color>
+    <Color x:Key="DisconnectedRedDark">#EF5350</Color>
+    <Color x:Key="ScanningBlue">#2196F3</Color>
+    <Color x:Key="ScanningBlueDark">#42A5F5</Color>
+
+    <!-- Shadow Colors -->
+    <Color x:Key="ShadowColorLight">#1A000000</Color>
+    <Color x:Key="ShadowColorDark">#40000000</Color>
+
+    <!-- Light Theme Semantic Colors -->
+    <Color x:Key="LightPageBackground">#FFFFFF</Color>
+    <Color x:Key="LightCardBackground">#FFFFFF</Color>
+    <Color x:Key="LightBorder">#E0E0E0</Color>
+    <Color x:Key="LightDivider">#EEEEEE</Color>
+    <Color x:Key="LightTextPrimary">#212121</Color>
+    <Color x:Key="LightTextSecondary">#757575</Color>
+    <Color x:Key="LightTextTertiary">#9E9E9E</Color>
+    <Color x:Key="LightTextDisabled">#BDBDBD</Color>
+    <Color x:Key="LightIcon">#616161</Color>
+    <Color x:Key="LightIconSecondary">#9E9E9E</Color>
+
+    <!-- Dark Theme Semantic Colors -->
+    <Color x:Key="DarkPageBackgroundColor">#121212</Color>
+    <Color x:Key="DarkCardBackgroundColor">#2C2C2C</Color>
+    <Color x:Key="DarkBorderColor">#3A3A3A</Color>
+    <Color x:Key="DarkDividerColor">#616161</Color>
+    <Color x:Key="DarkTextPrimary">#F5F5F5</Color>
+    <Color x:Key="DarkTextSecondary">#BDBDBD</Color>
+    <Color x:Key="DarkTextTertiary">#9E9E9E</Color>
+    <Color x:Key="DarkTextDisabled">#757575</Color>
+    <Color x:Key="DarkIconColor">#E0E0E0</Color>
+    <Color x:Key="DarkIconSecondaryColor">#9E9E9E</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}" />
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}" />
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}" />
+
+    <!-- Theme-Aware Semantic Brushes (Brushes CAN use AppThemeBinding) -->
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkPageBackgroundColor}}" />
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{AppThemeBinding Light={StaticResource LightCardBackground}, Dark={StaticResource DarkCardBackgroundColor}}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource DarkBorderColor}}" />
+    <SolidColorBrush x:Key="DividerBrush" Color="{AppThemeBinding Light={StaticResource LightDivider}, Dark={StaticResource DarkDividerColor}}" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}" />
+    <SolidColorBrush x:Key="TextDisabledBrush" Color="{AppThemeBinding Light={StaticResource LightTextDisabled}, Dark={StaticResource DarkTextDisabled}}" />
+    <SolidColorBrush x:Key="IconBrush" Color="{AppThemeBinding Light={StaticResource LightIcon}, Dark={StaticResource DarkIconColor}}" />
+    <SolidColorBrush x:Key="IconSecondaryBrush" Color="{AppThemeBinding Light={StaticResource LightIconSecondary}, Dark={StaticResource DarkIconSecondaryColor}}" />
+    <SolidColorBrush x:Key="ShadowBrush" Color="{AppThemeBinding Light={StaticResource ShadowColorLight}, Dark={StaticResource ShadowColorDark}}" />
+
+</ResourceDictionary>

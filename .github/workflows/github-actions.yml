@@ -1,142 +1,137 @@
-#
-# https://docs.github.com/en/actions/migrating-to-github-actions/automated-migrations/migrating-from-azure-devops-with-github-actions-importer#environment-variable-mapping
-#
-# bare in mind that variable substitution is not supported in github at all    so we cant do stuff like this
-#
-#   env:
-#     Build_Artifacts_Folderpath: $build_repository_folderpath/Artifacts
-#
+name: '🏗 Build & Package'
 
-name: '🏗 📦 Build, Pack & Deploy Nugets'
-
-env:
-  BUILD_REPOSITORY_FOLDERPATH: ${{     github.workspace                      }}
-
-  LAERDAL_SOURCE_BRANCH: ${{           github.ref                            }}
-  LAERDAL_REPOSITORY_PATH: ${{         github.repository                     }}
-
-  # note that its vital that we use our own token here instead of GITHUB_TOKEN    that is because access the
-  # nuget repos of Laerdal.Dfu.Bindings.iOS and Laerdal.Dfu.Bindings.Android which are inaccessible to the GITHUB_TOKEN
-  SCL_NUGET_ORG_FEED_API_KEY: ${{     secrets.NUGET_ORG_FEED_API_KEY         }}
-
-  SCL_GITHUB_ACCESS_TOKEN: ${{        secrets.SCL_GITHUB_ACCESS_TOKEN        }}
-  SCL_GITHUB_NUGET_FEED_USERNAME: ${{ secrets.SCL_GITHUB_NUGET_FEED_USERNAME }}
-
-  SCL_DEPENDENCY_TRACKER_API_KEY: ${{             secrets.SCL_DEPENDENCY_TRACKER_API_KEY             }}
-  SCL_DEPENDENCY_TRACKER_SERVER_URL: ${{          secrets.SCL_DEPENDENCY_TRACKER_SERVER_URL          }}
-  SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY: ${{ secrets.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY }}
-
-  DOTNET_TARGET_WORKLOAD_VERSION: "8.0.405" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
-
+run-name: >-
+  ${{ github.event_name == 'pull_request' &&
+      format('🏗 {0} - {1} → {2} by {3}', github.event_name, github.head_ref, github.base_ref, github.actor) ||
+      format('🏗 {0} - {1} - {2} by {3}', github.event_name, github.ref_name, github.sha, github.actor) }}
 
 on:
-  workflow_call: #     so that other workflows can trigger this
-  workflow_dispatch: # allows to run this workflow manually from the actions tab
-
   push:
-    branches:
-      - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch:
 
-  pull_request: # we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
-    branches:
-      - '**'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
+permissions:
+  contents: write
+  packages: write
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: '1'
+
+  SOLUTION_PATH: 'Laerdal.Dfu.Packages.slnx'
+  PACKAGE_OUTPUT_PATH: '${{ github.workspace }}/Artifacts'
+
+  # version.json defines major + minor; build number auto-increments from GITHUB_RUN_NUMBER.
+  # The +8 offset carries over the count from the Azure DevOps migration.
+  LAERDAL_VERSION_MAJOR: 1
+  LAERDAL_VERSION_MINOR: 27
 
 jobs:
-  
-  build:
 
-    runs-on: 'macos-14'
-    timeout-minutes: 20
+  build:
+    name: '🏗 Build & Pack'
+    runs-on: macos-14        # macOS required for net10.0-ios and net10.0-maccatalyst targets
+    timeout-minutes: 30
 
     steps:
 
       - name: '🔽 Checkout'
-        uses: 'actions/checkout@v4'
+        uses: actions/checkout@v4
         with:
-          fetch-tags: true # https://github.com/actions/checkout/issues/1471#issuecomment-1771231294
+          fetch-tags: true
           fetch-depth: 0
-  
-      #  "${{ github.actor }}"
-      #  "${{ github.token }}"
-      - name: '🛠 Setup Build Environment'
-        shell: 'bash'
-        run: |
-          chmod  +x  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
-                &&                                                                                               \
-                     "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts/Laerdal.SetupBuildEnvironment.sh"     \
-                             "${{env.DOTNET_TARGET_WORKLOAD_VERSION}}"                                           \
-                             "https://nuget.pkg.github.com/Laerdal/index.json"                                   \
-                             "${{ env.SCL_GITHUB_NUGET_FEED_USERNAME }}"                                         \
-                             "${{ env.SCL_GITHUB_ACCESS_TOKEN        }}"                                         \
-                             "${{ env.BUILD_REPOSITORY_FOLDERPATH    }}/Artifacts"
 
-      # we need to manually install java11 because it is needed by the latest windows vm-images that run on
-      # msbuild version 17.8.3 that started rolling out around 20 Nov 2023 https://stackoverflow.com/a/77519085/863651
-      - name: '🛠 Set Up JDK 11'
-        uses: 'actions/setup-java@v2'
+      - name: '🔧 Setup .NET'
+        uses: actions/setup-dotnet@v4
         with:
-          java-version: '11'
+          dotnet-version: '10.x'    # global.json "10.0.0" + rollForward:latestMinor — setup-dotnet doesn't honour rollForward, so specify the channel directly
+
+      - name: '☕ Setup JDK 17'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
           architecture: 'x64'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
-      - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
-        shell: 'bash'
+      - name: '📲 Restore .NET workloads'
+        run: dotnet workload restore '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+
+      - name: '🔄 Restore'
+        run: dotnet restore '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+
+      - name: '🏗 Build & Pack'
         run: |
-          cd                  "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Laerdal.Scripts"                                                                                                    \
-                     &&                                                                                                                                                                 \
-          echo  "${{env.SCL_DEPENDENCY_TRACKER_API_KEY}}"              >  "./dependency_tracker_api_key.ppk"                                                                            \
-                     &&                                                                                                                                                                 \
-          echo  "${{env.SCL_DEPENDENCY_TRACKER_SIGNING_PRIVATE_KEY}}"  >  "./dependency_tracker_private_signing_key.ppk"                                                                \
-                     &&                                                                                                                                                                 \
-          dotnet                                                                                                                                                                        \
-             msbuild                                                                                                                                                                    \
-             "Laerdal.Builder.targets"                                                                                                                                                  \
-                                                                                                                                                                                        \
-                                                        -p:PackageOutputPath="${{ env.BUILD_REPOSITORY_FOLDERPATH }}/Artifacts"                                                         \
-                                                    -p:Laerdal_Source_Branch="${{ env.LAERDAL_SOURCE_BRANCH       }}"                                                                   \
-                                                  -p:Laerdal_Repository_Path="${{ env.LAERDAL_REPOSITORY_PATH     }}"                                                                   \
-                                              -p:Laerdal_Github_Access_Token="${{ env.SCL_GITHUB_ACCESS_TOKEN     }}"                                                                   \
-                                                                                                                                                                                        \
-                                    -p:Laerdal_Dependency_Tracker_Server_Url="${{ env.SCL_DEPENDENCY_TRACKER_SERVER_URL  }}"                                                            \
-                             -p:Laerdal_Dependency_Tracker_Api_Key_File_Path="${{ env.BUILD_REPOSITORY_FOLDERPATH        }}/Laerdal.Scripts/dependency_tracker_api_key.ppk"             \
-                 -p:Laerdal_Dependency_Tracker_Private_Signing_Key_File_Path="${{ env.BUILD_REPOSITORY_FOLDERPATH        }}/Laerdal.Scripts/dependency_tracker_private_signing_key.ppk" \
-                     &&                                                                                                                                                                 \
-          rm   "./dependency_tracker_private_signing_key.ppk"    "./dependency_tracker_api_key.ppk"
+          VERSION_BUILD=$(( ${{ github.run_number }} + 8 ))
+          VERSION="${{ env.LAERDAL_VERSION_MAJOR }}.${{ env.LAERDAL_VERSION_MINOR }}.${VERSION_BUILD}"
+          echo "Version: ${VERSION}"
+          dotnet build '${{ github.workspace }}/${{ env.SOLUTION_PATH }}' \
+            --configuration Release \
+            --no-restore \
+            -p:Laerdal_Version_Full="${VERSION}" \
+            -p:GeneratePackageOnBuild=true \
+            -p:PackageOutputPath='${{ env.PACKAGE_OUTPUT_PATH }}'
 
-      - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
-        uses: 'actions/upload-artifact@v4'
+      - name: '🏗 Build & Pack (force-dud — net10.0 only, no native bindings)'
+        run: |
+          VERSION_BUILD=$(( ${{ github.run_number }} + 8 ))
+          VERSION="${{ env.LAERDAL_VERSION_MAJOR }}.${{ env.LAERDAL_VERSION_MINOR }}.${VERSION_BUILD}"
+          dotnet build '${{ github.workspace }}/Laerdal.Dfu/Laerdal.Dfu.csproj' \
+            --configuration Release \
+            -p:Laerdal_Version_Full="${VERSION}" \
+            -p:BuildOnlyDudNet8=true \
+            -p:SourceRoot='${{ github.workspace }}/Laerdal.Dfu/' \
+            -p:GeneratePackageOnBuild=true \
+            -p:PackageOutputPath='${{ env.PACKAGE_OUTPUT_PATH }}'
+
+      - name: '⬆️ Upload Artifacts'
+        uses: actions/upload-artifact@v4
         with:
           name: 'Artifacts'
-          path: '${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/**/*'
+          path: '${{ env.PACKAGE_OUTPUT_PATH }}/**/*'
           if-no-files-found: error
 
-      - name: '🚀 Publish to the Laerdal Nuget Server on Github' # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
-        shell: 'bash'
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-        run: |
-          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
-                    &&                                                                            \
-          ls .                                                                                    \
-                    &&                                                                            \
-          dotnet                                                                                  \
-                  nuget                                                                           \
-                  push                                                                            \
-                  --source   "https://nuget.pkg.github.com/Laerdal/index.json"                    \
-                  --api-key  "${{env.SCL_GITHUB_ACCESS_TOKEN}}"                                   \
-                  *nupkg
+  publish-github:
+    name: '🚀 Publish to GitHub Packages'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
 
-      - name: '🚀 Publish to the Nuget.org'
-        shell: 'bash'
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+      - name: '⬇️ Download Artifacts'
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: Artifacts
+
+      - name: '🚀 Push to GitHub Packages'
         run: |
-          cd "${{env.BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/"                                    \
-                    &&                                                                            \
-          ls .                                                                                    \
-                    &&                                                                            \
-          dotnet                                                                                  \
-                  nuget                                                                           \
-                  push                                                                            \
-                  --source   "https://api.nuget.org/v3/index.json"                                \
-                  --api-key  "${{env.SCL_NUGET_ORG_FEED_API_KEY}}"                                \
-                  *.nupkg
+          dotnet nuget push Artifacts/*.nupkg \
+            --source 'https://nuget.pkg.github.com/Laerdal/index.json' \
+            --api-key '${{ secrets.GITHUB_TOKEN }}'
+
+  publish-nuget:
+    name: '🚀 Publish to NuGet.org'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    environment:
+      name: nuget-org
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+      - name: '⬇️ Download Artifacts'
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: Artifacts
+
+      - name: '🚀 Push to NuGet.org'
+        run: |
+          dotnet nuget push Artifacts/*.nupkg \
+            --source 'https://api.nuget.org/v3/index.json' \
+            --api-key '${{ secrets.NUGET_ORG_FEED_API_KEY }}'
