@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:Laerdal.Dfu.Sample.Converters"
+             x:Class="Laerdal.Dfu.Sample.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:DfuServiceConverter x:Key="DfuServiceConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

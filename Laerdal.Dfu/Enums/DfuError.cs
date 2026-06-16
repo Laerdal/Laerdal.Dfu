@@ -66,6 +66,12 @@ namespace Laerdal.Dfu.Enums
 
         RemoteButtonlessDfuOperationFailed = 94, // 0x000000000000005E
 
+        RemoteButtonlessDFUInvalidAdvertisementName = 95,
+
+        RemoteButtonlessDFUBusy = 96,
+
+        RemoteButtonlessDFUNotBonded = 97,
+
         FileNotSpecified = 101, // 0x0000000000000065
 
         FileInvalid = 102, // 0x0000000000000066
@@ -97,6 +103,8 @@ namespace Laerdal.Dfu.Enums
         BytesLost = 308, // 0x0000000000000134
 
         CrcError = 309, // 0x0000000000000135
+
+        InvalidInternalState = 500,
 
         RemoteExperimentalButtonlessDfuSuccess = 9001, // 0x0000000000002329
 

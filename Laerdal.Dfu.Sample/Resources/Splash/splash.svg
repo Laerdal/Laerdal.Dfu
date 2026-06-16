@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Small centered logo on transparent background.
+     MAUI centers this on the Color="#512BD4" solid background set in the csproj. -->
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer ring -->
+  <circle cx="228" cy="200" r="90" fill="none" stroke="white" stroke-width="14"/>
+  <!-- Down arrow inside the ring (firmware download/update metaphor) -->
+  <line x1="228" y1="148" x2="228" y2="240" stroke="white" stroke-width="14" stroke-linecap="round"/>
+  <polyline points="196,212 228,248 260,212" fill="none" stroke="white" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- "DFU" label below -->
+  <text x="228" y="340" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="52" font-weight="700" text-anchor="middle" fill="white" letter-spacing="6">DFU</text>
+</svg>
