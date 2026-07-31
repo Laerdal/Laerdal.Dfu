@@ -1,44 +1,71 @@
 # Laerdal.Dfu
 
-This is an Xamarin binding library for the Nordic Semiconductors Android library for updating the firmware of their devices over the air via Bluetooth Low Energy.
+[![CI](https://img.shields.io/github/actions/workflow/status/Laerdal/Laerdal.Dfu/github-actions.yml?branch=main&logo=github&label=build)](https://github.com/Laerdal/Laerdal.Dfu/actions/workflows/github-actions.yml)
+[![NuGet](https://img.shields.io/nuget/v/Laerdal.Dfu?logo=nuget&color=004880)](https://www.nuget.org/packages/Laerdal.Dfu/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Laerdal.Dfu?logo=nuget&color=004880)](https://www.nuget.org/packages/Laerdal.Dfu/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![License](https://img.shields.io/github/license/Laerdal/Laerdal.Dfu?color=blue)](LICENSE)
 
-The Java library is located here: https://github.com/NordicSemiconductor/Android-DFU-Library
+A .NET MAUI binding library wrapping Nordic Semiconductor's native DFU (Device Firmware Update)
+SDKs for **Android** and **iOS/MacCatalyst**, giving you a single cross-platform API to update
+Nordic-based Bluetooth Low Energy devices over the air.
 
-The native iOS Pod library is located here: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
+Native libraries wrapped:
 
-[![Build status](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_apis/build/status/MAN-Laerdal.Dfu)](https://dev.azure.com/LaerdalMedical/Laerdal%20Nuget%20Platform/_build/latest?definitionId=121)
+- **Android** — [Android-DFU-Library](https://github.com/NordicSemiconductor/Android-DFU-Library), via [`Laerdal.Dfu.Bindings.Android`](https://github.com/Laerdal/Laerdal.Dfu.Bindings.Android)
+- **iOS / MacCatalyst** — [IOS-Pods-DFU-Library](https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library), via [`Laerdal.Dfu.Bindings.iOS`](https://github.com/Laerdal/Laerdal.Dfu.Bindings.iOS)
 
-[![NuGet Badge](https://buildstats.info/nuget/Laerdal.Dfu?includePreReleases=true)](https://www.nuget.org/packages/Laerdal.Dfu/)
+## Platform Support
+
+| Platform         | Supported |
+|------------------|-----------|
+| Android          | ✅        |
+| iOS              | ✅        |
+| MacCatalyst      | ✅        |
+| Windows / other  | ⚠️ "dud" build only — compiles but throws at runtime; useful for desktop UI testing, see [Known issues](#known-issues) |
+
+## Installation
+
+```bash
+dotnet add package Laerdal.Dfu
+```
+
+## Sample App
+
+[`Laerdal.Dfu.Sample`](Laerdal.Dfu.Sample) in this repo is a working .NET MAUI app demonstrating
+BLE scanning and a full firmware-update flow using this library.
 
 ## Building Locally
 
-### 1) Checkout
-
 ```bash
 git clone https://github.com/Laerdal/Laerdal.Dfu.git
+cd Laerdal.Dfu
+dotnet build Laerdal.Dfu/Laerdal.Dfu.csproj
 ```
-### 2) Build
 
-```bash
-dotnet msbuild Laerdal.Scripts/Laerdal.Builder.targets /m:1 /p:Laerdal_Version=9.0.x.0 /p:Laerdal_Github_Access_Token=<place your github access token here - its needed by carthage>
-```
+Building the Android/iOS/MacCatalyst targets requires the corresponding .NET MAUI workloads to be
+installed locally; CI builds and publishes all targets on every push to `main`/`master` via
+[`github-actions.yml`](.github/workflows/github-actions.yml).
 
 ## Known issues
 
-- Trying to use the iOS/Android flavours of this library in desktop-simulators for iOS/Android will probably result in compilation errors. If you want to perform general purpose
-  UI-testing on your desktop using such simulators you need to tweak your nuget references to use the `-force-dud` nuget of `Laerdal.Dfu` like so:
+- Using the iOS/Android flavours of this library from a desktop simulator (e.g. for general-purpose
+  UI testing) will fail to compile. Work around it with the `-force-dud` build of `Laerdal.Dfu`:
 
-```xml
-<PackageReference Include="Laerdal.Dfu" Version="x.y.z-force-dud">
+  ```xml
+  <PackageReference Include="Laerdal.Dfu" Version="x.y.z-force-dud">
+      <NoWarn>$(NoWarn);NU1605</NoWarn>
+  </PackageReference>
+  ```
+
+  Or, for iOS specifically (SDK 18.x and below only), override just the native binding instead:
+
+  ```xml
+  <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="x.y.z-ios-sim-arm64">
     <NoWarn>$(NoWarn);NU1605</NoWarn>
-</PackageReference>
-```
+  </PackageReference>
+  ```
 
-Alternatively you can achieve the same result by overriding the reference to `Laerdal.Dfu.Bindings.iOS` like so (note: this solution is only applicable for iOS and will work only
-for iOS sdk 18.x or below!):
+## License
 
-```xml
-<PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="x.y.z-ios-sim-arm64">
-  <NoWarn>$(NoWarn);NU1605</NoWarn>
-</PackageReference>
-```
+[BSD 3-Clause](LICENSE)
