@@ -89,7 +89,7 @@ jobs:
           configuration: Release
           no-restore: true
           arguments: >
-            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-full }}'
+            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-core }}'
             -p:GeneratePackageOnBuild=true
             -p:PackageOutputPath='${{ env.PACKAGE_OUTPUT_PATH }}'
           show-summary: true
@@ -101,7 +101,7 @@ jobs:
           path: '${{ github.workspace }}/Laerdal.Dfu/Laerdal.Dfu.csproj'
           configuration: Release
           arguments: >
-            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-full }}'
+            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-core }}'
             -p:BuildOnlyDudNet8=true
             -p:SourceRoot='${{ github.workspace }}/Laerdal.Dfu/'
             -p:GeneratePackageOnBuild=true
