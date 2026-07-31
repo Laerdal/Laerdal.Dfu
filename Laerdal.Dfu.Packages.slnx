@@ -4,11 +4,6 @@
     <File Path="LICENSE" />
     <File Path=".gitignore" />
     <File Path="global.json" />
-    <File Path="Laerdal.Scripts\Laerdal.Builder.targets" />
-    <File Path="Laerdal.Scripts\Laerdal.Version.sh" />
-    <File Path="Laerdal.Scripts\Laerdal.SetupBuildEnvironment.sh" />
-    <File Path="Laerdal.Scripts\Laerdal.CreateNewReleaseInGithub.sh" />
-    <File Path="Laerdal.Scripts\Laerdal.GenerateSignAndUploadSbom.sh" />
     <File Path=".github\workflows\github-actions.yml" />
     <File Path="PLAN_SAMPLE_APP.md" />
   </Folder>
