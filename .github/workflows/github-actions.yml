@@ -7,9 +7,9 @@ run-name: >-
 
 on:
   push:
-    branches: ['**']
+    branches: [main]
   pull_request:
-    branches: ['**']
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -17,8 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
-  packages: write
+  contents: write   # Needed to create tags and releases
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: '1'
@@ -27,25 +26,34 @@ env:
   SOLUTION_PATH: 'Laerdal.Dfu.Packages.slnx'
   PACKAGE_OUTPUT_PATH: '${{ github.workspace }}/Artifacts'
 
-  # version.json defines major + minor; build number auto-increments from GITHUB_RUN_NUMBER.
-  # The +8 offset carries over the count from the Azure DevOps migration.
-  LAERDAL_VERSION_MAJOR: 1
-  LAERDAL_VERSION_MINOR: 27
-
 jobs:
+
+  version:
+    uses: laerdal/github_actions/.github/workflows/reusable-version.yml@main
+    with:
+      config-file: './.config/version.json'
+      output-txt: 'output/version/version.txt'
+      output-json: 'output/version/version.json'
+      output-props: 'output/version/version.props'
+      artifact-name: 'version'
+      show-summary: true
 
   build:
     name: '🏗 Build & Pack'
-    runs-on: macos-14        # macOS required for net10.0-ios and net10.0-maccatalyst targets
+    runs-on: macos-14        # macOS required for net10.0-ios and net10.0-maccatalyst native binding compilation
     timeout-minutes: 30
+    needs: version
 
     steps:
 
       - name: '🔽 Checkout'
         uses: actions/checkout@v4
+
+      - name: '⬇️ Download Version artifact'
+        uses: actions/download-artifact@v8
         with:
-          fetch-tags: true
-          fetch-depth: 0
+          name: version
+          path: '${{ github.workspace }}/Output/Version'
 
       - name: '🔧 Setup .NET'
         uses: actions/setup-dotnet@v4
@@ -60,34 +68,60 @@ jobs:
           distribution: 'temurin'
 
       - name: '📲 Restore .NET workloads'
-        run: dotnet workload restore '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+        uses: laerdal/github_actions/dotnet@main
+        with:
+          command: workload
+          arguments: restore '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+          show-summary: true
 
       - name: '🔄 Restore'
-        run: dotnet restore '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+        uses: laerdal/github_actions/dotnet@main
+        with:
+          command: restore
+          path: '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+          show-summary: true
 
       - name: '🏗 Build & Pack'
-        run: |
-          VERSION_BUILD=$(( ${{ github.run_number }} + 8 ))
-          VERSION="${{ env.LAERDAL_VERSION_MAJOR }}.${{ env.LAERDAL_VERSION_MINOR }}.${VERSION_BUILD}"
-          echo "Version: ${VERSION}"
-          dotnet build '${{ github.workspace }}/${{ env.SOLUTION_PATH }}' \
-            --configuration Release \
-            --no-restore \
-            -p:Laerdal_Version_Full="${VERSION}" \
-            -p:GeneratePackageOnBuild=true \
+        uses: laerdal/github_actions/dotnet@main
+        with:
+          command: build
+          path: '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+          configuration: Release
+          no-restore: true
+          arguments: >
+            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-core }}'
+            -p:GeneratePackageOnBuild=true
             -p:PackageOutputPath='${{ env.PACKAGE_OUTPUT_PATH }}'
+          show-summary: true
 
       - name: '🏗 Build & Pack (force-dud — net10.0 only, no native bindings)'
-        run: |
-          VERSION_BUILD=$(( ${{ github.run_number }} + 8 ))
-          VERSION="${{ env.LAERDAL_VERSION_MAJOR }}.${{ env.LAERDAL_VERSION_MINOR }}.${VERSION_BUILD}"
-          dotnet build '${{ github.workspace }}/Laerdal.Dfu/Laerdal.Dfu.csproj' \
-            --configuration Release \
-            -p:Laerdal_Version_Full="${VERSION}" \
-            -p:BuildOnlyDudNet8=true \
-            -p:SourceRoot='${{ github.workspace }}/Laerdal.Dfu/' \
-            -p:GeneratePackageOnBuild=true \
+        uses: laerdal/github_actions/dotnet@main
+        with:
+          command: build
+          path: '${{ github.workspace }}/Laerdal.Dfu/Laerdal.Dfu.csproj'
+          configuration: Release
+          arguments: >
+            -p:Laerdal_Version_Full='${{ needs.version.outputs.version-core }}'
+            -p:BuildOnlyDudNet8=true
+            -p:SourceRoot='${{ github.workspace }}/Laerdal.Dfu/'
+            -p:GeneratePackageOnBuild=true
             -p:PackageOutputPath='${{ env.PACKAGE_OUTPUT_PATH }}'
+          show-summary: true
+
+      # SBOM is generated via the open-source CycloneDX .NET tool (no external service, no
+      # Laerdal-internal dependency tracker involved) and released as-is alongside the GitHub
+      # Release below. Signing it and feeding it into Laerdal's own SBOM/dependency-tracking
+      # system is a deliberate follow-up, not part of this pipeline.
+      - name: '📄 Generate CycloneDX SBOM'
+        uses: laerdal/github_actions/dotnet-cyclonedx@main
+        with:
+          path: '${{ github.workspace }}/${{ env.SOLUTION_PATH }}'
+          output: '${{ env.PACKAGE_OUTPUT_PATH }}'
+          filename: 'Laerdal.Dfu.cyclonedx.json'
+          output-format: 'Json'
+          set-name: 'Laerdal.Dfu'
+          set-version: '${{ needs.version.outputs.version-full }}'
+          show-summary: true
 
       - name: '⬆️ Upload Artifacts'
         uses: actions/upload-artifact@v4
@@ -96,28 +130,9 @@ jobs:
           path: '${{ env.PACKAGE_OUTPUT_PATH }}/**/*'
           if-no-files-found: error
 
-  publish-github:
-    name: '🚀 Publish to GitHub Packages'
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-
-      - name: '⬇️ Download Artifacts'
-        uses: actions/download-artifact@v4
-        with:
-          name: Artifacts
-          path: Artifacts
-
-      - name: '🚀 Push to GitHub Packages'
-        run: |
-          dotnet nuget push Artifacts/*.nupkg \
-            --source 'https://nuget.pkg.github.com/Laerdal/index.json' \
-            --api-key '${{ secrets.GITHUB_TOKEN }}'
-
   publish-nuget:
     name: '🚀 Publish to NuGet.org'
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: nuget-org
     runs-on: ubuntu-latest
@@ -131,7 +146,38 @@ jobs:
           path: Artifacts
 
       - name: '🚀 Push to NuGet.org'
-        run: |
-          dotnet nuget push Artifacts/*.nupkg \
-            --source 'https://api.nuget.org/v3/index.json' \
-            --api-key '${{ secrets.NUGET_ORG_FEED_API_KEY }}'
+        uses: laerdal/github_actions/dotnet-nuget-upload@main
+        with:
+          package-path: '${{ github.workspace }}/Artifacts/*.nupkg'
+          api-key: ${{ secrets.NUGET_ORG_FEED_API_KEY }}
+          source: 'https://api.nuget.org/v3/index.json'
+          show-summary: true
+
+  tag-and-release:
+    name: '🏷️ Tag & Release'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [version, publish-nuget]
+    steps:
+
+      - name: '🔄 Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: '⬇️ Download Artifacts'
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: Artifacts
+
+      - name: '🚀 Create GitHub Release'
+        uses: laerdal/github_actions/github-release@main
+        with:
+          tag: ${{ needs.version.outputs.version-fortag }}
+          title: 'Release ${{ needs.version.outputs.version-full }}'
+          generate-notes: 'true'
+          prerelease: ${{ needs.version.outputs.version-isprerelease }}
+          assets: 'Artifacts/Laerdal.Dfu.cyclonedx.json'
+          show-summary: 'true'
