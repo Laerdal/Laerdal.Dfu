@@ -40,8 +40,14 @@
 
     <!-- ==================== TARGET PLATFORM VERSION ======================= -->
     <PropertyGroup>
-        <!-- android    the TargetPlatformVersion must be aligned with the maxsdkversion used in androidmanifest.xml -->
-        <TargetPlatformVersion Condition="       '$(IsForAndroid)'      == 'true' ">36.1</TargetPlatformVersion>
+        <!-- android    deliberately NOT pinning TargetPlatformVersion here - it must float to whatever
+             the building SDK/workload resolves as default, same as every consumer (Laerdal.Bluetooth.Firmware,
+             fds-mobile-app, ...). A hardcoded value here (previously 36.1) can drift ahead of what consumers
+             resolve by default (e.g. 36.0), which makes this package's android-specific lib folder
+             (lib/net10.0-androidX.Y) invisible to those consumers under normal NuGet TargetPlatformVersion
+             compatibility rules - NuGet then silently falls back to the platform-agnostic lib/net10.0 folder,
+             which is a deliberate NotImplementedException stub. See reference_laerdal_dfu_android_packaging_bug
+             memory for the full incident writeup (discovered 2026-08-03, first real Android DFU test). -->
         <TargetPlatformMinVersion Condition="    '$(IsForAndroid)'      == 'true' ">21.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
