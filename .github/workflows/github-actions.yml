@@ -56,7 +56,7 @@ jobs:
           path: '${{ github.workspace }}/Output/Version'
 
       - name: '🔧 Setup .NET'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.x'    # global.json "10.0.0" + rollForward:latestMinor — setup-dotnet doesn't honour rollForward, so specify the channel directly
 
