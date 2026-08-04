@@ -1,0 +1,160 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for the library
+title: "[FEATURE] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to suggest a new feature! Please fill out the form below to help us understand your request.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - "New API method/functionality"
+        - "Performance optimization"
+        - "New data type support"
+        - "Error handling improvement"
+        - "Configuration option"
+        - "Integration support"
+        - "API improvement"
+        - "Documentation enhancement"
+        - "Developer experience"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: "Add support for [specific functionality] to help with [use case]"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: |
+        Current limitations or pain points:
+        - I need to [describe current workflow/limitation]
+        - This would save time by [specific benefit]
+        - Currently I have to work around this by [describe workaround]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented
+      placeholder: |
+        How would you like this feature to work? Consider:
+        - API design and method signatures
+        - Parameter types and return values
+        - Error handling behavior
+        - Performance considerations
+        - Integration with existing functionality
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Usage
+      description: Show how this feature would be used in code
+      placeholder: |
+        ```csharp
+        using YourNamespace;
+
+        // Example of how the new feature would be used
+        var input = GetSampleInput();
+
+        // Your proposed API usage here
+        var result = input.YourNewMethod();
+
+        // Expected behavior
+        Console.WriteLine($"Result: {result}");
+        ```
+      render: csharp
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or workarounds you've considered
+      placeholder: What other approaches could solve this problem?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - "Low - Nice to have"
+        - "Medium - Would improve my workflow"
+        - "High - Blocking my use case"
+        - "Critical - Required for production use"
+    validations:
+      required: true
+
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use Case Details
+      description: Describe your specific use case and how this feature would help
+      placeholder: |
+        - What are you trying to accomplish?
+        - How would this feature improve your workflow?
+        - Are there specific constraints or requirements?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: compatibility
+    attributes:
+      label: Backward Compatibility
+      description: Should this feature maintain backward compatibility?
+      options:
+        - "Yes - Must not break existing workflows"
+        - "No - Breaking change is acceptable"
+        - "Doesn't matter"
+        - "Unsure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request
+      placeholder: Links to similar features in other actions, mockups, related issues, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this feature hasn't been requested before
+          required: true
+        - label: I have provided a clear description of the problem and proposed solution
+          required: true
+        - label: This feature would benefit the broader community, not just my specific use case
+          required: false
+        - label: I am willing to help test this feature when implemented
+          required: false

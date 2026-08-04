@@ -1,0 +1,100 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with the library
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug! Please fill out the form below to help us understand and reproduce the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Code to Reproduce
+      description: Provide minimal code that reproduces the issue
+      placeholder: |
+        ```csharp
+        using YourNamespace;
+
+        // Minimal code that demonstrates the bug
+        var input = "example input";
+        var result = input.SomeMethod(); // This causes the issue
+        ```
+      render: csharp
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Information about your development environment
+      placeholder: |
+        - .NET Version: (e.g., .NET 10.0)
+        - Operating System: (e.g., Windows 11, macOS 14, Ubuntu 22.04)
+        - Device/Platform: (e.g., Android 14, iOS 18)
+        - IDE: (e.g., Visual Studio 2022, VS Code, Rider)
+        - Package Manager: (e.g., NuGet, PackageReference)
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs
+      description: Please include relevant error messages or logs
+      placeholder: Paste the error output
+      render: text
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Library Version
+      description: What version of the library are you using?
+      placeholder: "v1.2.3 or commit SHA"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: A clear description of what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Screenshots, related issues, workarounds, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this bug hasn't been reported before
+          required: true
+        - label: I have provided all the requested information above
+          required: true

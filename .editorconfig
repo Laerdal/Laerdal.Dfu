@@ -1,0 +1,87 @@
+root = true
+
+# General
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 240
+max_empty_lines = 1
+
+# C# files
+[*.cs]
+language_version = latest
+indent_size = 4
+
+# Naming conventions
+dotnet_naming_rule.private_fields_should_have_underscore_prefix.severity = warning
+dotnet_naming_rule.private_fields_should_have_underscore_prefix.symbols = private_fields
+dotnet_naming_rule.private_fields_should_have_underscore_prefix.style = underscore_prefix
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+
+dotnet_naming_rule.types_should_be_pascal_case.severity = warning
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum, delegate
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+dotnet_naming_rule.methods_should_be_pascal_case.severity = warning
+dotnet_naming_rule.methods_should_be_pascal_case.symbols = methods
+dotnet_naming_rule.methods_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_symbols.methods.applicable_kinds = method
+
+dotnet_naming_rule.constants_should_be_pascal_case.severity = warning
+dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
+dotnet_naming_rule.constants_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_symbols.constants.applicable_kinds = field
+dotnet_naming_symbols.constants.required_modifiers = const
+
+# Style rules
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = true:warning
+csharp_prefer_braces = true:warning
+csharp_style_expression_bodied_methods = false:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning
+csharp_style_expression_bodied_ctors = false:warning
+csharp_style_qualification_for_field = false:warning
+csharp_style_qualification_for_property = false:warning
+csharp_style_qualification_for_method = false:warning
+csharp_style_qualification_for_event = false:warning
+csharp_style_constructor_initializer = same_line:warning
+csharp_preserve_single_line_statements = true:warning
+csharp_preserve_single_line_blocks = true:warning
+csharp_style_wrap_long_argument_lists = when_long:warning
+csharp_style_wrap_long_parameter_lists = when_long:warning
+csharp_style_wrap_parameters = false:warning
+csharp_style_wrap_arguments = false:warning
+
+# Organize usings
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# Documentation
+csharp_style_require_documentation = true:suggestion
+
+# XML files: prevent line wrapping and set indentation
+
+# IDE0270: Use coalesce expression
+dotnet_style_coalesce_expression = false
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
+
+# IDE0032: Use auto property
+dotnet_style_prefer_auto_properties = false
+
+# CA1721: Property names should not match get methods
+dotnet_diagnostic.CA1721.severity = none
+
+[*.xml]
+max_line_length = 0
+indent_style = space
+indent_size = 2
