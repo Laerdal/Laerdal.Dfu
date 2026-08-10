@@ -34,7 +34,7 @@
     <ItemGroup>
         <PackageReference Include="Laerdal.Dfu" Version="1.27.173" />
         <PackageReference Include="CommunityToolkit.Maui" Version="15.0.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
     </ItemGroup>
