@@ -36,7 +36,7 @@
         <PackageReference Include="CommunityToolkit.Maui" Version="15.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
     </ItemGroup>
 
     <!-- Plugin.Bluetooth project references (for BLE scanning) -->
