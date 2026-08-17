@@ -66,6 +66,12 @@ installed locally; CI builds and publishes all targets on every push to `main`/`
   </PackageReference>
   ```
 
+- [`Laerdal.Dfu.Bindings.Android`](https://github.com/Laerdal/Laerdal.Dfu.Bindings.Android) (a
+  dependency of this package) hardcodes its own Android `TargetPlatformVersion` rather than
+  floating it the way this project does — see that repo's own README "Known issues" for why that's
+  a latent risk, not yet a live one. If an Android DFU build ever starts silently misbehaving after
+  bumping either project's `TargetPlatformVersion`, check there first.
+
 ## License
 
 [BSD 3-Clause](LICENSE)

@@ -47,7 +47,14 @@
              (lib/net10.0-androidX.Y) invisible to those consumers under normal NuGet TargetPlatformVersion
              compatibility rules - NuGet then silently falls back to the platform-agnostic lib/net10.0 folder,
              which is a deliberate NotImplementedException stub. See reference_laerdal_dfu_android_packaging_bug
-             memory for the full incident writeup (discovered 2026-08-03, first real Android DFU test). -->
+             memory for the full incident writeup (discovered 2026-08-03, first real Android DFU test).
+
+             The identical risk exists one level further down: Laerdal.Dfu.Bindings.Android (referenced
+             below as a PackageReference) hardcodes its own TargetPlatformVersion (currently 36, not
+             floating) rather than applying this same fix - see that repo's README "Known issues" section.
+             It hasn't bitten yet because its pin still happens to be <= what this project resolves to by
+             default, but that's coincidence, not a guarantee - re-check both sides whenever either one's
+             TargetPlatformVersion changes. -->
         <TargetPlatformMinVersion Condition="    '$(IsForAndroid)'      == 'true' ">21.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
