@@ -110,7 +110,7 @@
     <!-- =========================== PACKAGES ============================ -->
     <!-- Android -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.9.0.43908" />
+        <PackageReference Include="Laerdal.Dfu.Bindings.Android" Version="2.11.0.43910" />
     </ItemGroup>
     <!-- iOS -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
