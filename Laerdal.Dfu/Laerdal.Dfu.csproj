@@ -121,12 +121,12 @@
     </ItemGroup>
     <!-- iOS -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.16.0.44003" />
+      <PackageReference Include="Laerdal.Dfu.Bindings.iOS" Version="4.17.0.44005" />
       <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.0" />
     </ItemGroup>
     <!-- MacCatalyst -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">
-      <PackageReference Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.16.0.44003" />
+      <PackageReference Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.17.0.44005" />
       <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.0" />
     </ItemGroup>
     <!-- =========================== PACKAGES ============================ -->
