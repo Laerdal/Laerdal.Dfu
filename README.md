@@ -1,6 +1,6 @@
 # Laerdal.Dfu
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Laerdal/Laerdal.Dfu/github-actions.yml?branch=main&logo=github&label=build)](https://github.com/Laerdal/Laerdal.Dfu/actions/workflows/github-actions.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/Laerdal/Laerdal.Dfu/ci.yml?branch=main&logo=github&label=build)](https://github.com/Laerdal/Laerdal.Dfu/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/Laerdal.Dfu?logo=nuget&color=004880)](https://www.nuget.org/packages/Laerdal.Dfu/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Laerdal.Dfu?logo=nuget&color=004880)](https://www.nuget.org/packages/Laerdal.Dfu/)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
@@ -45,7 +45,7 @@ dotnet build Laerdal.Dfu/Laerdal.Dfu.csproj
 
 Building the Android/iOS/MacCatalyst targets requires the corresponding .NET MAUI workloads to be
 installed locally; CI builds and publishes all targets on every push to `main`/`master` via
-[`github-actions.yml`](.github/workflows/github-actions.yml).
+[`ci.yml`](.github/workflows/ci.yml).
 
 ## Known issues
 
