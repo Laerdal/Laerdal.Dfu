@@ -61,7 +61,7 @@ jobs:
           dotnet-version: '10.x'    # global.json "10.0.0" + rollForward:latestMinor — setup-dotnet doesn't honour rollForward, so specify the channel directly
 
       - name: '☕ Setup JDK 17'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: '17'
           architecture: 'x64'
