@@ -33,17 +33,11 @@
     <!-- NuGet packages -->
     <ItemGroup>
         <PackageReference Include="Laerdal.Dfu" Version="1.27.205" />
+        <PackageReference Include="Bluetooth.Maui" Version="4.0.18" />
         <PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.101" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.11" />
-    </ItemGroup>
-
-    <!-- Plugin.Bluetooth project references (for BLE scanning) -->
-    <ItemGroup>
-        <ProjectReference Include="..\..\Laerdal_Plugin.Bluetooth\Bluetooth.Maui\Bluetooth.Maui.csproj" />
-        <ProjectReference Include="..\..\Laerdal_Plugin.Bluetooth\Bluetooth.Abstractions\Bluetooth.Abstractions.csproj" />
-        <ProjectReference Include="..\..\Laerdal_Plugin.Bluetooth\Bluetooth.Abstractions.Scanning\Bluetooth.Abstractions.Scanning.csproj" />
     </ItemGroup>
 
     <!-- Resources -->
@@ -51,10 +45,8 @@
         <MauiIcon Include="Resources\AppIcon\appicon.svg" />
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="256,256" />
         <MauiImage Include="Resources\Images\*" />
-        <MauiFont Include="..\..\Laerdal_Plugin.Bluetooth\Bluetooth.Maui.Sample.Scanner\Resources\Fonts\OpenSans-Regular.ttf"
-                  Link="Resources\Fonts\OpenSans-Regular.ttf" />
-        <MauiFont Include="..\..\Laerdal_Plugin.Bluetooth\Bluetooth.Maui.Sample.Scanner\Resources\Fonts\OpenSans-Semibold.ttf"
-                  Link="Resources\Fonts\OpenSans-Semibold.ttf" />
+        <MauiFont Include="Resources\Fonts\OpenSans-Regular.ttf" />
+        <MauiFont Include="Resources\Fonts\OpenSans-Semibold.ttf" />
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
