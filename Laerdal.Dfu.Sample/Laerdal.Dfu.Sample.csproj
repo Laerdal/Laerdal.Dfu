@@ -32,8 +32,8 @@
 
     <!-- NuGet packages -->
     <ItemGroup>
-        <PackageReference Include="Laerdal.Dfu" Version="1.27.205" />
-        <PackageReference Include="Bluetooth.Maui" Version="4.0.18" />
+        <PackageReference Include="Laerdal.Dfu" Version="1.27.206" />
+        <PackageReference Include="Bluetooth.Maui" Version="4.0.19" />
         <PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.101" />
