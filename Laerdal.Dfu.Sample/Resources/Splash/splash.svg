@@ -7,7 +7,11 @@
   <!-- Down arrow inside the ring (firmware download/update metaphor) -->
   <line x1="228" y1="148" x2="228" y2="240" stroke="white" stroke-width="14" stroke-linecap="round"/>
   <polyline points="196,212 228,248 260,212" fill="none" stroke="white" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- "DFU" label below -->
-  <text x="228" y="340" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
-        font-size="52" font-weight="700" text-anchor="middle" fill="white" letter-spacing="6">DFU</text>
+  <!-- "DFU" label below, drawn as paths so rendering does not depend on build-machine fonts -->
+  <g transform="translate(228,318) scale(0.27) translate(-172.5,-70)"
+     fill="none" stroke="white" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0,0 H40 C95,0 95,140 40,140 H0 Z"/>
+    <path d="M130,140 V0 H215 M130,72 H192"/>
+    <path d="M245,0 V80 A50,50 0 0 0 345,80 V0"/>
+  </g>
 </svg>
