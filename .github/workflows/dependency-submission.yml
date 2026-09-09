@@ -1,0 +1,44 @@
+name: '📊 Dependency Submission'
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  submit:
+    name: '📊 Submit NuGet dependencies'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: '🔽 Checkout'
+        uses: actions/checkout@v7
+
+      - name: '🔧 Setup .NET'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.x'    # global.json + rollForward:latestMinor — setup-dotnet doesn't honour rollForward, so specify the channel directly
+
+      - name: '☕ Setup JDK 17'
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          architecture: 'x64'
+          distribution: 'temurin'
+
+      - name: '📲 Restore .NET workloads'
+        run: dotnet workload restore Laerdal.Dfu/Laerdal.Dfu.csproj
+
+      - name: '🔄 Restore'
+        run: dotnet restore Laerdal.Dfu/Laerdal.Dfu.csproj
+
+      - name: '📊 Submit dependency snapshot'
+        uses: advanced-security/component-detection-dependency-submission-action@v0.1.6
+        with:
+          detectorsCategories: NuGet
