@@ -15,7 +15,7 @@ public class NavigationService : INavigationService
         where TPage : Page
     {
         var page = _serviceProvider.GetRequiredService<TPage>();
-        if (parameters != null && page is IQueryAttributable qa)
+        if (parameters != null && page.BindingContext is IQueryAttributable qa)
             qa.ApplyQueryAttributes(parameters);
         if (Navigation != null)
             await Navigation.PushAsync(page, true);
