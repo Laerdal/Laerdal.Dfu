@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Enable Central Package Management -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- ==================== INTERNAL DEPENDENCIES ==================== -->
+  <ItemGroup>
+    <PackageVersion Include="Laerdal.Dfu.Bindings.Android" Version="2.11.0.43910" />
+    <PackageVersion Include="Laerdal.Dfu.Bindings.iOS" Version="4.17.0.44005" />
+    <PackageVersion Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.17.0.44005" />
+  </ItemGroup>
+
+  <!-- ==================== BUILD & ANALYSIS DEPENDENCIES ==================== -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.ILLink.Tasks" Version="10.0.11" />
+  </ItemGroup>
+</Project>
