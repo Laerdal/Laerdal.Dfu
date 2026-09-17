@@ -20,7 +20,8 @@ Native libraries wrapped, via separate binding packages:
 - **Language:** C#
 - **Package Management:** Central Package Management (`Directory.Packages.props` at repo root)
   — `Laerdal.Dfu.Sample` is explicitly opted out (`ManagePackageVersionsCentrally=false`) since
-  it intentionally pins different package versions and isn't part of the main solution
+  it intentionally pins different package versions; it's part of `Laerdal.Dfu.sln` but not
+  `Laerdal.Dfu.Packages.slnx`, the solution CI actually restores/builds
 - **CI/CD:** GitHub Actions
 - **License:** BSD-3-Clause — intentionally matches the license of the Nordic libraries this
   repo wraps (both `Android-DFU-Library` and `IOS-Pods-DFU-Library` are BSD-3-Clause), not a
