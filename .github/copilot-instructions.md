@@ -18,7 +18,10 @@ Native libraries wrapped, via separate binding packages:
 
 - **Framework:** .NET MAUI, target framework `net10.0` (SDK `10.0.0`, see `global.json`)
 - **Language:** C#
-- **Package Management:** per-project `PackageReference`, not central package management
+- **Package Management:** Central Package Management (`Directory.Packages.props` at repo root)
+  — `Laerdal.Dfu.Sample` is explicitly opted out (`ManagePackageVersionsCentrally=false`) since
+  it intentionally pins different package versions; it's part of `Laerdal.Dfu.sln` but not
+  `Laerdal.Dfu.Packages.slnx`, the solution CI actually restores/builds
 - **CI/CD:** GitHub Actions
 - **License:** BSD-3-Clause — intentionally matches the license of the Nordic libraries this
   repo wraps (both `Android-DFU-Library` and `IOS-Pods-DFU-Library` are BSD-3-Clause), not a
