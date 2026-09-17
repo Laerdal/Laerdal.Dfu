@@ -17,10 +17,10 @@ Explain the reason for this change.
 ## Affected Areas
 
 - [ ] Core (`Laerdal.Dfu`)
-- [ ] Platform: Android
-- [ ] Platform: iOS/MacCatalyst
-- [ ] Platform: NetX fallback
-- [ ] Sample app (`Laerdal.Dfu.Sample`)
+- [ ] Android bridging (`Platforms.Droid`)
+- [ ] iOS/MacCatalyst bridging (`Platforms.iOSandMacCatalyst`)
+- [ ] NetX placeholder (`Platforms.NetX`)
+- [ ] Sample app
 - [ ] Documentation
 
 ## Behavior And Compatibility
@@ -34,7 +34,7 @@ If any box above is checked, describe impact:
 
 ## Platform Notes
 
-List platform-specific behavior differences introduced or touched.
+List platform-specific behavior differences introduced or touched (Android/iOS/MacCatalyst).
 
 ## Tests
 
