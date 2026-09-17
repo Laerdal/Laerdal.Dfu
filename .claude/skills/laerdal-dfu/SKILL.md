@@ -23,19 +23,25 @@ only adds what that file doesn't cover.
 
 ## What's not written down there — versioning
 
-`.config/version.json` holds only `{ "major": ..., "minor": ... }`, hand-set by whoever bumps
-the version. **Patch is generated per-build by the shared `reusable-version.yml` workflow
-(`laerdal/github_actions`), not hand-edited and not derived from `x.y.0`.** There is no clean
-`x.y.0` release to expect. Don't hand-bump `minor` for a purely additive change — check recent
-tags first (`git tag --sort=-v:refname | head`) to see what CI actually produced last, rather
-than assuming semver defaults apply.
+`.config/version.json` holds only `{ "major": ..., "minor": ... }` — there is no `patch` field
+in it, and hand-editing one in wouldn't do anything. **Patch is generated per-build by the
+shared `reusable-version.yml` workflow (`laerdal/github_actions`), derived from git tag history
+for the current `major.minor` series.** Bumping `minor` starts a brand-new series at patch `0`
+— a clean `x.y.0` release is normal and expected the first time a series publishes (this repo
+has several, e.g. `0.6.0`, `0.7.0`); every subsequent build within that same series increments
+from there instead. Don't hand-bump `minor` for a purely additive change just to "get" a clean
+release — check recent tags first (`git tag --sort=-v:refname | head`) to see what CI actually
+produced last, rather than assuming semver defaults apply or manufacturing an `x.y.0` you don't
+need.
 
 ## Cross-repo reminder
 
 If Android DFU misbehaves after touching `TargetPlatformVersion` anywhere in this repo or in
 `Laerdal.Dfu.Bindings.Android`, check both repos' pins together — a mismatch between them is
-the historical root cause (see this repo's README "Known issues"). The same coordination
-applies when bumping the wrapped Nordic native library version itself:
-`Laerdal.Dfu.Bindings.Android` and `Laerdal.Dfu.Bindings.iOS` both need the native bump, and
-this repo's `NordicDfuUuids` (Legacy/Secure DFU GATT constants) needs re-verifying against the
-new native version before republishing.
+the historical root cause (see this repo's README "Known issues"). Separately:
+`Laerdal.Dfu.Bindings.Android` and `Laerdal.Dfu.Bindings.iOS` wrap **independently-versioned**
+native libraries (`Android-DFU-Library` vs `IOS-Pods-DFU-Library`) — bumping one does **not**
+imply bumping the other. What does need re-checking whenever *either* platform's native library
+moves is this repo's own `NordicDfuUuids` (Legacy/Secure DFU GATT constants) — re-verify it
+against the new native version before republishing, since neither binding repo's own build
+would catch a drift there.
