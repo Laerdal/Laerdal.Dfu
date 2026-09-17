@@ -27,6 +27,7 @@ Explain the reason for this change.
 
 - [ ] Public API changed
 - [ ] Exception behavior changed
+- [ ] DI registration behavior changed
 - [ ] No externally visible behavior change
 
 If any box above is checked, describe impact:
