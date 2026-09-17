@@ -18,8 +18,8 @@ reasoning about any non-trivial code in this repo.** It covers project structure
 commands, code organization, and a "Known Gotchas" section that already documents the two
 biggest traps here: `DfuProgressChangedEventArgs.Progress` being on a `0.0`–`1.0` scale versus
 Nordic's native `0`–`100` scale, and the binding package versions
-(`Laerdal.Dfu.Bindings.Android`/`.iOS`) being pinned, not floating. Everything below this point
-only adds what that file doesn't cover.
+(`Laerdal.Dfu.Bindings.Android`, `Laerdal.Dfu.Bindings.iOS`/`.MacCatalyst`) being pinned, not
+floating. Everything below this point only adds what that file doesn't cover.
 
 ## What's not written down there — versioning
 
