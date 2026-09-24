@@ -31,6 +31,7 @@ namespace Laerdal.Dfu
                 Logger = new DfuLogger(),
                 WeakDelegate = DfuServiceDelegate,
                 WeakProgressDelegate = DfuProgressDelegate,
+                PeripheralSelector = DfuPeripheralSelectorDelegate,
             };
 
             Initiator = Initiator.WithFirmware(Firmware);
