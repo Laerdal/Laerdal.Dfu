@@ -31,6 +31,7 @@ namespace Laerdal.Dfu
                 Logger = new DfuLogger(),
                 WeakDelegate = DfuServiceDelegate,
                 WeakProgressDelegate = DfuProgressDelegate,
+                PeripheralSelector = DfuPeripheralSelectorDelegate,
             };
 
             Initiator = Initiator.WithFirmware(Firmware);
@@ -85,7 +86,7 @@ namespace Laerdal.Dfu
 
         private DfuProgressDelegate DfuProgressDelegate { get; set; }
 
-        
+
 
         private DfuPeripheralSelectorDelegate DfuPeripheralSelectorDelegate { get; set; }
         public DfuInstallation(string deviceId, string fileUrl) : base(deviceId, fileUrl)
@@ -127,19 +128,19 @@ namespace Laerdal.Dfu
 
             DfuServiceDelegate?.Dispose();
             DfuServiceDelegate = null;
-            
+
             DfuProgressDelegate?.Dispose();
             DfuProgressDelegate = null;
-            
+
             DfuPeripheralSelectorDelegate?.Dispose();
             DfuPeripheralSelectorDelegate = null;
-            
+
             Firmware?.Dispose();
             Firmware = null;
-            
+
             Initiator?.Dispose();
             Initiator = null;
-            
+
             Controller?.Dispose();
             Controller = null;
         }
