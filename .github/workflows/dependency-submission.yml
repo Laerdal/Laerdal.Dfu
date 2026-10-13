@@ -39,6 +39,6 @@ jobs:
         run: dotnet restore Laerdal.Dfu/Laerdal.Dfu.csproj
 
       - name: '📊 Submit dependency snapshot'
-        uses: advanced-security/component-detection-dependency-submission-action@v0.1.6
+        uses: advanced-security/component-detection-dependency-submission-action@v0.2.0
         with:
           detectorsCategories: NuGet
