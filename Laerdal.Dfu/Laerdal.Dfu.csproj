@@ -58,7 +58,9 @@
         <TargetPlatformMinVersion Condition="    '$(IsForAndroid)'      == 'true' ">21.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
-        <!-- ios   you will need specific workloads though    dotnet workload install maui -->
+        <!-- ios   you will need specific workloads though    dotnet workload install maui
+             26.5 is only a valid TargetPlatformVersion in the workload set pinned by global.json (workloadVersion);
+             a newer set (27.0.x) rejects it with NETSDK1140. Move this, the pin and the Xcode in ci.yml together. -->
         <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">26.5</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsForIOS)'          == 'true' ">14.2</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForIOS)'          == 'true' ">14.2</SupportedOSPlatformVersion>

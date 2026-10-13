@@ -107,7 +107,7 @@ public class ScanViewModel : BaseViewModel
         {
             _allDevices = [.. _scanner.GetDevices()];
             Devices.Clear();
-            foreach (var d in _allDevices.OrderByDescending(d => d.SignalStrengthDbm))
+            foreach (var d in _allDevices.OrderByDescending(d => d.SignalStrengthInDbm))
                 Devices.Add(d);
             OnPropertyChanged(nameof(DeviceCount));
         });
