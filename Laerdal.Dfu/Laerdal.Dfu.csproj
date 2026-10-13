@@ -59,16 +59,14 @@
         <SupportedOSPlatformVersion Condition="  '$(IsForAndroid)'      == 'true' ">21.0</SupportedOSPlatformVersion>
 
         <!-- ios   you will need specific workloads though    dotnet workload install maui
-             27.0 must be one of the TargetPlatformVersions the installed ios/maccatalyst workload ships (26.0 and 27.0
-             at workload 27.0.x) or the build fails with NETSDK1140. Consumers need that workload or newer too: a
-             lower one cannot see this package's lib/net10.0-ios27.0 folder and silently falls back to the
-             NotImplementedException stub in lib/net10.0. -->
-        <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">27.0</TargetPlatformVersion>
+             26.5 is only a valid TargetPlatformVersion in the workload set pinned by global.json (workloadVersion);
+             a newer set (27.0.x) rejects it with NETSDK1140. Move this, the pin and the Xcode in ci.yml together. -->
+        <TargetPlatformVersion Condition="       '$(IsForIOS)'          == 'true' ">26.5</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsForIOS)'          == 'true' ">14.2</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForIOS)'          == 'true' ">14.2</SupportedOSPlatformVersion>
 
         <!-- maccatalyst   you will need specific workloads though    dotnet workload install maui -->
-        <TargetPlatformVersion Condition="       '$(IsForMacCatalyst)'  == 'true' ">27.0</TargetPlatformVersion>
+        <TargetPlatformVersion Condition="       '$(IsForMacCatalyst)'  == 'true' ">26.5</TargetPlatformVersion>
         <TargetPlatformMinVersion Condition="    '$(IsForMacCatalyst)'  == 'true' ">13.1</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="  '$(IsForMacCatalyst)'  == 'true' ">13.1</SupportedOSPlatformVersion>
     </PropertyGroup>
