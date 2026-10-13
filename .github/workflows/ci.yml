@@ -26,6 +26,7 @@ env:
 
   SOLUTION_PATH: 'Laerdal.Dfu.Packages.slnx'
   PACKAGE_OUTPUT_PATH: '${{ github.workspace }}/Artifacts'
+  XCODE_APP: '/Applications/Xcode_27.0.app'   # must match the iOS/MacCatalyst TargetPlatformVersion in Laerdal.Dfu.csproj
 
 jobs:
 
@@ -41,7 +42,7 @@ jobs:
 
   build:
     name: '🏗 Build & Pack'
-    runs-on: macos-14        # macOS required for net10.0-ios and net10.0-maccatalyst native binding compilation
+    runs-on: xcode-27        # macOS required for net10.0-ios and net10.0-maccatalyst; the 27.0 SDKs only exist on the Xcode 27 image
     timeout-minutes: 30
     needs: version
 
@@ -49,6 +50,9 @@ jobs:
 
       - name: '🔽 Checkout'
         uses: actions/checkout@v7
+
+      - name: '🍎 Select Xcode'
+        run: sudo xcode-select -s '${{ env.XCODE_APP }}/Contents/Developer'
 
       - name: '⬇️ Download Version artifact'
         uses: actions/download-artifact@v8
