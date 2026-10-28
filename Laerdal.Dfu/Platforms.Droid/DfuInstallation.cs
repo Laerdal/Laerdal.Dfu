@@ -170,8 +170,9 @@ namespace Laerdal.Dfu
                 return true;
 
             var parsed = DeviceId.Split(':').Select(p => int.Parse(p, NumberStyles.HexNumber)).ToList();
-            parsed[^1] += 1;
-            
+            // The bootloader address is the last byte + 1 and wraps at 0xFF without carrying, as in Nordic's library.
+            parsed[^1] = (parsed[^1] + 1) & 0xFF;
+
             var deviceAddressPlusOne = string.Join(":", parsed.Select(p => p.ToString("X2")));
             if (deviceAddress == deviceAddressPlusOne)
             {
