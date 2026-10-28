@@ -58,6 +58,11 @@ namespace Laerdal.Dfu
                 Initiator.ForceScanningForNewAddressInLegacyDfu = ForceScanningForNewAddressInLegacyDfu.Value;
 
             }
+
+            if (SelectPeripheralByDeviceId)
+            {
+                Initiator.PeripheralSelector = DfuPeripheralSelectorDelegate;
+            }
             if (EnableUnsafeExperimentalButtonlessServiceInSecureDfu.HasValue)
             {
                 Initiator.EnableUnsafeExperimentalButtonlessServiceInSecureDfu = EnableUnsafeExperimentalButtonlessServiceInSecureDfu.Value;
