@@ -90,6 +90,16 @@ namespace Laerdal.Dfu
         public bool? ForceScanningForNewAddressInLegacyDfu { get; set; }
 
         /// <summary>
+        /// iOS only, ignored on Android.
+        /// When the DFU library has to scan for the bootloader after the jump (see <see cref="ForceScanningForNewAddressInLegacyDfu"/>,
+        /// or a SoftDevice update), accept only the peripheral whose identifier equals <see cref="DeviceId"/> instead of the first
+        /// peripheral advertising a DFU service UUID. This picks up a bootloader that re-advertises under the original address without a
+        /// DFU service UUID in its packets, but it rejects one that advertises under a new address (address+1), because CoreBluetooth
+        /// gives that one a new identifier. Defaults to false, which keeps Nordic's default selector.
+        /// </summary>
+        public bool SelectPeripheralByDeviceId { get; set; }
+
+        /// <summary>
         /// Android :
         ///     public DfuServiceInitiator SetPacketsReceiptNotificationsEnabled(bool enabled)
         ///     public DfuServiceInitiator SetPacketsReceiptNotificationsValue(int number)
