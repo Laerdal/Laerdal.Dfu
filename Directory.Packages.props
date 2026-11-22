@@ -8,8 +8,8 @@
   <!-- ==================== INTERNAL DEPENDENCIES ==================== -->
   <ItemGroup>
     <PackageVersion Include="Laerdal.Dfu.Bindings.Android" Version="2.11.0.43910" />
-    <PackageVersion Include="Laerdal.Dfu.Bindings.iOS" Version="4.17.0.44005" />
-    <PackageVersion Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.17.0.44005" />
+    <PackageVersion Include="Laerdal.Dfu.Bindings.iOS" Version="4.17.0.44009" />
+    <PackageVersion Include="Laerdal.Dfu.Bindings.MacCatalyst" Version="4.17.0.44009" />
   </ItemGroup>
 
   <!-- ==================== MAUI DEPENDENCIES ==================== -->
