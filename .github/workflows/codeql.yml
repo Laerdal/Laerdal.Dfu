@@ -1,0 +1,106 @@
+name: CodeQL
+run-name: >-
+  ${{ github.event_name == 'pull_request' &&
+      format('🔎 CodeQL - {0} → {1} by {2}', github.head_ref, github.base_ref, github.actor) ||
+      format('🔎 CodeQL - {0} - {1} by {2}', github.event_name, github.ref_name, github.actor) }}
+
+# Replaces GitHub's "default setup" for code scanning. The default setup analyzes C# with
+# build-mode "none" on a Linux runner without the .NET workloads, so Laerdal.Dfu fails to
+# restore and is extracted with unresolved Android, iOS and Mac Catalyst types
+# ("Low C# analysis quality"). Here C# is built for real on macOS, with the same Xcode, SDK,
+# JDK and workload steps as ci.yml, so every target framework is compiled and extracted.
+#
+# Do NOT add `paths-ignore` to the pull_request trigger: the `main` ruleset requires CodeQL
+# results on every PR, and a skipped run would block merges.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '17 6 * * 3' # weekly, catches new queries on unchanged code
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: '1'
+  SOLUTION_PATH: 'Laerdal.Dfu.Packages.slnx'            # keep in sync with ci.yml
+  XCODE_APP: '/Applications/Xcode_26.5.app'             # keep in sync with ci.yml
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 45
+    permissions:
+      security-events: write # upload results
+      contents: read
+      actions: read
+      packages: read
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+            runs-on: ubuntu-latest
+          - language: csharp
+            build-mode: manual
+            runs-on: macos-26 # net10.0-ios and net10.0-maccatalyst need macOS with the 26.5 SDK
+    steps:
+      - name: '🔽 Checkout'
+        uses: actions/checkout@v7
+
+      - name: '🍎 Select Xcode'
+        if: matrix.language == 'csharp'
+        run: sudo xcode-select -s "$XCODE_APP/Contents/Developer"
+
+      - name: '🔧 Setup .NET'
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.x' # same as ci.yml: setup-dotnet does not honour global.json rollForward
+
+      - name: '☕ Setup JDK 17'
+        if: matrix.language == 'csharp'
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          architecture: 'x64'
+          distribution: 'temurin'
+
+      - name: '📲 Install .NET workloads'
+        if: matrix.language == 'csharp'
+        run: dotnet workload restore "$SOLUTION_PATH"
+
+      # `security-extended` is what the default setup ran here ("extended" query suite),
+      # keeping it avoids silently dropping the alerts that suite raises.
+      - name: '🔎 Initialize CodeQL'
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended
+
+      # CodeQL traces the compiler, so the build must really compile everything:
+      # --no-incremental (no skipped projects) and no shared compilation server.
+      - name: '🔨 Build'
+        if: matrix.build-mode == 'manual'
+        run: >-
+          dotnet build "$SOLUTION_PATH"
+          --configuration Release
+          --no-incremental
+          -p:UseSharedCompilation=false
+
+      - name: '🔎 Analyze'
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: '/language:${{ matrix.language }}' # same category as the default setup, so alert history carries over
